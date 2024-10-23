@@ -1,0 +1,7 @@
+v1.5 Rev.240916
+Sistema Optica
+Para implementar:
+• Añadir opción de "Método de Pago" en Ficha de Cliente
+• Añadir reporte de "Resumen de Ventas" por (Día, semana y/o mes)
+• Agregar solicitud de clave de usuario al Editar o Eliminar OTs
+• Cambiar de orden valores dentro de Ficha de Cliente

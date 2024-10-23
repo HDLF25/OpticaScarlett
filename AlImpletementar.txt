@@ -1,0 +1,11 @@
+
+---Pasos para nueva implementación---
+Insertar Estados
+1-Activo
+2-Inactivo
+
+Insertar un Depósito
+1-Default
+
+-------------------------------------
+Total Articulo + Total Cristal
