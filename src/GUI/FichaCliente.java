@@ -354,10 +354,8 @@ public class FichaCliente extends javax.swing.JPanel {
     private void CalcPayMethod() { /*Esta función actualiza los campos Total Pago y Saldo*/
         int TPayMethod = 0;
         for (int a = 0; a < PayMethod.getRowCount(); a++) { /* Recorre la tabla de PayMethod y acumula los montos de la columna Monto en la variable TPayMethod */
-            System.out.println(PayMethod.getValueAt(a, 1));
             TPayMethod = TPayMethod + Integer.parseInt(PayMethod.getValueAt(a, 1).toString());
         }
-        System.out.println(TPayMethod);
         txtSena.setText(String.valueOf(TPayMethod)); /* El Monto sumado en la variable TPayMethod define en el campo TotalPay */
         int CalcSubtPay = Integer.parseInt(txtOTSubtotal.getText()) - TPayMethod; /* Se resta el total OT con el Pago total */
         txtSaldo.setText(String.valueOf(CalcSubtPay)); /* El restante de (TotalOT-TotalPago) se define en el campo Saldo */
