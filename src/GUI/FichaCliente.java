@@ -330,11 +330,14 @@ public class FichaCliente extends javax.swing.JPanel {
         return String.valueOf(total);
     }
 
-    private void SumaGeneral() { /* Esta función agarra los campos TotalArticulo, TotalCristal y TotalPago, hace cálculos y el resultado manda al campo Saldo */
+    private void SumaGeneral() {
+        /* Esta función agarra los campos TotalArticulo, TotalCristal y TotalPago, hace cálculos y el resultado manda al campo Saldo */
         int CalcTotal = 0;
-        CalcTotal = (Integer.parseInt(txtArtTotal.getText()) + Integer.parseInt(txtCristalTotal.getText())) - Integer.parseInt(txtSena.getText()); /* Se suma TOTAL ARTICULO y TOTAL CRISTAL y se resta con el TOTAL PAGO */
-        String OTTotal = String.valueOf(CalcTotal); 
-        txtSaldo.setText(OTTotal); /* Se define la suma y resta ((TotalArticulo+TotalCristal)-TotalArticulo) en el campo Saldo */
+        CalcTotal = (Integer.parseInt(txtArtTotal.getText()) + Integer.parseInt(txtCristalTotal.getText())) - Integer.parseInt(txtSena.getText());
+        /* Se suma TOTAL ARTICULO y TOTAL CRISTAL y se resta con el TOTAL PAGO */
+        String OTTotal = String.valueOf(CalcTotal);
+        txtSaldo.setText(OTTotal);
+        /* Se define la suma y resta ((TotalArticulo+TotalCristal)-TotalArticulo) en el campo Saldo */
     }
 
     private void SumaSubTotal() {
@@ -351,16 +354,21 @@ public class FichaCliente extends javax.swing.JPanel {
         txtCristalTotal.setText(TotalCristal);
     }
 
-    private void CalcPayMethod() { /*Esta función actualiza los campos Total Pago y Saldo*/
+    private void CalcPayMethod() {
+        /*Esta función actualiza los campos Total Pago y Saldo*/
         int TPayMethod = 0;
-        for (int a = 0; a < PayMethod.getRowCount(); a++) { /* Recorre la tabla de PayMethod y acumula los montos de la columna Monto en la variable TPayMethod */
+        for (int a = 0; a < PayMethod.getRowCount(); a++) {
+            /* Recorre la tabla de PayMethod y acumula los montos de la columna Monto en la variable TPayMethod */
             TPayMethod = TPayMethod + Integer.parseInt(PayMethod.getValueAt(a, 1).toString());
         }
-        txtSena.setText(String.valueOf(TPayMethod)); /* El Monto sumado en la variable TPayMethod define en el campo TotalPay */
-        int CalcSubtPay = Integer.parseInt(txtOTSubtotal.getText()) - TPayMethod; /* Se resta el total OT con el Pago total */
-        txtSaldo.setText(String.valueOf(CalcSubtPay)); /* El restante de (TotalOT-TotalPago) se define en el campo Saldo */
+        txtSena.setText(String.valueOf(TPayMethod));
+        /* El Monto sumado en la variable TPayMethod define en el campo TotalPay */
+        int CalcSubtPay = Integer.parseInt(txtOTSubtotal.getText()) - TPayMethod;
+        /* Se resta el total OT con el Pago total */
+        txtSaldo.setText(String.valueOf(CalcSubtPay));
+        /* El restante de (TotalOT-TotalPago) se define en el campo Saldo */
     }
-    
+
     private void RefreshTotals() {
         int CristTotal = Integer.parseInt(txtCristalTotal.getText());
         int ArtTotal = Integer.parseInt(txtArtTotal.getText());
@@ -373,20 +381,20 @@ public class FichaCliente extends javax.swing.JPanel {
         String NroOT = txtOTNro.getText();
         String Estado = "Abierto";
         String CISolicitante = txtCiSol.getText();
-        String IDSol = "";
         String CIPaciente = txtCiPa.getText();
+        String IDSol = "";
         String IDPa = "";
         String OIEsferico = txtOIEsferico.getText();
-        String OICilindrico = txtOICilindrico.getText();
-        String OIEje = txtOIEje.getText();
-        String OIAdicion = txtOIAdicion.getText();
-        int OICantidad = (Integer) spinOICantidad.getValue();
         String ODEsferico = txtODEsferico.getText();
+        String OICilindrico = txtOICilindrico.getText();
         String ODCilindrico = txtODCilindrico.getText();
+        String OIEje = txtOIEje.getText();
         String ODEje = txtODEje.getText();
+        String OIAdicion = txtOIAdicion.getText();
         String ODAdicion = txtODAdicion.getText();
-        int ODCantidad = (Integer) spinODCantidad.getValue();
-        int TotalCristal = OICantidad + ODCantidad;
+        int OICant = (Integer) spinOICantidad.getValue();
+        int ODCant = (Integer) spinODCantidad.getValue();
+        int TotalCristal = OICant + ODCant;
         String DI = txtDI.getText();
         String DNI = txtDNI.getText();
         String DND = txtDND.getText();
@@ -410,7 +418,7 @@ public class FichaCliente extends javax.swing.JPanel {
         if (Flag == 1) {
             con.InsertarDatos("ordentrabajo",
                     "id_cliente,id_paciente,id_usuario,ot_estado,fecha_ordentrabajo,oi_esferico,oi_cilindrico,oi_eje,oi_adicion,oi_cantidad,od_esferico,od_cilindrico,od_eje,od_adicion,od_cantidad,di,dnd,dni,alturafocal,id_cristal,preciocristal,observacion,subtotal,sena,total",
-                    "'" + IDSol + "','" + IDPa + "','" + 1 + "','" + Estado + "','" + fecha + "','" + OIEsferico + "','" + OICilindrico + "','" + OIEje + "','" + OIAdicion + "','" + OICantidad + "','" + ODEsferico + "','" + ODCilindrico + "','" + ODEje + "','" + ODAdicion + "','" + ODCantidad + "','" + DI + "','" + DND + "','" + DNI + "','" + AlturaFocal + "','" + IDCristal + "','" + PrecioCristal + "','" + Observacion + "','" + SubTotal + "','" + Sena + "','" + Saldo + "'");
+                    "'" + IDSol + "','" + IDPa + "','" + 1 + "','" + Estado + "','" + fecha + "','" + OIEsferico + "','" + OICilindrico + "','" + OIEje + "','" + OIAdicion + "','" + OICant + "','" + ODEsferico + "','" + ODCilindrico + "','" + ODEje + "','" + ODAdicion + "','" + ODCant + "','" + DI + "','" + DND + "','" + DNI + "','" + AlturaFocal + "','" + IDCristal + "','" + PrecioCristal + "','" + Observacion + "','" + SubTotal + "','" + Sena + "','" + Saldo + "'");
             for (int a = 0; a < DetalleArt.getRowCount(); a++) {
                 String IDArt = DetalleArt.getValueAt(a, 0).toString();
                 String PrecioArt = DetalleArt.getValueAt(a, 2).toString();
@@ -424,6 +432,17 @@ public class FichaCliente extends javax.swing.JPanel {
                 }
             }
             con.EditarDatosDetalle("stock", "cantidad = cantidad - '" + TotalCristal + "'", "id_articulo='" + IDCristal + "' and id_deposito=1");
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod
+                String CurrPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
+                rs = con.Results(PaySQL); // Ejecuta el query definido arriba
+                if (rs.next()) { // Si trae algún dato, entra en el IF 
+                    int Pay_Code = rs.getInt("id_paymethod");
+                    String Pay_Mount = PayMethod.getValueAt(i, 1).toString();
+                    String Pay_Nro = PayMethod.getValueAt(i, 2).toString();
+                    con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + Pay_Mount + "," + Pay_Nro);
+                }
+            }
         } else if (Flag == 2) {
             for (int a = 0; a < DetalleArt.getRowCount(); a++) {
                 String IDArt = DetalleArt.getValueAt(a, 0).toString();
@@ -461,7 +480,16 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.EditarDatos("stock", "cantidad = cantidad - '" + Resto + "'", "id_articulo='" + IDCristal + "' and id_deposito=1");
                 }
             }
-            con.EditarDatos("ordentrabajo", "id_cliente='" + IDSol + "',id_paciente='" + IDPa + "',id_usuario='" + 1 + "',ot_estado='" + Estado + "',fecha_ordentrabajo='" + fecha + "',oi_esferico='" + OIEsferico + "',oi_cilindrico='" + OICilindrico + "',oi_eje='" + OIEje + "',oi_adicion='" + OIAdicion + "',oi_cantidad='" + OICantidad + "',od_esferico='" + ODEsferico + "',od_cilindrico='" + ODCilindrico + "',od_eje='" + ODEje + "',od_adicion='" + ODAdicion + "',od_cantidad='" + ODCantidad + "',di='" + DI + "',dnd='" + DND + "',dni='" + DNI + "',alturafocal='" + AlturaFocal + "',id_cristal='" + IDCristal + "',preciocristal='" + PrecioCristal + "',observacion='" + Observacion + "',subtotal='" + SubTotal + "',sena='" + Sena + "',total='" + Saldo + "'", "id_ordentrabajo=" + NroOT);
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod
+                String CurrPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
+                rs = con.Results(PaySQL); // Ejecuta el query definido arriba
+                if (rs.next()) { // Si trae algún dato, entra en el IF 
+                    int Pay_Code = rs.getInt("id_paymethod");
+                    con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
+                }
+            }
+            con.EditarDatos("ordentrabajo", "id_cliente='" + IDSol + "',id_paciente='" + IDPa + "',id_usuario='" + 1 + "',ot_estado='" + Estado + "',fecha_ordentrabajo='" + fecha + "',oi_esferico='" + OIEsferico + "',oi_cilindrico='" + OICilindrico + "',oi_eje='" + OIEje + "',oi_adicion='" + OIAdicion + "',oi_cantidad='" + OICant + "',od_esferico='" + ODEsferico + "',od_cilindrico='" + ODCilindrico + "',od_eje='" + ODEje + "',od_adicion='" + ODAdicion + "',od_cantidad='" + ODCant + "',di='" + DI + "',dnd='" + DND + "',dni='" + DNI + "',alturafocal='" + AlturaFocal + "',id_cristal='" + IDCristal + "',preciocristal='" + PrecioCristal + "',observacion='" + Observacion + "',subtotal='" + SubTotal + "',sena='" + Sena + "',total='" + Saldo + "'", "id_ordentrabajo=" + NroOT);
         } else if (Flag == 3) {
             con.EditarDatos("ordentrabajo", "ot_estado='Anulado'", "id_ordentrabajo='" + NroOT + "'");
             String RecuCant = "select oi_cantidad, od_cantidad from ordentrabajo where id_ordentrabajo='" + NroOT + "'";
@@ -479,6 +507,18 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.EditarDatosDetalle("stock", "cantidad = cantidad + '" + CantidadArt + "'", "id_articulo='" + IDArt + "' and id_deposito=1");
                 }
             }
+            con.BorrarDatos("ot_pay", "id_ordentrabajo=" + NroOT);
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod
+                int PayMount = Integer.parseInt(PayMethod.getValueAt(i, 1).toString());
+                String CurrentPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrentPay + "'"; // Este query es para quitar el ID del Método de pago
+                rs = con.Results(PaySQL); // Ejecuta el query definido arriba
+                if (rs.next()) { // Si trae algún dato, entra en el IF 
+                    int Pay_Code = rs.getInt("id_paymethod");
+                    int Pay_Nro = Integer.parseInt(txtPayCompr.getText());
+                    con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + PayMount + "," + Pay_Nro);
+                }
+            }
         } else if (Flag == 4) {
             con.EditarDatos("ordentrabajo", "sena=sena+" + txtCOTPago.getText() + ", total=total-" + txtCOTPago.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
         }
@@ -488,6 +528,7 @@ public class FichaCliente extends javax.swing.JPanel {
         String SQL_Recuperar = "select ot.*,us.username,sum(dot.subtotal_articulo) as subtotal_articulo from ordentrabajo ot, detalle_ordentrabajo dot, cliente cl, usuario us where cl.id_cliente=ot.id_cliente and ot.id_usuario=us.id_usuario and dot.id_ordentrabajo=ot.id_ordentrabajo and ot.id_ordentrabajo='" + id + "' group by ot.id_ordentrabajo,cl.ci_cliente,cl.nombre_cliente,cl.apellido_cliente,us.username order by fecha_ordentrabajo desc";
         rs = con.Results(SQL_Recuperar);
         if (rs.next()) {
+            
             String NroOT = rs.getString("id_ordentrabajo");
             String CiSol = rs.getString("id_cliente");
             String CiPa = rs.getString("id_paciente");
@@ -508,11 +549,16 @@ public class FichaCliente extends javax.swing.JPanel {
             txtDND.setText(rs.getString("dnd"));
             txtAlturaFocal.setText(rs.getString("alturafocal"));
             txtObservacion.setText(rs.getString("observacion"));
-            txtCristalTotal.setText(rs.getString("subtotal"));
+            int OI_Cant = rs.getInt("oi_cantidad");
+            int OD_Cant = rs.getInt("od_cantidad");
+            int Cris_Price = rs.getInt("preciocristal");
+            int TtlCristal = (OI_Cant + OD_Cant) * Cris_Price;
+            String TotalCristal = String.valueOf(TtlCristal);
+            txtCristalTotal.setText(TotalCristal);
+            txtOTSubtotal.setText(rs.getString("subtotal"));
             txtArtTotal.setText(rs.getString("subtotal_articulo"));
             txtSena.setText(rs.getString("sena"));
             txtSaldo.setText(rs.getString("total"));
-
             String CodCristal = rs.getString("id_cristal");
             txtCristalCode.setText(rs.getString("id_cristal"));
             txtCristalPrice.setText(rs.getString("preciocristal"));
@@ -539,11 +585,9 @@ public class FichaCliente extends javax.swing.JPanel {
             if (rs.next()) {
                 txtCristalCode.setText(rs.getString("id_articulo"));
                 txtCristalDescr.setText(rs.getString("descripcion_articulo"));
-                /* txtPrecioCristal.setText(rs.getString("precioventa_articulo")); */
             }
-
-            String SQLArticulos = "select dot.id_articulo,art.descripcion_articulo,dot.cantidad_articulo,dot.precio_articulo,dot.subtotal_articulo from detalle_ordentrabajo dot, ordentrabajo ot, articulos art where dot.id_ordentrabajo=ot.id_ordentrabajo and dot.id_articulo=art.id_articulo and dot.id_ordentrabajo=" + NroOT;
             /* FALTA RECUPERAR ARTICULOS Y AÑADIR EN LA TABLA DETALLE */
+            String SQLArticulos = "select dot.id_articulo,art.descripcion_articulo,dot.cantidad_articulo,dot.precio_articulo,dot.subtotal_articulo from detalle_ordentrabajo dot, ordentrabajo ot, articulos art where dot.id_ordentrabajo=ot.id_ordentrabajo and dot.id_articulo=art.id_articulo and dot.id_ordentrabajo=" + NroOT;
             rs = con.Results(SQLArticulos);
             while (rs.next()) {
                 String CodArt = rs.getString("id_articulo");
@@ -555,6 +599,18 @@ public class FichaCliente extends javax.swing.JPanel {
                     fila[3] = rs.getString("cantidad_articulo");
                     fila[4] = rs.getString("subtotal_articulo");
                     DetalleArt.addRow(fila);
+                }
+            }
+            String SQLPays = "select pm.descr_paymethod,otp.payamount,otp.nrocomprobante from paymethod pm, ot_pay otp where otp.id_paymethod=pm.id_paymethod and otp.id_ordentrabajo=" + NroOT;
+            rs = con.Results(SQLPays);
+            while (rs.next()) {
+                String PayDescr = rs.getString("descr_paymethod");
+                if (Check(PayMethod, 0, PayDescr) == true) {
+                    Object[] fila = new Object[3];
+                    fila[0] = rs.getString("descr_paymethod");
+                    fila[1] = rs.getString("payamount");
+                    fila[2] = rs.getString("nrocomprobante");
+                    PayMethod.addRow(fila);
                 }
             }
             HabilitarBtn2();
@@ -720,16 +776,16 @@ public class FichaCliente extends javax.swing.JPanel {
                 txtOTNro.requestFocus();
                 txtUser.setText("");
                 txtPass.setText("");
+                return;
             } else {
                 JOptionPane.showMessageDialog(null, "El usuario ingresado no es un administrador. Inténtalo de nuevo más tarde.");
+                return;
             }
         }
-        if (!rs.next()) {
-            JOptionPane.showMessageDialog(null, "El usuario ingresado no existe o está inactivo. Intentalo nuevamente.");
-            txtUser.setText("");
-            txtPass.setText("");
-            txtUser.requestFocus();
-        }
+        JOptionPane.showMessageDialog(null, "El usuario ingresado no existe o está inactivo. Intentalo nuevamente.");
+        txtUser.setText("");
+        txtPass.setText("");
+        txtUser.requestFocus();
     }
 
     private void CargarTablaClientes() throws SQLException {
@@ -1016,7 +1072,6 @@ public class FichaCliente extends javax.swing.JPanel {
         txtCOTSena = new javax.swing.JTextField();
         lblCOTSaldo = new javax.swing.JLabel();
         txtCOTSaldo = new javax.swing.JTextField();
-        jSeparator6 = new javax.swing.JSeparator();
         lblCOTPago = new javax.swing.JLabel();
         txtCOTPago = new javax.swing.JTextField();
         btnCOTConfirm = new javax.swing.JButton();
@@ -1376,23 +1431,23 @@ public class FichaCliente extends javax.swing.JPanel {
         lblCOTNro.setFont(new java.awt.Font("Segoe UI", 1, 12)); // NOI18N
         lblCOTNro.setText("null");
 
-        lblCOTTotal.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCOTTotal.setText("Total OT:");
+        lblCOTTotal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCOTTotal.setText("Total OT");
 
         txtCOTTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        lblCOTSena.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCOTSena.setText("Seña:");
+        lblCOTSena.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCOTSena.setText("Seña");
 
         txtCOTSena.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        lblCOTSaldo.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCOTSaldo.setText("Saldo:");
+        lblCOTSaldo.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCOTSaldo.setText("Saldo");
 
         txtCOTSaldo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        lblCOTPago.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCOTPago.setText("A pagar:");
+        lblCOTPago.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCOTPago.setText("A pagar");
 
         txtCOTPago.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
@@ -1419,31 +1474,36 @@ public class FichaCliente extends javax.swing.JPanel {
             .addGroup(WindowCloseOTLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
-                        .addComponent(lblCOTTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(lblCOTNro))
-                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WindowCloseOTLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
                         .addComponent(btnCOTConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCOTCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, WindowCloseOTLayout.createSequentialGroup()
-                            .addComponent(lblCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtCOTPago, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE))
-                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, WindowCloseOTLayout.createSequentialGroup()
-                            .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(lblCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 65, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(jSeparator6, javax.swing.GroupLayout.DEFAULT_SIZE, 120, Short.MAX_VALUE)
-                                .addComponent(txtCOTTotal)
-                                .addComponent(txtCOTSena)
-                                .addComponent(txtCOTSaldo)))))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                        .addComponent(lblCOTTitle)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                        .addComponent(lblCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(lblCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                        .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                            .addComponent(lblCOTNro))
+                        .addGap(0, 93, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         WindowCloseOTLayout.setVerticalGroup(
             WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -1452,29 +1512,27 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCOTTitle)
                     .addComponent(lblCOTNro))
-                .addGap(18, 18, 18)
-                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCOTTotal)
-                    .addComponent(txtCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCOTSena)
-                    .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCOTSaldo)
-                    .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 4, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(lblCOTPago)
-                    .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                        .addComponent(lblCOTTotal)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(lblCOTSena)
+                            .addComponent(lblCOTSaldo)
+                            .addComponent(lblCOTPago))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCOTConfirm)
                     .addComponent(btnCOTCancel))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
 
         lblSUSubtitle.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
@@ -1654,7 +1712,7 @@ public class FichaCliente extends javax.swing.JPanel {
         PnlOTStatsLayout.setHorizontalGroup(
             PnlOTStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlOTStatsLayout.createSequentialGroup()
-                .addContainerGap(14, Short.MAX_VALUE)
+                .addContainerGap(19, Short.MAX_VALUE)
                 .addComponent(lblOt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(txtOTNro, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2007,8 +2065,8 @@ public class FichaCliente extends javax.swing.JPanel {
         PnlCristal.setLayout(PnlCristalLayout);
         PnlCristalLayout.setHorizontalGroup(
             PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(PnlCristalLayout.createSequentialGroup()
-                .addContainerGap()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlCristalLayout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                     .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                         .addGroup(PnlCristalLayout.createSequentialGroup()
@@ -2063,7 +2121,6 @@ public class FichaCliente extends javax.swing.JPanel {
                                 .addComponent(txtOICilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtODCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lblCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(txtOIEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2087,7 +2144,7 @@ public class FichaCliente extends javax.swing.JPanel {
                             .addComponent(spinOICantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblCantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblVistaLejana, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap())
         );
         PnlCristalLayout.setVerticalGroup(
             PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -2174,7 +2231,6 @@ public class FichaCliente extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtCristalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addGap(1, 1, 1)))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(PnlCristalLayout.createSequentialGroup()
                         .addComponent(lblCristalTotal)
@@ -2574,32 +2630,31 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
+                        .addComponent(PnlBtnsOT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(PnlOTStats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(layout.createSequentialGroup()
                                 .addComponent(lblObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 900, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(PnlBtnsOT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PnlOTStats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jSeparator2)
-                            .addGroup(layout.createSequentialGroup()
-                                .addGap(193, 193, 193)
-                                .addComponent(PnlCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator3)
-                            .addComponent(jSeparator7)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(PnlCristal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(PnlArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jSeparator8))
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jSeparator2)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addGap(193, 193, 193)
+                                    .addComponent(PnlCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSeparator3)
+                                .addComponent(jSeparator7)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(PnlCristal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 5, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(PnlArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(jSeparator8)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -3166,7 +3221,8 @@ public class FichaCliente extends javax.swing.JPanel {
                 } else if (Flag == 4) {
                     lblCOTNro.setText(txtOTNro.getText());
                     Integer OtTotal = Integer.parseInt(txtArtTotal.getText()) + Integer.parseInt(txtCristalTotal.getText());
-                    txtCOTTotal.setText(OtTotal.toString());
+                    String OTSubtotal = txtOTSubtotal.getText();
+                    txtCOTTotal.setText(OTSubtotal);
                     txtCOTTotal.setEditable(false);
                     txtCOTSena.setText(txtSena.getText());
                     txtCOTSena.setEditable(false);
@@ -3434,16 +3490,15 @@ public class FichaCliente extends javax.swing.JPanel {
     }//GEN-LAST:event_btnPayDeleteActionPerformed
 
     private void spinODCantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinODCantidadStateChanged
-        if (txtCristalPrice.getText() != null) {
+        if (!txtCristalPrice.getText().isEmpty()) {
             SumaCristal();
             SumaGeneral();
             SumaSubTotal();
-        } else {
         }
     }//GEN-LAST:event_spinODCantidadStateChanged
 
     private void spinOICantidadStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinOICantidadStateChanged
-        if (txtCristalPrice != null) {
+        if (!txtCristalPrice.getText().isEmpty()) {
             SumaCristal();
             SumaGeneral();
             SumaSubTotal();
@@ -3524,7 +3579,6 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
-    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JLabel lblAdicion;
