@@ -1076,6 +1076,16 @@ public class FichaCliente extends javax.swing.JPanel {
         txtCOTPago = new javax.swing.JTextField();
         btnCOTConfirm = new javax.swing.JButton();
         btnCOTCancel = new javax.swing.JButton();
+        TablePayMethod1 = new javax.swing.JScrollPane();
+        TSeacherPayCOT = new javax.swing.JTable();
+        txtPayMethodCOT = new javax.swing.JLabel();
+        cboxPayMethodCOT = new javax.swing.JComboBox<>();
+        lblPayMountCOT = new javax.swing.JLabel();
+        txtPayMountCOT = new javax.swing.JTextField();
+        lblPayComprCOT = new javax.swing.JLabel();
+        txtPayComprCOT = new javax.swing.JTextField();
+        btnPayAddCOT = new javax.swing.JButton();
+        btnPayDeleteCOT = new javax.swing.JButton();
         SUConfirm = new javax.swing.JDialog();
         lblSUSubtitle = new javax.swing.JLabel();
         lblUser = new javax.swing.JLabel();
@@ -1446,7 +1456,7 @@ public class FichaCliente extends javax.swing.JPanel {
 
         txtCOTSaldo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        lblCOTPago.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblCOTPago.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblCOTPago.setText("A pagar");
 
         txtCOTPago.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
@@ -1467,6 +1477,54 @@ public class FichaCliente extends javax.swing.JPanel {
             }
         });
 
+        TSeacherPayCOT.setModel(PayMethod);
+        TablePayMethod1.setViewportView(TSeacherPayCOT);
+
+        txtPayMethodCOT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        txtPayMethodCOT.setText("Método de Pago");
+
+        cboxPayMethodCOT.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                cboxPayMethodCOTItemStateChanged(evt);
+            }
+        });
+
+        lblPayMountCOT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPayMountCOT.setText("Monto");
+
+        txtPayMountCOT.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPayMountCOT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPayMountCOTKeyPressed(evt);
+            }
+        });
+
+        lblPayComprCOT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblPayComprCOT.setText("Nro. Comprobante");
+
+        txtPayComprCOT.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+        txtPayComprCOT.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtPayComprCOTKeyPressed(evt);
+            }
+        });
+
+        btnPayAddCOT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus.png"))); // NOI18N
+        btnPayAddCOT.setToolTipText("Añadir método de pago");
+        btnPayAddCOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPayAddCOTActionPerformed(evt);
+            }
+        });
+
+        btnPayDeleteCOT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/minus.png"))); // NOI18N
+        btnPayDeleteCOT.setToolTipText("Quitar método de pago seleccionado ya cargado");
+        btnPayDeleteCOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPayDeleteCOTActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout WindowCloseOTLayout = new javax.swing.GroupLayout(WindowCloseOT.getContentPane());
         WindowCloseOT.getContentPane().setLayout(WindowCloseOTLayout);
         WindowCloseOTLayout.setHorizontalGroup(
@@ -1480,29 +1538,49 @@ public class FichaCliente extends javax.swing.JPanel {
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(btnCOTCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(WindowCloseOTLayout.createSequentialGroup()
-                        .addComponent(lblCOTTitle)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                .addComponent(lblCOTTitle)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(lblCOTNro))
                             .addGroup(WindowCloseOTLayout.createSequentialGroup()
                                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addComponent(lblCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
-                                        .addComponent(lblCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                    .addComponent(lblCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(TablePayMethod1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
+                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, WindowCloseOTLayout.createSequentialGroup()
+                                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                                .addComponent(cboxPayMethodCOT, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(txtPayMountCOT, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                            .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                                .addComponent(txtPayMethodCOT, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                                .addComponent(lblPayMountCOT, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                            .addComponent(txtPayComprCOT)
+                                            .addComponent(lblPayComprCOT, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(lblCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
-                                        .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                        .addComponent(btnPayAddCOT)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                            .addComponent(lblCOTNro))
-                        .addGap(0, 93, Short.MAX_VALUE)))
+                                        .addComponent(btnPayDeleteCOT)))))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         WindowCloseOTLayout.setVerticalGroup(
@@ -1512,26 +1590,48 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(lblCOTTitle)
                     .addComponent(lblCOTNro))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGap(18, 18, 18)
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(WindowCloseOTLayout.createSequentialGroup()
-                        .addComponent(lblCOTTotal)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                .addComponent(lblCOTTotal)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                .addComponent(lblCOTSena)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(18, 18, 18)
                         .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(lblCOTSena)
-                            .addComponent(lblCOTSaldo)
+                            .addComponent(lblPayComprCOT)
+                            .addComponent(lblPayMountCOT)
+                            .addComponent(txtPayMethodCOT))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(cboxPayMethodCOT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtPayMountCOT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(btnPayAddCOT)
+                                    .addComponent(txtPayComprCOT, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addComponent(btnPayDeleteCOT))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(TablePayMethod1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(lblCOTPago))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 387, Short.MAX_VALUE)
-                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(btnCOTConfirm)
-                    .addComponent(btnCOTCancel))
+                            .addComponent(btnCOTConfirm)
+                            .addComponent(btnCOTCancel)))
+                    .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                        .addComponent(lblCOTSaldo)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
 
@@ -2536,7 +2636,7 @@ public class FichaCliente extends javax.swing.JPanel {
             PnlPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PnlPayMethodLayout.createSequentialGroup()
                 .addContainerGap()
-                .addGroup(PnlPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                .addGroup(PnlPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(PnlPayMethodLayout.createSequentialGroup()
                         .addGroup(PnlPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
                             .addGroup(PnlPayMethodLayout.createSequentialGroup()
@@ -3514,6 +3614,26 @@ public class FichaCliente extends javax.swing.JPanel {
         txtCristalTotal.setText("0");
     }//GEN-LAST:event_btnCristCleanActionPerformed
 
+    private void btnPayDeleteCOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayDeleteCOTActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPayDeleteCOTActionPerformed
+
+    private void cboxPayMethodCOTItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxPayMethodCOTItemStateChanged
+        // TODO add your handling code here:
+    }//GEN-LAST:event_cboxPayMethodCOTItemStateChanged
+
+    private void txtPayMountCOTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPayMountCOTKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPayMountCOTKeyPressed
+
+    private void txtPayComprCOTKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPayComprCOTKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_txtPayComprCOTKeyPressed
+
+    private void btnPayAddCOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayAddCOTActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btnPayAddCOTActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PnlArticulo;
@@ -3527,12 +3647,14 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JDialog SearcherCliente;
     private javax.swing.JDialog SearcherOT;
     private javax.swing.JTable TSeacherPay;
+    private javax.swing.JTable TSeacherPayCOT;
     private javax.swing.JTable TSearcherArt;
     private javax.swing.JTable TSearcherCli;
     private javax.swing.JTable TSearcherDetalle;
     private javax.swing.JTable TSearcherOT;
     private javax.swing.JScrollPane TableDetailArticle;
     private javax.swing.JScrollPane TablePayMethod;
+    private javax.swing.JScrollPane TablePayMethod1;
     private javax.swing.JDialog WindowCloseOT;
     private javax.swing.JButton btnArtAdd;
     private javax.swing.JButton btnArtClean;
@@ -3561,7 +3683,9 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnOTNew;
     private javax.swing.JButton btnOTNull;
     private javax.swing.JButton btnPayAdd;
+    private javax.swing.JButton btnPayAddCOT;
     private javax.swing.JButton btnPayDelete;
+    private javax.swing.JButton btnPayDeleteCOT;
     private javax.swing.JButton btnSearchOT;
     private javax.swing.JButton btnSearchPa;
     private javax.swing.JButton btnSearchSol;
@@ -3569,6 +3693,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JComboBox<String> cboxFiltrarCli;
     private javax.swing.JComboBox<String> cboxFiltrarOT;
     private javax.swing.JComboBox<String> cboxPayMethod;
+    private javax.swing.JComboBox<String> cboxPayMethodCOT;
     private javax.swing.JCheckBox chboxMenor;
     private com.toedter.calendar.JDateChooser dtOTDate;
     private javax.swing.JScrollPane jScrollPane2;
@@ -3627,7 +3752,9 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JLabel lblPaciente;
     private javax.swing.JLabel lblPass;
     private javax.swing.JLabel lblPayCompr;
+    private javax.swing.JLabel lblPayComprCOT;
     private javax.swing.JLabel lblPayMount;
+    private javax.swing.JLabel lblPayMountCOT;
     private javax.swing.JLabel lblPrecioCristal;
     private javax.swing.JLabel lblSUSubtitle;
     private javax.swing.JLabel lblSaldo;
@@ -3677,8 +3804,11 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JTextField txtObservacion;
     private javax.swing.JPasswordField txtPass;
     private javax.swing.JTextField txtPayCompr;
+    private javax.swing.JTextField txtPayComprCOT;
     private javax.swing.JLabel txtPayMethod;
+    private javax.swing.JLabel txtPayMethodCOT;
     private javax.swing.JTextField txtPayMount;
+    private javax.swing.JTextField txtPayMountCOT;
     private javax.swing.JTextField txtSaldo;
     private javax.swing.JTextField txtSena;
     private javax.swing.JTextField txtUser;
