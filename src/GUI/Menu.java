@@ -175,6 +175,11 @@ public class Menu extends javax.swing.JFrame {
 
         jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
         jButton1.setText("Resumen de Ventas");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/complete.png"))); // NOI18N
         jButton2.setText("Métodos de Pago");
@@ -545,6 +550,20 @@ public class Menu extends javax.swing.JFrame {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton2ActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        contenedor = new JDialog();
+        contenedor.getContentPane().add(new SalesSummary());
+        contenedor.setModal(false);
+        contenedor.setTitle("Resumen de Ventas");
+        URL url = getClass().getResource("/images/searchicon.png");
+        ImageIcon imgicon = new ImageIcon(url);
+        contenedor.setIconImage(imgicon.getImage());
+        contenedor.pack();
+        contenedor.setLocationRelativeTo(null);
+        contenedor.setResizable(false);
+        contenedor.setVisible(true);
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

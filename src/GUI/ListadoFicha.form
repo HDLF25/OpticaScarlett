@@ -244,10 +244,10 @@
                   <Component id="lblHasta" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Component id="jFechaDesde" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="jFechaHasta" min="-2" max="-2" attributes="0"/>
-                  <Component id="chboxAllDates" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                  <Component id="jFechaDesde" alignment="1" max="32767" attributes="0"/>
+                  <Component id="jFechaHasta" max="32767" attributes="0"/>
+                  <Component id="chboxAllDates" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace pref="22" max="32767" attributes="0"/>
               <Component id="lblExcluir" min="-2" max="-2" attributes="0"/>

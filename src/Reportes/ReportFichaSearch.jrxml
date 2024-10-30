@@ -111,7 +111,7 @@ cl.ci_cliente, cl.nombre_cliente, cl.apellido_cliente, us.username order by fech
 			</staticText>
 			<image>
 				<reportElement x="1" y="0" width="79" height="79" uuid="1f14b6de-d2c2-49c6-8268-b0f1bf3b2f23"/>
-				<imageExpression><![CDATA["C:\\Users\\Emilio Maldonado\\AppData\\Local\\OpticaScarlett\\src\\Reportes\\logoOptica.png"]]></imageExpression>
+				<imageExpression><![CDATA["C:\\Users\\ccti\\Desktop\\OpticaScarlett\\src\\Reportes\\logoOptica.png"]]></imageExpression>
 			</image>
 		</band>
 	</title>
