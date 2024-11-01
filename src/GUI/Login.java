@@ -141,7 +141,11 @@ public class Login extends javax.swing.JFrame {
     }//GEN-LAST:event_TxtUserKeyPressed
 
     private void TxtPasswordKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_TxtPasswordKeyPressed
-        if(evt.getKeyCode() == 10  && !TxtPassword.getText().equals("")){
+        char[] passwordArray = TxtPassword.getPassword();
+        String password = new String(passwordArray);
+        java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
+
+        if(evt.getKeyCode() == 10  && password!=""){
             BtnLogin.setEnabled(true);
             BtnLogin.requestFocus();
         }
@@ -160,7 +164,10 @@ public class Login extends javax.swing.JFrame {
     private void BtnLoginActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_BtnLoginActionPerformed
         try {
             String user = TxtUser.getText();
-            String password = TxtPassword.getText();
+            //String password = TxtPassword.getText();
+            char[] passwordArray = TxtPassword.getPassword();
+            String password = new String(passwordArray);
+            java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
             String sql_user = "select username from usuario where username = '"+user+"' and id_estado = 1;";
             rs = con.Results(sql_user);
             if(rs.next()){

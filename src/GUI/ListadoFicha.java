@@ -21,7 +21,7 @@ import net.sf.jasperreports.engine.util.JRLoader;
 import net.sf.jasperreports.view.JasperViewer;
 
 public class ListadoFicha extends javax.swing.JPanel {
-    
+
     Conexion con;
     ResultSet rs;
     DefaultTableModel SearchCliente = new DefaultTableModel() {
@@ -40,43 +40,44 @@ public class ListadoFicha extends javax.swing.JPanel {
         jFechaHasta.setDateFormatString("yyyy-MM-dd");
         SeleccionarChbox();
     }
-    
-    private void RecuperarCliente(String ci) throws SQLException{
-        String SQL_Recuperar = "select * from cliente where ci_cliente='"+String.valueOf(ci)+"'";
+
+    private void RecuperarCliente(String ci) throws SQLException {
+        String SQL_Recuperar = "select * from cliente where ci_cliente='" + String.valueOf(ci) + "'";
         rs = con.Results(SQL_Recuperar);
-        if(rs.next()){
+        if (rs.next()) {
             txtNroCliente.setText(rs.getString("id_cliente"));
-            txtCliente.setText(rs.getString("nombre_cliente")+" "+rs.getString("apellido_cliente"));
-        }else{
-            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con el CI/RUC Nro. "+txtCi.getText());
+            txtCliente.setText(rs.getString("nombre_cliente") + " " + rs.getString("apellido_cliente"));
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con el CI/RUC Nro. " + txtCi.getText());
             txtCliente.setText("");
             txtNroCliente.setText("");
             txtCi.setText("");
             txtCi.requestFocus();
         }
     }
-    private void SeleccionarChbox(){
-        chboxAbierto.setSelected(true);
-        chboxCerrado.setSelected(true);
-        chboxAnulado.setSelected(true);
+
+    private void SeleccionarChbox() {
+        chboxOpen.setSelected(true);
+        chboxClose.setSelected(true);
+        chboxNull.setSelected(true);
     }
-    
-    private void RecuperarClientePorID(String id) throws SQLException{
-        String SQL_Recuperar = "select * from cliente where id_cliente='"+String.valueOf(id)+"' and menordeedad=false";
+
+    private void RecuperarClientePorID(String id) throws SQLException {
+        String SQL_Recuperar = "select * from cliente where id_cliente='" + String.valueOf(id) + "' and menordeedad=false";
         rs = con.Results(SQL_Recuperar);
-        if(rs.next()){
+        if (rs.next()) {
             txtCi.setText(rs.getString("ci_cliente"));
-            txtCliente.setText(rs.getString("nombre_cliente")+" "+rs.getString("apellido_cliente"));
-        }else{
-            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con el ID Nro. "+txtNroCliente.getText());
+            txtCliente.setText(rs.getString("nombre_cliente") + " " + rs.getString("apellido_cliente"));
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontró ningún cliente con el ID Nro. " + txtNroCliente.getText());
             txtCliente.setText("");
             txtCi.setText("");
             txtNroCliente.setText("");
             txtNroCliente.requestFocus();
         }
     }
-    
-    private void CabeceraTablaCliente(){
+
+    private void CabeceraTablaCliente() {
         SearchCliente.addColumn("ID");
         SearchCliente.addColumn("CI/RUC");
         SearchCliente.addColumn("Nombres");
@@ -94,12 +95,12 @@ public class ListadoFicha extends javax.swing.JPanel {
         TSearcherCliente.getColumnModel().getColumn(6).setPreferredWidth(60);
         TSearcherCliente.getColumnModel().getColumn(7).setPreferredWidth(150);
     }
-    
-    private void CargarTablaClientes() throws SQLException{
+
+    private void CargarTablaClientes() throws SQLException {
         String SQLCliente = "select cl.*, c.ciudad from cliente cl, ciudad c where c.id_ciudad=cl.id_ciudad and menordeedad=false";
         rs = con.Results(SQLCliente);
         SearchCliente.setRowCount(0);
-        while(rs.next()){
+        while (rs.next()) {
             Object[] row = new Object[8];
             row[0] = rs.getString("id_cliente");
             row[1] = rs.getString("ci_cliente");
@@ -117,10 +118,11 @@ public class ListadoFicha extends javax.swing.JPanel {
             SearchCliente.addRow(row);
         }
     }
-    
-    private void ViewReport(String ftr_ci, Date ftr_fdesde, Date ftr_fhasta, String ftr_abierto, String ftr_cerrado, String ftr_anulado){
+
+    private void ViewReport(String ftr_ci, Date ftr_fdesde, Date ftr_fhasta, String ftr_abierto, String ftr_cerrado, String ftr_anulado) {
         try {
-            HashMap parametros = new HashMap();
+            HashMap<String, Object> parametros = new HashMap<>();
+            //HashMap parametros = new HashMap();
             parametros.put("ci", ftr_ci);
             parametros.put("fdesde", ftr_fdesde);
             parametros.put("fhasta", ftr_fhasta);
@@ -139,8 +141,8 @@ public class ListadoFicha extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, ex);
         }
     }
-    
-    private Boolean Validaciones(){
+
+    private Boolean Validaciones() {
         if (txtNroCliente.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "El campo N° Cliente está vacío, ingrese un valor antes de continuar.");
             return false;
@@ -195,10 +197,10 @@ public class ListadoFicha extends javax.swing.JPanel {
         jFechaDesde = new com.toedter.calendar.JDateChooser();
         jFechaHasta = new com.toedter.calendar.JDateChooser();
         lblExcluir = new javax.swing.JLabel();
-        chboxAbierto = new javax.swing.JCheckBox();
-        chboxCerrado = new javax.swing.JCheckBox();
-        chboxAnulado = new javax.swing.JCheckBox();
-        btnGenerar = new javax.swing.JButton();
+        chboxOpen = new javax.swing.JCheckBox();
+        chboxClose = new javax.swing.JCheckBox();
+        chboxNull = new javax.swing.JCheckBox();
+        btnGenerate = new javax.swing.JButton();
         jLabel1 = new javax.swing.JLabel();
         txtNroCliente = new javax.swing.JTextField();
 
@@ -341,32 +343,32 @@ public class ListadoFicha extends javax.swing.JPanel {
         lblExcluir.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblExcluir.setText("Incluir OT");
 
-        chboxAbierto.setText("Abiertos");
-        chboxAbierto.addChangeListener(new javax.swing.event.ChangeListener() {
+        chboxOpen.setText("Abiertos");
+        chboxOpen.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
-                chboxAbiertoStateChanged(evt);
+                chboxOpenStateChanged(evt);
             }
         });
 
-        chboxCerrado.setText("Cerrados");
-        chboxCerrado.addActionListener(new java.awt.event.ActionListener() {
+        chboxClose.setText("Cerrados");
+        chboxClose.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chboxCerradoActionPerformed(evt);
+                chboxCloseActionPerformed(evt);
             }
         });
 
-        chboxAnulado.setText("Anulados");
-        chboxAnulado.addActionListener(new java.awt.event.ActionListener() {
+        chboxNull.setText("Anulados");
+        chboxNull.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                chboxAnuladoActionPerformed(evt);
+                chboxNullActionPerformed(evt);
             }
         });
 
-        btnGenerar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/printer.png"))); // NOI18N
-        btnGenerar.setText("Generar Reporte");
-        btnGenerar.addActionListener(new java.awt.event.ActionListener() {
+        btnGenerate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/printer.png"))); // NOI18N
+        btnGenerate.setText("Generar Reporte");
+        btnGenerate.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnGenerarActionPerformed(evt);
+                btnGenerateActionPerformed(evt);
             }
         });
 
@@ -419,7 +421,7 @@ public class ListadoFicha extends javax.swing.JPanel {
                                 .addComponent(lblCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtCliente, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(btnGenerar)
+                            .addComponent(btnGenerate)
                             .addComponent(lblExcluir, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(0, 6, Short.MAX_VALUE))
                     .addGroup(layout.createSequentialGroup()
@@ -429,11 +431,11 @@ public class ListadoFicha extends javax.swing.JPanel {
                         .addContainerGap())))
             .addGroup(layout.createSequentialGroup()
                 .addGap(61, 61, 61)
-                .addComponent(chboxAbierto, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(chboxOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chboxCerrado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(chboxClose, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(chboxAnulado, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addComponent(chboxNull, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addGap(0, 0, Short.MAX_VALUE))
         );
         layout.setVerticalGroup(
@@ -469,11 +471,11 @@ public class ListadoFicha extends javax.swing.JPanel {
                 .addComponent(lblExcluir)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(chboxAbierto)
-                    .addComponent(chboxCerrado)
-                    .addComponent(chboxAnulado))
+                    .addComponent(chboxOpen)
+                    .addComponent(chboxClose)
+                    .addComponent(chboxNull))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 16, Short.MAX_VALUE)
-                .addComponent(btnGenerar)
+                .addComponent(btnGenerate)
                 .addContainerGap())
         );
 
@@ -518,10 +520,10 @@ public class ListadoFicha extends javax.swing.JPanel {
             } else if (cboxFiltrar.getSelectedItem().equals("Ciudad")) {
                 filtro = "c.ciudad";
             }
-            String SQL_Search = "select cl.*, c.ciudad from cliente cl, ciudad c where c.id_ciudad=cl.id_ciudad and "+filtro+" ilike '%"+txtFilter.getText()+"%'";
+            String SQL_Search = "select cl.*, c.ciudad from cliente cl, ciudad c where c.id_ciudad=cl.id_ciudad and " + filtro + " ilike '%" + txtFilter.getText() + "%'";
             rs = con.Results(SQL_Search);
             SearchCliente.setRowCount(0);
-            while(rs.next()){
+            while (rs.next()) {
                 Object[] row = new Object[8];
                 row[0] = rs.getString("id_cliente");
                 row[1] = rs.getString("ci_cliente");
@@ -588,7 +590,7 @@ public class ListadoFicha extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCleanActionPerformed
 
     private void chboxAllDatesStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chboxAllDatesStateChanged
-        if(chboxAllDates.isSelected() == true){
+        if (chboxAllDates.isSelected() == true) {
             jFechaDesde.setEnabled(false);
             jFechaDesde.setCalendar(null);
             jFechaHasta.setEnabled(false);
@@ -599,26 +601,26 @@ public class ListadoFicha extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_chboxAllDatesStateChanged
 
-    private void chboxAbiertoStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chboxAbiertoStateChanged
-        if (chboxAbierto.isSelected() == false && chboxAnulado.isSelected() == false && chboxCerrado.isSelected() == false) {
+    private void chboxOpenStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_chboxOpenStateChanged
+        if (chboxOpen.isSelected() == false && chboxNull.isSelected() == false && chboxClose.isSelected() == false) {
             JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
-            chboxAbierto.setSelected(true);
+            chboxOpen.setSelected(true);
         }
-    }//GEN-LAST:event_chboxAbiertoStateChanged
+    }//GEN-LAST:event_chboxOpenStateChanged
 
-    private void chboxCerradoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chboxCerradoActionPerformed
-        if (chboxAbierto.isSelected() == false && chboxAnulado.isSelected() == false && chboxCerrado.isSelected() == false) {
+    private void chboxCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chboxCloseActionPerformed
+        if (chboxOpen.isSelected() == false && chboxNull.isSelected() == false && chboxClose.isSelected() == false) {
             JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
-            chboxCerrado.setSelected(true);
+            chboxClose.setSelected(true);
         }
-    }//GEN-LAST:event_chboxCerradoActionPerformed
+    }//GEN-LAST:event_chboxCloseActionPerformed
 
-    private void chboxAnuladoActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chboxAnuladoActionPerformed
-        if (chboxAbierto.isSelected() == false && chboxAnulado.isSelected() == false && chboxCerrado.isSelected() == false) {
+    private void chboxNullActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chboxNullActionPerformed
+        if (chboxOpen.isSelected() == false && chboxNull.isSelected() == false && chboxClose.isSelected() == false) {
             JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
-            chboxAnulado.setSelected(true);
+            chboxNull.setSelected(true);
         }
-    }//GEN-LAST:event_chboxAnuladoActionPerformed
+    }//GEN-LAST:event_chboxNullActionPerformed
 
     private void txtNroClienteKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNroClienteKeyPressed
         if (evt.getKeyCode() == 10 && !txtNroCliente.getText().equals("")) {
@@ -642,14 +644,14 @@ public class ListadoFicha extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtNroClienteKeyPressed
 
-    private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
+    private void btnGenerateActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerateActionPerformed
         if (Validaciones() == true) {
             String ftr_abierto = "";
             String ftr_cerrado = "";
             String ftr_anulado = "";
-            if (chboxAbierto.isSelected() == true) {
-                if (chboxCerrado.isSelected() == true) {
-                    if (chboxAnulado.isSelected() == true) {
+            if (chboxOpen.isSelected() == true) {
+                if (chboxClose.isSelected() == true) {
+                    if (chboxNull.isSelected() == true) {
                         ftr_abierto = "Abierto";
                         ftr_cerrado = "Cerrado";
                         ftr_anulado = "Anulado";
@@ -657,20 +659,20 @@ public class ListadoFicha extends javax.swing.JPanel {
                         ftr_abierto = "Abierto";
                         ftr_cerrado = "Cerrado";
                     }
-                } else if (chboxAnulado.isSelected() == true) {
+                } else if (chboxNull.isSelected() == true) {
                     ftr_abierto = "Abierto";
                     ftr_anulado = "Anulado";
                 } else {
                     ftr_abierto = "Abierto";
                 }
-            } else if (chboxCerrado.isSelected() == true) {
-                if (chboxAnulado.isSelected() == true) {
+            } else if (chboxClose.isSelected() == true) {
+                if (chboxNull.isSelected() == true) {
                     ftr_cerrado = "Cerrado";
                     ftr_anulado = "Anulado";
                 } else {
                     ftr_cerrado = "Cerrado";
                 }
-            } else if (chboxAnulado.isSelected() == true) {
+            } else if (chboxNull.isSelected() == true) {
                 ftr_anulado = "Anulado";
             } else {
                 JOptionPane.showMessageDialog(null, "Hay algo raro aquí, esto no debería pasar D:");
@@ -691,13 +693,13 @@ public class ListadoFicha extends javax.swing.JPanel {
                 ftr_fhasta = (Date) jFechaHasta.getDate();
             }
             String ftr_ci = txtCi.getText();
-            System.out.println("Filtro CI:     ("+ftr_ci+")");
-            System.out.println("Filtro Desde:  ("+ftr_fdesde+")");
-            System.out.println("Filtro Hasta:  ("+ftr_fhasta+")");
-            System.out.println("Filtro Estado: ("+ftr_abierto+", "+ftr_cerrado+", "+ftr_anulado+")");
+            System.out.println("Filtro CI:     (" + ftr_ci + ")");
+            System.out.println("Filtro Desde:  (" + ftr_fdesde + ")");
+            System.out.println("Filtro Hasta:  (" + ftr_fhasta + ")");
+            System.out.println("Filtro Estado: (" + ftr_abierto + ", " + ftr_cerrado + ", " + ftr_anulado + ")");
             ViewReport(ftr_ci, ftr_fdesde, ftr_fhasta, ftr_abierto, ftr_cerrado, ftr_anulado);
         }
-    }//GEN-LAST:event_btnGenerarActionPerformed
+    }//GEN-LAST:event_btnGenerateActionPerformed
 
     private void txtNroClienteFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtNroClienteFocusLost
         if (txtNroCliente.getText().equals("")) {
@@ -719,13 +721,13 @@ public class ListadoFicha extends javax.swing.JPanel {
     private javax.swing.JTable TSearcherCliente;
     private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnClean;
-    private javax.swing.JButton btnGenerar;
+    private javax.swing.JButton btnGenerate;
     private javax.swing.JButton btnSearch;
     private javax.swing.JComboBox<String> cboxFiltrar;
-    private javax.swing.JCheckBox chboxAbierto;
     private javax.swing.JCheckBox chboxAllDates;
-    private javax.swing.JCheckBox chboxAnulado;
-    private javax.swing.JCheckBox chboxCerrado;
+    private javax.swing.JCheckBox chboxClose;
+    private javax.swing.JCheckBox chboxNull;
+    private javax.swing.JCheckBox chboxOpen;
     private javax.swing.JButton jButton1;
     private com.toedter.calendar.JDateChooser jFechaDesde;
     private com.toedter.calendar.JDateChooser jFechaHasta;

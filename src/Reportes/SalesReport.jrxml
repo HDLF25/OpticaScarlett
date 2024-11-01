@@ -1,11 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesReport" language="groovy" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82d18f05-6a43-4943-9ebc-73e98924c153">
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="SalesReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="82d18f05-6a43-4943-9ebc-73e98924c153">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
 	<parameter name="date_first" class="java.util.Date"/>
 	<parameter name="date_last" class="java.util.Date"/>
-	<parameter name="sort_report" class="java.lang.String"/>
 	<queryString>
 		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot, cliente cli WHERE cli.id_cliente = ot.id_paciente AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
 	</queryString>
@@ -29,10 +28,6 @@
 	</background>
 	<title>
 		<band height="79" splitType="Stretch">
-			<image>
-				<reportElement x="1" y="0" width="79" height="79" uuid="1f14b6de-d2c2-49c6-8268-b0f1bf3b2f23"/>
-				<imageExpression><![CDATA["C:\\Users\\ccti\\Desktop\\OpticaScarlett\\src\\Reportes\\logoOptica.png"]]></imageExpression>
-			</image>
 			<staticText>
 				<reportElement x="80" y="6" width="177" height="66" uuid="c07108ab-aec8-4bff-864b-c07c5742358d"/>
 				<textElement verticalAlignment="Middle">
@@ -48,7 +43,7 @@
 				<text><![CDATA[Resumen de Ventas]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="323" y="16" width="35" height="20" uuid="432e4a30-bdba-4512-ac26-6eab7673a058"/>
+				<reportElement x="326" y="16" width="35" height="20" uuid="432e4a30-bdba-4512-ac26-6eab7673a058"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -56,11 +51,11 @@
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
 				<reportElement x="361" y="16" width="70" height="20" uuid="4ced17d6-9b74-40eb-a256-160d9a0bcc65"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="433" y="16" width="35" height="20" uuid="e8a80d1c-de4d-497c-a6b8-bb3a1061c73a"/>
+				<reportElement x="436" y="16" width="35" height="20" uuid="e8a80d1c-de4d-497c-a6b8-bb3a1061c73a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -68,12 +63,16 @@
 			</staticText>
 			<textField pattern="HH:mm:ss">
 				<reportElement x="471" y="16" width="70" height="20" uuid="998b4602-abf2-46a0-89f5-0279768aae89"/>
-				<textElement verticalAlignment="Middle"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
 			<rectangle radius="10">
-				<reportElement mode="Transparent" x="314" y="6" width="236" height="68" uuid="470cc0a3-e867-4a30-b558-74e3daab2697"/>
+				<reportElement stretchType="RelativeToBandHeight" mode="Transparent" x="314" y="6" width="236" height="68" uuid="470cc0a3-e867-4a30-b558-74e3daab2697"/>
 			</rectangle>
+			<image>
+				<reportElement x="5" y="11" width="70" height="56" uuid="ee684ac8-8593-40f4-a4a6-ebfb1b3dcaf4"/>
+				<imageExpression><![CDATA["C:\\Users\\ccti\\Desktop\\OpticaScarlett\\src\\Reportes\\Logo.jpg"]]></imageExpression>
+			</image>
 		</band>
 	</title>
 	<pageHeader>

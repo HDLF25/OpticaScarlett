@@ -89,7 +89,7 @@ public class PayMethods extends javax.swing.JPanel {
     private void GuardarDatos() {
         String paymethod = txtMethod.getText();
         if (Flag == 1) {
-            con.InsertarDatos("paymethod", "descr_paymethod, id_estado", "'" + paymethod + "',"+cboxStatus.getSelectedIndex());
+            con.InsertarDatos("paymethod", "descr_paymethod, id_estado", "'" + paymethod + "'," + cboxStatus.getSelectedIndex());
         } else if (Flag == 2) {
             con.EditarDatos("paymethod", "descr_paymethod='" + paymethod + "'", "id_paymethod=" + txtidMethod.getText());
         } else if (Flag == 3) {
@@ -635,7 +635,10 @@ public class PayMethods extends javax.swing.JPanel {
 
     private void btnOKUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKUserActionPerformed
         String UserName = txtUser.getText().toString();
-        String Password = txtPass.getText().toString();
+        //String Password = txtPass.getText().toString();
+        char[] passwordArray = txtPass.getPassword();
+        String Password = new String(passwordArray);
+        java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
         if (Flag == 2) {
             try {
                 UserCheck(UserName, Password);
@@ -660,13 +663,16 @@ public class PayMethods extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCancelUserActionPerformed
 
     private void txtUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtUserKeyPressed
-        if(evt.getKeyCode() == 10 && !txtUser.getText().equals("")){
+        if (evt.getKeyCode() == 10 && !txtUser.getText().equals("")) {
             txtPass.requestFocus();
         }
     }//GEN-LAST:event_txtUserKeyPressed
 
     private void txtPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyPressed
-        if(evt.getKeyCode() == 10  && !txtPass.getText().equals("")){
+        char[] passwordArray = txtPass.getPassword();
+        String password = new String(passwordArray);
+        java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
+        if (evt.getKeyCode() == 10 && password != "") {
             btnOKUser.requestFocus();
         }
     }//GEN-LAST:event_txtPassKeyPressed

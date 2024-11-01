@@ -21,7 +21,7 @@ public class Conexion {
         try {
             Class.forName("org.postgresql.Driver");
             con = DriverManager.getConnection("jdbc:postgresql://"+server+"/"+db,user,password);
-            System.out.println("La conexión se realizó con éxito.");
+            //System.out.println("La conexión se realizó con éxito.");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }

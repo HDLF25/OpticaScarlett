@@ -938,9 +938,6 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Nuevo OT"/>
             <Property name="toolTipText" type="java.lang.String" value="Realizar un nuevo Orden de Trabajo"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="btnOTEdit"/>
-            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOTNewActionPerformed"/>
@@ -953,9 +950,6 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Editar OT"/>
             <Property name="toolTipText" type="java.lang.String" value="Editar Orden de Trabajo existente"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="btnOTNull"/>
-            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOTEditActionPerformed"/>
@@ -968,9 +962,6 @@
             </Property>
             <Property name="text" type="java.lang.String" value="Anular OT"/>
             <Property name="toolTipText" type="java.lang.String" value="Anular Orden de Trabajo existente"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="btnOTClose"/>
-            </Property>
           </Properties>
           <Events>
             <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnOTNullActionPerformed"/>
@@ -1415,6 +1406,7 @@
                               </Group>
                               <Component id="lblCilindrico" alignment="0" min="-2" pref="60" max="-2" attributes="0"/>
                           </Group>
+                          <EmptySpace max="32767" attributes="0"/>
                           <Group type="103" groupAlignment="0" attributes="0">
                               <Group type="103" alignment="0" groupAlignment="1" attributes="0">
                                   <Component id="txtOIEje" alignment="1" min="-2" pref="50" max="-2" attributes="0"/>
@@ -1623,25 +1615,16 @@
         <Component class="javax.swing.JTextField" name="txtOIEsferico">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtOICilindrico"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtOICilindrico">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtOIEje"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtOIEje">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtOIAdicion"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblOIEje">
@@ -1652,18 +1635,12 @@
         <Component class="javax.swing.JTextField" name="txtOIAdicion">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="spinOICantidad"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JSpinner" name="spinOICantidad">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
               <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-            </Property>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtDI"/>
             </Property>
           </Properties>
           <Events>
@@ -1679,25 +1656,16 @@
         <Component class="javax.swing.JTextField" name="txtODEsferico">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtODCilindrico"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtODCilindrico">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtODEje"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JTextField" name="txtODEje">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtODAdicion"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblODEje">
@@ -1708,18 +1676,12 @@
         <Component class="javax.swing.JTextField" name="txtODAdicion">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="spinODCantidad"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JSpinner" name="spinODCantidad">
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
               <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-            </Property>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtOIEsferico"/>
             </Property>
           </Properties>
           <Events>
@@ -1735,9 +1697,6 @@
         <Component class="javax.swing.JTextField" name="txtDI">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtDND"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblDND">
@@ -1749,9 +1708,6 @@
         <Component class="javax.swing.JTextField" name="txtDND">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtDNI"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblDNI">
@@ -1763,9 +1719,6 @@
         <Component class="javax.swing.JTextField" name="txtDNI">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtAlturaFocal"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblAlturaFocal">
@@ -1777,9 +1730,6 @@
         <Component class="javax.swing.JTextField" name="txtAlturaFocal">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtCristalCode"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblTipoCristal">
@@ -1791,9 +1741,6 @@
         <Component class="javax.swing.JTextField" name="txtCristalCode">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtCristalPrice"/>
-            </Property>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtCristalCodeKeyPressed"/>
@@ -2034,9 +1981,6 @@
         <Component class="javax.swing.JTextField" name="txtArtCode">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="txtArtUnitPrice"/>
-            </Property>
           </Properties>
           <Events>
             <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtArtCodeKeyPressed"/>
@@ -2069,9 +2013,6 @@
         <Component class="javax.swing.JTextField" name="txtArtUnitPrice">
           <Properties>
             <Property name="horizontalAlignment" type="int" value="4"/>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="spinArtQuantity"/>
-            </Property>
           </Properties>
         </Component>
         <Component class="javax.swing.JLabel" name="lblArtQuantity">
@@ -2084,9 +2025,6 @@
           <Properties>
             <Property name="model" type="javax.swing.SpinnerModel" editor="org.netbeans.modules.form.editors2.SpinnerModelEditor">
               <SpinnerModel initial="0" minimum="0" numberType="java.lang.Integer" stepSize="1" type="number"/>
-            </Property>
-            <Property name="nextFocusableComponent" type="java.awt.Component" editor="org.netbeans.modules.form.ComponentChooserEditor">
-              <ComponentRef name="btnArtAdd"/>
             </Property>
           </Properties>
           <Events>

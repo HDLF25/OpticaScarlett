@@ -190,7 +190,7 @@
                               <EmptySpace max="-2" attributes="0"/>
                               <Component id="txtCliente" min="-2" pref="300" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="btnGenerar" alignment="0" min="-2" max="-2" attributes="0"/>
+                          <Component id="btnGenerate" alignment="0" min="-2" max="-2" attributes="0"/>
                           <Component id="lblExcluir" alignment="0" max="32767" attributes="0"/>
                       </Group>
                       <EmptySpace min="0" pref="6" max="32767" attributes="0"/>
@@ -206,11 +206,11 @@
           </Group>
           <Group type="102" alignment="0" attributes="0">
               <EmptySpace min="-2" pref="61" max="-2" attributes="0"/>
-              <Component id="chboxAbierto" min="-2" pref="80" max="-2" attributes="0"/>
+              <Component id="chboxOpen" min="-2" pref="80" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="chboxCerrado" min="-2" pref="80" max="-2" attributes="0"/>
+              <Component id="chboxClose" min="-2" pref="80" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
-              <Component id="chboxAnulado" min="-2" pref="80" max="-2" attributes="0"/>
+              <Component id="chboxNull" min="-2" pref="80" max="-2" attributes="0"/>
               <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
           </Group>
       </Group>
@@ -253,12 +253,12 @@
               <Component id="lblExcluir" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="3" attributes="0">
-                  <Component id="chboxAbierto" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="chboxCerrado" alignment="3" min="-2" max="-2" attributes="0"/>
-                  <Component id="chboxAnulado" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chboxOpen" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chboxClose" alignment="3" min="-2" max="-2" attributes="0"/>
+                  <Component id="chboxNull" alignment="3" min="-2" max="-2" attributes="0"/>
               </Group>
               <EmptySpace pref="16" max="32767" attributes="0"/>
-              <Component id="btnGenerar" min="-2" max="-2" attributes="0"/>
+              <Component id="btnGenerate" min="-2" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
       </Group>
@@ -368,31 +368,31 @@
         <Property name="text" type="java.lang.String" value="Incluir OT"/>
       </Properties>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chboxAbierto">
+    <Component class="javax.swing.JCheckBox" name="chboxOpen">
       <Properties>
         <Property name="text" type="java.lang.String" value="Abiertos"/>
       </Properties>
       <Events>
-        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="chboxAbiertoStateChanged"/>
+        <EventHandler event="stateChanged" listener="javax.swing.event.ChangeListener" parameters="javax.swing.event.ChangeEvent" handler="chboxOpenStateChanged"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chboxCerrado">
+    <Component class="javax.swing.JCheckBox" name="chboxClose">
       <Properties>
         <Property name="text" type="java.lang.String" value="Cerrados"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chboxCerradoActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chboxCloseActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JCheckBox" name="chboxAnulado">
+    <Component class="javax.swing.JCheckBox" name="chboxNull">
       <Properties>
         <Property name="text" type="java.lang.String" value="Anulados"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chboxAnuladoActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="chboxNullActionPerformed"/>
       </Events>
     </Component>
-    <Component class="javax.swing.JButton" name="btnGenerar">
+    <Component class="javax.swing.JButton" name="btnGenerate">
       <Properties>
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/printer.png"/>
@@ -400,7 +400,7 @@
         <Property name="text" type="java.lang.String" value="Generar Reporte"/>
       </Properties>
       <Events>
-        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGenerarActionPerformed"/>
+        <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnGenerateActionPerformed"/>
       </Events>
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">

@@ -63,7 +63,7 @@ public class FichaCliente extends javax.swing.JPanel {
         CabeceraTablaOT();
         CabeceraTablaPayMethod();
         CargarCboxPMethod();
-        dtOTDate.setDateFormatString("yyyy-MM-dd");
+        dtOTDate.setDateFormatString("dd/MM/yyyy");
     }
 
     private void DeshabilitarMainBtn() {
@@ -480,13 +480,24 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.EditarDatos("stock", "cantidad = cantidad - '" + Resto + "'", "id_articulo='" + IDCristal + "' and id_deposito=1");
                 }
             }
-            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
                 String CurrPay = PayMethod.getValueAt(i, 0).toString();
                 String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
                 rs = con.Results(PaySQL); // Ejecuta el query definido arriba
                 if (rs.next()) { // Si trae algún dato, entra en el IF 
                     int Pay_Code = rs.getInt("id_paymethod");
                     con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
+                }
+            }
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Agrega los nuevos métodos definidos)
+                String CurrPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
+                rs = con.Results(PaySQL); // Ejecuta el query definido arriba
+                if (rs.next()) { // Si trae algún dato, entra en el IF 
+                    int Pay_Code = rs.getInt("id_paymethod");
+                    String Pay_Mount = PayMethod.getValueAt(i, 1).toString();
+                    String Pay_Nro = PayMethod.getValueAt(i, 2).toString();
+                    con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + Pay_Mount + "," + Pay_Nro);
                 }
             }
             con.EditarDatos("ordentrabajo", "id_cliente='" + IDSol + "',id_paciente='" + IDPa + "',id_usuario='" + 1 + "',ot_estado='" + Estado + "',fecha_ordentrabajo='" + fecha + "',oi_esferico='" + OIEsferico + "',oi_cilindrico='" + OICilindrico + "',oi_eje='" + OIEje + "',oi_adicion='" + OIAdicion + "',oi_cantidad='" + OICant + "',od_esferico='" + ODEsferico + "',od_cilindrico='" + ODCilindrico + "',od_eje='" + ODEje + "',od_adicion='" + ODAdicion + "',od_cantidad='" + ODCant + "',di='" + DI + "',dnd='" + DND + "',dni='" + DNI + "',alturafocal='" + AlturaFocal + "',id_cristal='" + IDCristal + "',preciocristal='" + PrecioCristal + "',observacion='" + Observacion + "',subtotal='" + SubTotal + "',sena='" + Sena + "',total='" + Saldo + "'", "id_ordentrabajo=" + NroOT);
@@ -508,19 +519,38 @@ public class FichaCliente extends javax.swing.JPanel {
                 }
             }
             con.BorrarDatos("ot_pay", "id_ordentrabajo=" + NroOT);
-            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod
-                int PayMount = Integer.parseInt(PayMethod.getValueAt(i, 1).toString());
-                String CurrentPay = PayMethod.getValueAt(i, 0).toString();
-                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrentPay + "'"; // Este query es para quitar el ID del Método de pago
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
+                String CurrPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
                 rs = con.Results(PaySQL); // Ejecuta el query definido arriba
                 if (rs.next()) { // Si trae algún dato, entra en el IF 
                     int Pay_Code = rs.getInt("id_paymethod");
-                    int Pay_Nro = Integer.parseInt(txtPayCompr.getText());
-                    con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + PayMount + "," + Pay_Nro);
+                    con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
                 }
             }
         } else if (Flag == 4) {
             con.EditarDatos("ordentrabajo", "sena=sena+" + txtCOTPago.getText() + ", total=total-" + txtCOTPago.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
+            //FALTA AGREGAR CAMBIOS EN EL DB DE LOS MÉTODOS DE PAGO
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
+                String CurrPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
+                rs = con.Results(PaySQL); // Ejecuta el query definido arriba
+                if (rs.next()) { // Si trae algún dato, entra en el IF 
+                    int Pay_Code = rs.getInt("id_paymethod");
+                    con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
+                }
+            }
+            for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Agrega los nuevos métodos definidos)
+                String CurrPay = PayMethod.getValueAt(i, 0).toString();
+                String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
+                rs = con.Results(PaySQL); // Ejecuta el query definido arriba
+                if (rs.next()) { // Si trae algún dato, entra en el IF 
+                    int Pay_Code = rs.getInt("id_paymethod");
+                    String Pay_Mount = PayMethod.getValueAt(i, 1).toString();
+                    String Pay_Nro = PayMethod.getValueAt(i, 2).toString();
+                    con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + Pay_Mount + "," + Pay_Nro);
+                }
+            }
         }
     }
 
@@ -528,7 +558,7 @@ public class FichaCliente extends javax.swing.JPanel {
         String SQL_Recuperar = "select ot.*,us.username,sum(dot.subtotal_articulo) as subtotal_articulo from ordentrabajo ot, detalle_ordentrabajo dot, cliente cl, usuario us where cl.id_cliente=ot.id_cliente and ot.id_usuario=us.id_usuario and dot.id_ordentrabajo=ot.id_ordentrabajo and ot.id_ordentrabajo='" + id + "' group by ot.id_ordentrabajo,cl.ci_cliente,cl.nombre_cliente,cl.apellido_cliente,us.username order by fecha_ordentrabajo desc";
         rs = con.Results(SQL_Recuperar);
         if (rs.next()) {
-            
+
             String NroOT = rs.getString("id_ordentrabajo");
             String CiSol = rs.getString("id_cliente");
             String CiPa = rs.getString("id_paciente");
@@ -1734,7 +1764,6 @@ public class FichaCliente extends javax.swing.JPanel {
         btnOTNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
         btnOTNew.setText("Nuevo OT");
         btnOTNew.setToolTipText("Realizar un nuevo Orden de Trabajo");
-        btnOTNew.setNextFocusableComponent(btnOTEdit);
         btnOTNew.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOTNewActionPerformed(evt);
@@ -1744,7 +1773,6 @@ public class FichaCliente extends javax.swing.JPanel {
         btnOTEdit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/write.png"))); // NOI18N
         btnOTEdit.setText("Editar OT");
         btnOTEdit.setToolTipText("Editar Orden de Trabajo existente");
-        btnOTEdit.setNextFocusableComponent(btnOTNull);
         btnOTEdit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOTEditActionPerformed(evt);
@@ -1754,7 +1782,6 @@ public class FichaCliente extends javax.swing.JPanel {
         btnOTNull.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/disabled.png"))); // NOI18N
         btnOTNull.setText("Anular OT");
         btnOTNull.setToolTipText("Anular Orden de Trabajo existente");
-        btnOTNull.setNextFocusableComponent(btnOTClose);
         btnOTNull.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnOTNullActionPerformed(evt);
@@ -2062,21 +2089,16 @@ public class FichaCliente extends javax.swing.JPanel {
         lblOI.setText("Ojo Izq.");
 
         txtOIEsferico.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtOIEsferico.setNextFocusableComponent(txtOICilindrico);
 
         txtOICilindrico.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtOICilindrico.setNextFocusableComponent(txtOIEje);
 
         txtOIEje.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtOIEje.setNextFocusableComponent(txtOIAdicion);
 
         lblOIEje.setText("°");
 
         txtOIAdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtOIAdicion.setNextFocusableComponent(spinOICantidad);
 
         spinOICantidad.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        spinOICantidad.setNextFocusableComponent(txtDI);
         spinOICantidad.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinOICantidadStateChanged(evt);
@@ -2087,21 +2109,16 @@ public class FichaCliente extends javax.swing.JPanel {
         lblOD.setText("Ojo Der.");
 
         txtODEsferico.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtODEsferico.setNextFocusableComponent(txtODCilindrico);
 
         txtODCilindrico.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtODCilindrico.setNextFocusableComponent(txtODEje);
 
         txtODEje.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtODEje.setNextFocusableComponent(txtODAdicion);
 
         lblODEje.setText("°");
 
         txtODAdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
-        txtODAdicion.setNextFocusableComponent(spinODCantidad);
 
         spinODCantidad.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        spinODCantidad.setNextFocusableComponent(txtOIEsferico);
         spinODCantidad.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinODCantidadStateChanged(evt);
@@ -2112,31 +2129,26 @@ public class FichaCliente extends javax.swing.JPanel {
         lblDI.setText("DI");
 
         txtDI.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDI.setNextFocusableComponent(txtDND);
 
         lblDND.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDND.setText("DND");
 
         txtDND.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDND.setNextFocusableComponent(txtDNI);
 
         lblDNI.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblDNI.setText("DNI");
 
         txtDNI.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtDNI.setNextFocusableComponent(txtAlturaFocal);
 
         lblAlturaFocal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblAlturaFocal.setText("Alt. focal");
 
         txtAlturaFocal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtAlturaFocal.setNextFocusableComponent(txtCristalCode);
 
         lblTipoCristal.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblTipoCristal.setText("Tipo de Cristal");
 
         txtCristalCode.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtCristalCode.setNextFocusableComponent(txtCristalPrice);
         txtCristalCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtCristalCodeKeyPressed(evt);
@@ -2237,6 +2249,7 @@ public class FichaCliente extends javax.swing.JPanel {
                                 .addComponent(txtOICilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addComponent(txtODCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(lblCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                         .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                 .addComponent(txtOIEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -2378,7 +2391,6 @@ public class FichaCliente extends javax.swing.JPanel {
         lblArtCode.setText("Código");
 
         txtArtCode.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtArtCode.setNextFocusableComponent(txtArtUnitPrice);
         txtArtCode.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtArtCodeKeyPressed(evt);
@@ -2399,13 +2411,11 @@ public class FichaCliente extends javax.swing.JPanel {
         lblArtUnitPrice.setText("Precio Unitario");
 
         txtArtUnitPrice.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtArtUnitPrice.setNextFocusableComponent(spinArtQuantity);
 
         lblArtQuantity.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblArtQuantity.setText("Cantidad");
 
         spinArtQuantity.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
-        spinArtQuantity.setNextFocusableComponent(btnArtAdd);
         spinArtQuantity.addChangeListener(new javax.swing.event.ChangeListener() {
             public void stateChanged(javax.swing.event.ChangeEvent evt) {
                 spinArtQuantityStateChanged(evt);
@@ -3354,6 +3364,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     txtCOTSena.requestFocus();
                     txtCOTSaldo.requestFocus();
                     txtCOTPago.requestFocus();
+                    btnOTConfirm.setEnabled(true);
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -3475,7 +3486,10 @@ public class FichaCliente extends javax.swing.JPanel {
 
     private void btnOKUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKUserActionPerformed
         String UserName = txtUser.getText().toString();
-        String Password = txtPass.getText().toString();
+        //String Password = txtPass.getText().toString();
+        char[] passwordArray = txtPass.getPassword();
+        String Password = new String(passwordArray);
+        java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
         if (Flag == 2) {
             try {
                 UserCheck(UserName, Password);
@@ -3508,7 +3522,10 @@ public class FichaCliente extends javax.swing.JPanel {
     }//GEN-LAST:event_txtUserKeyPressed
 
     private void txtPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPassKeyPressed
-        if (evt.getKeyCode() == 10 && !txtPass.getText().equals("")) {
+        char[] passwordArray = txtPass.getPassword();
+        String password = new String(passwordArray);
+        java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
+        if (evt.getKeyCode() == 10 && password != "") {
             btnOKUser.requestFocus();
         }
     }//GEN-LAST:event_txtPassKeyPressed
