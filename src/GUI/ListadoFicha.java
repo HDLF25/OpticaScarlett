@@ -129,7 +129,7 @@ public class ListadoFicha extends javax.swing.JPanel {
             parametros.put("fabierto", ftr_abierto);
             parametros.put("fcerrado", ftr_cerrado);
             parametros.put("fanulado", ftr_anulado);
-            URL urlReport = getClass().getClassLoader().getResource("Reportes/ReportFichaSearch.jasper");
+            URL urlReport = getClass().getClassLoader().getResource("Reportes/DocSearchReport.jasper");
             JasperReport masterReport = null;
             masterReport = (JasperReport) JRLoader.loadObject(urlReport);
             JasperPrint masterPrint = null;
