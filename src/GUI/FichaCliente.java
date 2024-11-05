@@ -64,6 +64,7 @@ public class FichaCliente extends javax.swing.JPanel {
         CabeceraTablaPayMethod();
         CargarCboxPMethod();
         dtOTDate.setDateFormatString("dd/MM/yyyy");
+        btnPayDelete.setRequestFocusEnabled(false);
     }
 
     private void DeshabilitarMainBtn() {
@@ -486,7 +487,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 rs = con.Results(PaySQL); // Ejecuta el query definido arriba
                 if (rs.next()) { // Si trae algún dato, entra en el IF 
                     int Pay_Code = rs.getInt("id_paymethod");
-                    con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
+                    con.BorrarDatosDetalle("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
                 }
             }
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Agrega los nuevos métodos definidos)
@@ -645,6 +646,7 @@ public class FichaCliente extends javax.swing.JPanel {
             }
             HabilitarBtn2();
             HabilitarTxt2();
+            btnOTConfirm.setEnabled(true);
         } else {
             JOptionPane.showMessageDialog(null, "No se encontraron resultados");
         }
@@ -806,6 +808,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 txtOTNro.requestFocus();
                 txtUser.setText("");
                 txtPass.setText("");
+                btnSearchOT.setEnabled(true);
                 return;
             } else {
                 JOptionPane.showMessageDialog(null, "El usuario ingresado no es un administrador. Inténtalo de nuevo más tarde.");
@@ -1093,23 +1096,15 @@ public class FichaCliente extends javax.swing.JPanel {
         TSearcherCli = new javax.swing.JTable();
         txtFilterCli = new javax.swing.JTextField();
         SearcherArticulo = new javax.swing.JDialog();
-        txtFilterArt = new javax.swing.JTextField();
-        lblFiltrarArt = new javax.swing.JLabel();
         btnCerrarArt = new javax.swing.JButton();
         lblMensajeArt = new javax.swing.JLabel();
-        cboxFiltrarArt = new javax.swing.JComboBox<>();
-        btnCleanFilterArt = new javax.swing.JButton();
         jScrollPane3 = new javax.swing.JScrollPane();
         TSearcherArt = new javax.swing.JTable();
         SearcherOT = new javax.swing.JDialog();
-        btnCleanFilterOT = new javax.swing.JButton();
         jScrollPane4 = new javax.swing.JScrollPane();
         TSearcherOT = new javax.swing.JTable();
-        txtFilterOT = new javax.swing.JTextField();
-        lblFiltrarOT = new javax.swing.JLabel();
         btnCerrarOT = new javax.swing.JButton();
         lblMensajeOT = new javax.swing.JLabel();
-        cboxFiltrarOT = new javax.swing.JComboBox<>();
         WindowCloseOT = new javax.swing.JDialog();
         lblCOTTitle = new javax.swing.JLabel();
         lblCOTNro = new javax.swing.JLabel();
@@ -1338,9 +1333,6 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
-        lblFiltrarArt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/filtrar.png"))); // NOI18N
-        lblFiltrarArt.setText("Filtrar por:");
-
         btnCerrarArt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
         btnCerrarArt.setText("Cerrar");
         btnCerrarArt.addActionListener(new java.awt.event.ActionListener() {
@@ -1351,16 +1343,6 @@ public class FichaCliente extends javax.swing.JPanel {
 
         lblMensajeArt.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMensajeArt.setText("null");
-
-        cboxFiltrarArt.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código/ID", "Marca", "Categoría" }));
-        cboxFiltrarArt.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cboxFiltrarArtItemStateChanged(evt);
-            }
-        });
-
-        btnCleanFilterArt.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/eraser.png"))); // NOI18N
-        btnCleanFilterArt.setText("Limpiar Filtro");
 
         TSearcherArt.setModel(SearchArticulo);
         TSearcherArt.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1378,14 +1360,6 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(SearcherArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 798, Short.MAX_VALUE)
-                    .addGroup(SearcherArticuloLayout.createSequentialGroup()
-                        .addComponent(lblFiltrarArt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboxFiltrarArt, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFilterArt)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCleanFilterArt, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblMensajeArt, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SearcherArticuloLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1398,20 +1372,11 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(lblMensajeArt)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(SearcherArticuloLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtFilterArt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFiltrarArt)
-                    .addComponent(cboxFiltrarArt, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCleanFilterArt))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane3, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane3, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCerrarArt)
                 .addContainerGap())
         );
-
-        btnCleanFilterOT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/eraser.png"))); // NOI18N
-        btnCleanFilterOT.setText("Limpiar Filtro");
 
         TSearcherOT.setModel(SearchOT);
         TSearcherOT.addMouseListener(new java.awt.event.MouseAdapter() {
@@ -1420,9 +1385,6 @@ public class FichaCliente extends javax.swing.JPanel {
             }
         });
         jScrollPane4.setViewportView(TSearcherOT);
-
-        lblFiltrarOT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/filtrar.png"))); // NOI18N
-        lblFiltrarOT.setText("Filtrar por:");
 
         btnCerrarOT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
         btnCerrarOT.setText("Cerrar");
@@ -1435,13 +1397,6 @@ public class FichaCliente extends javax.swing.JPanel {
         lblMensajeOT.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblMensajeOT.setText("null");
 
-        cboxFiltrarOT.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "Descripción", "Código/ID", "Marca", "Categoría" }));
-        cboxFiltrarOT.addItemListener(new java.awt.event.ItemListener() {
-            public void itemStateChanged(java.awt.event.ItemEvent evt) {
-                cboxFiltrarOTItemStateChanged(evt);
-            }
-        });
-
         javax.swing.GroupLayout SearcherOTLayout = new javax.swing.GroupLayout(SearcherOT.getContentPane());
         SearcherOT.getContentPane().setLayout(SearcherOTLayout);
         SearcherOTLayout.setHorizontalGroup(
@@ -1450,14 +1405,6 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap()
                 .addGroup(SearcherOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 1118, Short.MAX_VALUE)
-                    .addGroup(SearcherOTLayout.createSequentialGroup()
-                        .addComponent(lblFiltrarOT)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(cboxFiltrarOT, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(txtFilterOT)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnCleanFilterOT, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(lblMensajeOT, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, SearcherOTLayout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
@@ -1470,14 +1417,8 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap()
                 .addComponent(lblMensajeOT)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(SearcherOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtFilterOT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblFiltrarOT)
-                    .addComponent(cboxFiltrarOT, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(btnCleanFilterOT))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane4, javax.swing.GroupLayout.DEFAULT_SIZE, 510, Short.MAX_VALUE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane4, javax.swing.GroupLayout.PREFERRED_SIZE, 520, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addComponent(btnCerrarOT)
                 .addContainerGap())
         );
@@ -2982,10 +2923,6 @@ public class FichaCliente extends javax.swing.JPanel {
         SearcherArticulo.setVisible(false);
     }//GEN-LAST:event_btnCerrarArtActionPerformed
 
-    private void cboxFiltrarArtItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxFiltrarArtItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboxFiltrarArtItemStateChanged
-
     private void TSearcherArtMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSearcherArtMouseClicked
         if (TagSearch == 3) {
             try {
@@ -3053,10 +2990,6 @@ public class FichaCliente extends javax.swing.JPanel {
     private void btnCerrarOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarOTActionPerformed
         SearcherOT.setVisible(false);
     }//GEN-LAST:event_btnCerrarOTActionPerformed
-
-    private void cboxFiltrarOTItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxFiltrarOTItemStateChanged
-        // TODO add your handling code here:
-    }//GEN-LAST:event_cboxFiltrarOTItemStateChanged
 
     private void btnClearSolActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClearSolActionPerformed
         txtCiSol.setText("");
@@ -3771,9 +3704,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnCerrarArt;
     private javax.swing.JButton btnCerrarCli;
     private javax.swing.JButton btnCerrarOT;
-    private javax.swing.JButton btnCleanFilterArt;
     private javax.swing.JButton btnCleanFilterCli;
-    private javax.swing.JButton btnCleanFilterOT;
     private javax.swing.JButton btnClearPa;
     private javax.swing.JButton btnClearSol;
     private javax.swing.JButton btnConfirmarCli;
@@ -3794,9 +3725,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnSearchOT;
     private javax.swing.JButton btnSearchPa;
     private javax.swing.JButton btnSearchSol;
-    private javax.swing.JComboBox<String> cboxFiltrarArt;
     private javax.swing.JComboBox<String> cboxFiltrarCli;
-    private javax.swing.JComboBox<String> cboxFiltrarOT;
     private javax.swing.JComboBox<String> cboxPayMethod;
     private javax.swing.JComboBox<String> cboxPayMethodCOT;
     private javax.swing.JCheckBox chboxMenor;
@@ -3840,9 +3769,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JLabel lblEsferico;
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblFecha;
-    private javax.swing.JLabel lblFiltrarArt;
     private javax.swing.JLabel lblFiltrarCli;
-    private javax.swing.JLabel lblFiltrarOT;
     private javax.swing.JLabel lblMenor;
     private javax.swing.JLabel lblMensajeArt;
     private javax.swing.JLabel lblMensajeCli;
@@ -3892,9 +3819,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JTextField txtDI;
     private javax.swing.JTextField txtDND;
     private javax.swing.JTextField txtDNI;
-    private javax.swing.JTextField txtFilterArt;
     private javax.swing.JTextField txtFilterCli;
-    private javax.swing.JTextField txtFilterOT;
     private javax.swing.JTextField txtODAdicion;
     private javax.swing.JTextField txtODCilindrico;
     private javax.swing.JTextField txtODEje;

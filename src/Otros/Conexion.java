@@ -87,4 +87,13 @@ public class Conexion {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
     }
+    public void BorrarDatosDetalle(String tabla, String condicion) {
+        try {
+            stm = con.createStatement();
+            stm.executeUpdate("Delete from "+tabla+" where "+condicion);
+        } catch (SQLException ex) {
+            System.out.println("Delete from "+tabla+" where "+condicion);
+            JOptionPane.showMessageDialog(null, ex.getMessage());
+        }
+    }
 }

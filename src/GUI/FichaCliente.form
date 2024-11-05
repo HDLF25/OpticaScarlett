@@ -139,15 +139,6 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jScrollPane3" alignment="0" pref="798" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblFiltrarArt" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cboxFiltrarArt" min="-2" pref="110" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtFilterArt" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnCleanFilterArt" min="-2" pref="130" max="-2" attributes="0"/>
-                      </Group>
                       <Component id="lblMensajeArt" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -164,15 +155,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblMensajeArt" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtFilterArt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblFiltrarArt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cboxFiltrarArt" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnCleanFilterArt" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane3" pref="510" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane3" min="-2" pref="520" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnCerrarArt" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -180,16 +164,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JTextField" name="txtFilterArt">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblFiltrarArt">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/filtrar.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Filtrar por:"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btnCerrarArt">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -205,32 +179,6 @@
           <Properties>
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="null"/>
-          </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cboxFiltrarArt">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Descripci&#xf3;n"/>
-                <StringItem index="1" value="C&#xf3;digo/ID"/>
-                <StringItem index="2" value="Marca"/>
-                <StringItem index="3" value="Categor&#xed;a"/>
-              </StringArray>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboxFiltrarArtItemStateChanged"/>
-          </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
-        </Component>
-        <Component class="javax.swing.JButton" name="btnCleanFilterArt">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/eraser.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Limpiar Filtro"/>
           </Properties>
         </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane3">
@@ -263,15 +211,6 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Group type="103" groupAlignment="0" attributes="0">
                       <Component id="jScrollPane4" alignment="0" pref="1118" max="32767" attributes="0"/>
-                      <Group type="102" alignment="0" attributes="0">
-                          <Component id="lblFiltrarOT" min="-2" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="cboxFiltrarOT" min="-2" pref="110" max="-2" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="txtFilterOT" max="32767" attributes="0"/>
-                          <EmptySpace max="-2" attributes="0"/>
-                          <Component id="btnCleanFilterOT" min="-2" pref="130" max="-2" attributes="0"/>
-                      </Group>
                       <Component id="lblMensajeOT" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="1" attributes="0">
                           <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
@@ -288,15 +227,8 @@
                   <EmptySpace max="-2" attributes="0"/>
                   <Component id="lblMensajeOT" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
-                  <Group type="103" groupAlignment="3" attributes="0">
-                      <Component id="txtFilterOT" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="lblFiltrarOT" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="cboxFiltrarOT" alignment="3" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnCleanFilterOT" alignment="3" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <EmptySpace max="-2" attributes="0"/>
-                  <Component id="jScrollPane4" pref="510" max="32767" attributes="0"/>
-                  <EmptySpace max="-2" attributes="0"/>
+                  <Component id="jScrollPane4" min="-2" pref="520" max="-2" attributes="0"/>
+                  <EmptySpace max="32767" attributes="0"/>
                   <Component id="btnCerrarOT" min="-2" max="-2" attributes="0"/>
                   <EmptySpace max="-2" attributes="0"/>
               </Group>
@@ -304,14 +236,6 @@
         </DimensionLayout>
       </Layout>
       <SubComponents>
-        <Component class="javax.swing.JButton" name="btnCleanFilterOT">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/eraser.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Limpiar Filtro"/>
-          </Properties>
-        </Component>
         <Container class="javax.swing.JScrollPane" name="jScrollPane4">
           <AuxValues>
             <AuxValue name="autoScrollPane" type="java.lang.Boolean" value="true"/>
@@ -331,16 +255,6 @@
             </Component>
           </SubComponents>
         </Container>
-        <Component class="javax.swing.JTextField" name="txtFilterOT">
-        </Component>
-        <Component class="javax.swing.JLabel" name="lblFiltrarOT">
-          <Properties>
-            <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-              <Image iconType="3" name="/icons/filtrar.png"/>
-            </Property>
-            <Property name="text" type="java.lang.String" value="Filtrar por:"/>
-          </Properties>
-        </Component>
         <Component class="javax.swing.JButton" name="btnCerrarOT">
           <Properties>
             <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
@@ -357,24 +271,6 @@
             <Property name="horizontalAlignment" type="int" value="0"/>
             <Property name="text" type="java.lang.String" value="null"/>
           </Properties>
-        </Component>
-        <Component class="javax.swing.JComboBox" name="cboxFiltrarOT">
-          <Properties>
-            <Property name="model" type="javax.swing.ComboBoxModel" editor="org.netbeans.modules.form.editors2.ComboBoxModelEditor">
-              <StringArray count="4">
-                <StringItem index="0" value="Descripci&#xf3;n"/>
-                <StringItem index="1" value="C&#xf3;digo/ID"/>
-                <StringItem index="2" value="Marca"/>
-                <StringItem index="3" value="Categor&#xed;a"/>
-              </StringArray>
-            </Property>
-          </Properties>
-          <Events>
-            <EventHandler event="itemStateChanged" listener="java.awt.event.ItemListener" parameters="java.awt.event.ItemEvent" handler="cboxFiltrarOTItemStateChanged"/>
-          </Events>
-          <AuxValues>
-            <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;String&gt;"/>
-          </AuxValues>
         </Component>
       </SubComponents>
     </Container>

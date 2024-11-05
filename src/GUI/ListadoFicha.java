@@ -39,6 +39,7 @@ public class ListadoFicha extends javax.swing.JPanel {
         jFechaDesde.setDateFormatString("yyyy-MM-dd");
         jFechaHasta.setDateFormatString("yyyy-MM-dd");
         SeleccionarChbox();
+        txtCi.requestFocus();
     }
 
     private void RecuperarCliente(String ci) throws SQLException {
