@@ -363,10 +363,12 @@ public class FichaCliente extends javax.swing.JPanel {
             TPayMethod = TPayMethod + Integer.parseInt(PayMethod.getValueAt(a, 1).toString());
         }
         txtSena.setText(String.valueOf(TPayMethod));
+        txtCOTSena.setText(String.valueOf(TPayMethod));
         /* El Monto sumado en la variable TPayMethod define en el campo TotalPay */
         int CalcSubtPay = Integer.parseInt(txtOTSubtotal.getText()) - TPayMethod;
         /* Se resta el total OT con el Pago total */
         txtSaldo.setText(String.valueOf(CalcSubtPay));
+        txtCOTSaldo.setText(String.valueOf(CalcSubtPay));
         /* El restante de (TotalOT-TotalPago) se define en el campo Saldo */
     }
 
@@ -530,7 +532,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 }
             }
         } else if (Flag == 4) {
-            con.EditarDatos("ordentrabajo", "sena=sena+" + txtCOTPago.getText() + ", total=total-" + txtCOTPago.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
+            con.EditarDatos("ordentrabajo", "sena=" + txtCOTSena.getText() + ", total=" + txtCOTSaldo.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
             //FALTA AGREGAR CAMBIOS EN EL DB DE LOS MÉTODOS DE PAGO
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
                 String CurrPay = PayMethod.getValueAt(i, 0).toString();
@@ -538,7 +540,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 rs = con.Results(PaySQL); // Ejecuta el query definido arriba
                 if (rs.next()) { // Si trae algún dato, entra en el IF 
                     int Pay_Code = rs.getInt("id_paymethod");
-                    con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
+                    con.BorrarDatosDetalle("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
                 }
             }
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Agrega los nuevos métodos definidos)
@@ -1114,8 +1116,6 @@ public class FichaCliente extends javax.swing.JPanel {
         txtCOTSena = new javax.swing.JTextField();
         lblCOTSaldo = new javax.swing.JLabel();
         txtCOTSaldo = new javax.swing.JTextField();
-        lblCOTPago = new javax.swing.JLabel();
-        txtCOTPago = new javax.swing.JTextField();
         btnCOTConfirm = new javax.swing.JButton();
         btnCOTCancel = new javax.swing.JButton();
         TablePayMethod1 = new javax.swing.JScrollPane();
@@ -1444,11 +1444,6 @@ public class FichaCliente extends javax.swing.JPanel {
 
         txtCOTSaldo.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
-        lblCOTPago.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
-        lblCOTPago.setText("A pagar");
-
-        txtCOTPago.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-
         btnCOTConfirm.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/check.png"))); // NOI18N
         btnCOTConfirm.setText("Confirmar");
         btnCOTConfirm.addActionListener(new java.awt.event.ActionListener() {
@@ -1535,10 +1530,6 @@ public class FichaCliente extends javax.swing.JPanel {
                                     .addComponent(lblCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
                                     .addComponent(txtCOTSena, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                             .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addGroup(WindowCloseOTLayout.createSequentialGroup()
-                                    .addComponent(lblCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
                                     .addComponent(TablePayMethod1, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, 470, Short.MAX_VALUE)
                                     .addGroup(javax.swing.GroupLayout.Alignment.LEADING, WindowCloseOTLayout.createSequentialGroup()
@@ -1558,19 +1549,17 @@ public class FichaCliente extends javax.swing.JPanel {
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                         .addComponent(btnPayAddCOT)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                        .addComponent(btnPayDeleteCOT)))))
+                                        .addComponent(btnPayDeleteCOT)))
+                                .addGroup(WindowCloseOTLayout.createSequentialGroup()
+                                    .addComponent(lblCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WindowCloseOTLayout.createSequentialGroup()
-                        .addGap(0, 0, Short.MAX_VALUE)
-                        .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WindowCloseOTLayout.createSequentialGroup()
-                                .addComponent(btnCOTConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnCOTCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, WindowCloseOTLayout.createSequentialGroup()
-                                .addComponent(lblCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(0, 244, Short.MAX_VALUE)
+                        .addComponent(btnCOTConfirm, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnCOTCancel, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap())
         );
         WindowCloseOTLayout.setVerticalGroup(
@@ -1611,10 +1600,6 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(txtCOTSaldo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(lblCOTSaldo))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(txtCOTPago, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(lblCOTPago))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(WindowCloseOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCOTConfirm)
@@ -3296,7 +3281,6 @@ public class FichaCliente extends javax.swing.JPanel {
                     txtCOTTotal.requestFocus();
                     txtCOTSena.requestFocus();
                     txtCOTSaldo.requestFocus();
-                    txtCOTPago.requestFocus();
                     btnOTConfirm.setEnabled(true);
                 }
             } catch (SQLException ex) {
@@ -3464,11 +3448,80 @@ public class FichaCliente extends javax.swing.JPanel {
     }//GEN-LAST:event_txtPassKeyPressed
 
     private void btnPayAddActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayAddActionPerformed
-        if (!txtPayMount.getText().equals("")) {
-            if (!txtPayCompr.getText().equals("")) {
-                if (Integer.parseInt(txtPayMount.getText()) > 0) {
-                    if (Integer.parseInt(txtPayCompr.getText()) >= 0) {
+        if (!txtPayMount.getText().equals("")) { //Comprueba de que el monto no esté vacio
+            if (!txtPayCompr.getText().equals("")) { //Comprueba de que el nro de comprobante no esté vacio
+                if (Integer.parseInt(txtPayMount.getText()) > 0) { //Comprueba de que el monto sea mayor a 0
+                    if (Integer.parseInt(txtPayCompr.getText()) >= 0) { //Comprueba de que el nro de comprobante sea mayor a 0
                         String PayMethodSelected = (String) cboxPayMethod.getSelectedItem();
+                        if (cboxPayMethod.getSelectedItem().equals("Efectivo")) {
+                            System.out.println("Pay Method es Efectivo");
+                            if (Check(PayMethod, 0, PayMethodSelected) == true) {
+                                System.out.println("No había efectivo ya insertado");
+                                Object[] fila = new Object[3];
+                                fila[0] = cboxPayMethod.getSelectedItem();
+                                fila[1] = txtPayMount.getText();
+                                fila[2] = txtPayCompr.getText();
+                                PayMethod.addRow(fila);
+                                cboxPayMethod.setSelectedIndex(0);
+                                cboxPayMethod.requestFocus();
+                                CalcPayMethod();
+                                txtPayMount.setText("");
+                                txtPayCompr.setText("");
+                            } else {
+                                int Option = JOptionPane.showConfirmDialog(null, "Este método de pago ya ha sido insertado. Desea sumar a la lista?", "Atención", JOptionPane.YES_NO_OPTION);
+                                if (Option == 0) {
+                                    int row = 0;
+                                    for (int a = 0; a < PayMethod.getRowCount(); a++) {
+                                        if (PayMethod.getValueAt(a, 0).toString().equals(PayMethodSelected)) {
+                                            row = a;
+                                        }
+                                    }
+                                    int LastValue = Integer.parseInt(PayMethod.getValueAt(row, 1).toString());
+                                    int NewValue = Integer.parseInt(txtPayMount.getText());
+                                    PayMethod.setValueAt(String.valueOf(LastValue + NewValue), row, 1);
+                                    CalcPayMethod();
+                                    cboxPayMethod.setSelectedIndex(0);
+                                    txtPayMount.setText("");
+                                    txtPayCompr.setText("");
+                                }
+                            }
+                        } else {
+                            System.out.println("Pay Method no es Efectivo");
+                            Object[] fila = new Object[3];
+                            fila[0] = cboxPayMethod.getSelectedItem();
+                            fila[1] = txtPayMount.getText();
+                            fila[2] = txtPayCompr.getText();
+                            PayMethod.addRow(fila);
+                            cboxPayMethod.setSelectedIndex(0);
+                            cboxPayMethod.requestFocus();
+                            CalcPayMethod();
+                            txtPayMount.setText("");
+                            txtPayCompr.setText("");
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Nro. Comprobante no puede contener valores negativos. Vuelve a intentarlo.");
+                        txtPayCompr.setText("");
+                        txtPayCompr.requestFocus();
+                    }
+                } else if (Integer.parseInt(txtPayMount.getText()) <= 0) {
+                    JOptionPane.showMessageDialog(null, "Monto inválido, ingrese solo valores positivos y mayores a 0.");
+                    txtPayMount.setText("");
+                    txtPayMount.requestFocus();
+                }
+            } else {
+                JOptionPane.showMessageDialog(null, "Ingrese el número de comprobante antes de continuar.");
+                txtPayCompr.requestFocus();
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "Ingrese un monto antes de continuar.");
+            txtPayMount.requestFocus();
+        }
+        /*if (!txtPayMount.getText().equals("")) { //Comprueba de que el monto no esté vacio
+            if (!txtPayCompr.getText().equals("")) { //Comprueba de que el nro de comprobante no esté vacio
+                if (Integer.parseInt(txtPayMount.getText()) > 0) { //Comprueba de que el monto sea mayor a 0
+                    if (Integer.parseInt(txtPayCompr.getText()) >= 0) { //Comprueba de que el nro de comprobante sea mayor a 0
+                        //String PayMethodSelected = (String) cboxPayMethod.getSelectedItem();
+                        String PayMethodSelected = "Efectivo";
                         if (Check(PayMethod, 0, PayMethodSelected) == true) {
                             Object[] fila = new Object[3];
                             fila[0] = cboxPayMethod.getSelectedItem();
@@ -3515,7 +3568,7 @@ public class FichaCliente extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Ingrese un monto antes de continuar.");
             txtPayMount.requestFocus();
-        }
+        }*/
     }//GEN-LAST:event_btnPayAddActionPerformed
 
     private void txtPayMountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPayMountKeyPressed
@@ -3750,7 +3803,6 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JLabel lblArtTotal;
     private javax.swing.JLabel lblArtUnitPrice;
     private javax.swing.JLabel lblCOTNro;
-    private javax.swing.JLabel lblCOTPago;
     private javax.swing.JLabel lblCOTSaldo;
     private javax.swing.JLabel lblCOTSena;
     private javax.swing.JLabel lblCOTTitle;
@@ -3804,7 +3856,6 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JTextField txtArtSubtotal;
     private javax.swing.JTextField txtArtTotal;
     private javax.swing.JTextField txtArtUnitPrice;
-    private javax.swing.JTextField txtCOTPago;
     private javax.swing.JTextField txtCOTSaldo;
     private javax.swing.JTextField txtCOTSena;
     private javax.swing.JTextField txtCOTTotal;

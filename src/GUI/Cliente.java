@@ -7,11 +7,14 @@ package GUI;
 import Otros.Conexion;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableModel;
 
 /**
@@ -152,22 +155,6 @@ public class Cliente extends javax.swing.JPanel {
             con.BorrarDatos("cliente", "id_cliente='" + txtidCliente.getText() + "'");
         }
     }
-
-    /*private void GuardarStock() throws SQLException{
-        String idarticulo = txtidArticulo.getText();
-        String stock = txtStock.getText();
-        if (Flag == 1) {
-            con.InsertarDatos("stock",
-            "id_articulo,id_deposito,cantidad",
-            "'"+idarticulo+"',1,"+stock);
-        } else if (Flag == 2) {
-            con.EditarDatos("stock",
-            "cantidad="+stock,
-            "id_articulo='"+txtidArticulo.getText()+"' and id_deposito=1");
-        } else if (Flag == 3) {
-            con.BorrarDatos("stock", "id_articulo='"+txtidArticulo.getText()+"'");
-        }
-    }*/
 
     private void RecuperarPorID(String id) throws SQLException {
         String SQL_Recuperar = "select cl.*, c.ciudad from cliente cl, ciudad c where c.id_ciudad=cl.id_ciudad and cl.id_cliente='" + String.valueOf(id) + "'";
@@ -444,6 +431,12 @@ public class Cliente extends javax.swing.JPanel {
                 .addContainerGap())
         );
 
+        txtApellidos.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtApellidosKeyReleased(evt);
+            }
+        });
+
         jLabel3.setText("Apellidos");
 
         btnAdd.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus.png"))); // NOI18N
@@ -518,6 +511,11 @@ public class Cliente extends javax.swing.JPanel {
         jLabel2.setText("Nombres");
 
         txtNombres.setToolTipText("Inserte nombre");
+        txtNombres.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtNombresKeyReleased(evt);
+            }
+        });
 
         jLabel7.setText("Ciudad");
 
@@ -809,6 +807,28 @@ public class Cliente extends javax.swing.JPanel {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jButton1ActionPerformed
+
+    private void txtNombresKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtNombresKeyReleased
+        String ClientName = txtNombres.getText();
+        if (ClientName.matches(".*[\'\"!@#$%^&*()].*")) {
+            txtNombres.setText(ClientName.substring(0, ClientName.length() - 1));
+            txtNombres.setToolTipText("Inserte nombre. No se permiten caracteres especiales.");
+            ToolTipManager.sharedInstance().mouseMoved(
+                    new MouseEvent(txtNombres, 0, 0, 0, 0, 0, 0, false)
+            );
+        }
+    }//GEN-LAST:event_txtNombresKeyReleased
+
+    private void txtApellidosKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtApellidosKeyReleased
+        String ClientLastName = txtNombres.getText();
+        if (ClientLastName.matches(".*[\'\"!@#$%^&*()].*")) {
+            txtNombres.setText(ClientLastName.substring(0, ClientLastName.length() - 1));
+            txtNombres.setToolTipText("Inserte apellido. No se permiten caracteres especiales.");
+            ToolTipManager.sharedInstance().mouseMoved(
+                    new MouseEvent(txtNombres, 0, 0, 0, 0, 0, 0, false)
+            );
+        }
+    }//GEN-LAST:event_txtApellidosKeyReleased
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables

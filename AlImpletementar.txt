@@ -1,11 +1,19 @@
-
 ---Pasos para nueva implementación---
-Insertar Estados
-1-Activo
-2-Inactivo
+1- Insertar Nuevos Estados Principales
+• Activo
+• Inactivo
 
-Insertar un Depósito
-1-Default
+2- Insertar Usuarios
 
--------------------------------------
-Total Articulo + Total Cristal
+3- Insertar un Depósito
+• Default
+
+4- Insertar Nuevos Métodos de Pago
+• Efectivo
+• Pago con QR
+• Transferencia Bancaria
+• Tarjeta de débito
+• Tarjeta de Crédito
+• Giros
+
+Insertar todos los datos de la base de datos original

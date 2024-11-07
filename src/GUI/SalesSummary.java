@@ -41,7 +41,7 @@ public class SalesSummary extends javax.swing.JPanel {
 
     private void TodaySelected() {
         lblToday.setEnabled(true);
-        int CurrentMonth = LocalDate.now().getMonthValue();
+        int CurrentMonth = LocalDate.now().getMonthValue()-1;
         int CurrentYear = LocalDate.now().getYear();
         jMonth.setEnabled(false);
         jMonth.setMonth(CurrentMonth);
@@ -55,7 +55,7 @@ public class SalesSummary extends javax.swing.JPanel {
 
     private void MonthSelected() {
         lblToday.setEnabled(false);
-        int CurrentMonth = LocalDate.now().getMonthValue();
+        int CurrentMonth = LocalDate.now().getMonthValue()-1;
         int CurrentYear = LocalDate.now().getYear();
         jMonth.setEnabled(true);
         jMonth.setMonth(CurrentMonth);
@@ -69,7 +69,7 @@ public class SalesSummary extends javax.swing.JPanel {
 
     private void RangeSelected() {
         lblToday.setEnabled(false);
-        int CurrentMonth = LocalDate.now().getMonthValue();
+        int CurrentMonth = LocalDate.now().getMonthValue()-1;
         int CurrentYear = LocalDate.now().getYear();
         jMonth.setEnabled(false);
         jMonth.setMonth(CurrentMonth);

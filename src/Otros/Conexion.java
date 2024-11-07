@@ -13,7 +13,7 @@ public class Conexion {
     Connection con = null;
     String server = "localhost";
     String puerto = "5432";
-    String db = "OpticaScarlettTest";
+    String db = "OpticaScarlett";
     String user = "postgres";
     String password = "serpiente25";
     
