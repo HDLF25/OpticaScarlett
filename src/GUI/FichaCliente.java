@@ -3258,8 +3258,10 @@ public class FichaCliente extends javax.swing.JPanel {
                 if (Flag == 3) {
                     int resp = JOptionPane.showConfirmDialog(null, "Estás seguro?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
                     if (resp == 0) {
+                        btnOTConfirm.setEnabled(true);
                         btnOTConfirm.doClick();
                     } else {
+                        btnOTCancel.setEnabled(true);
                         btnOTCancel.doClick();
                     }
                 } else if (Flag == 4) {

@@ -12,11 +12,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 
-/**
- *
- * @author David
- */
 public class Menu extends javax.swing.JFrame {
 
     Conexion con;
@@ -35,14 +32,13 @@ public class Menu extends javax.swing.JFrame {
         lblWelcome.setText("Bienvenido, " + Username + "!");
         con = new Conexion();
         con.Login();
-        //DeshabilitarBtn();
+        CheckUserPermissions();
     }
 
-    /*private void DeshabilitarBtn() {
-        btnFindClientes.setEnabled(false);
-        btnFindArticulos.setEnabled(false);
-    }*/
-
+    private void CheckUserPermissions() {
+        
+    }
+    
     private Menu() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -56,21 +52,24 @@ public class Menu extends javax.swing.JFrame {
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        lblWelcome = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
         btnFicha = new javax.swing.JButton();
+        btnFindFicha = new javax.swing.JButton();
+        btnSaleSummary = new javax.swing.JButton();
         btnClientes = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
-        btnCiudades = new javax.swing.JButton();
-        jLabel1 = new javax.swing.JLabel();
-        btnMarcas = new javax.swing.JButton();
-        jSeparator2 = new javax.swing.JSeparator();
-        jLabel2 = new javax.swing.JLabel();
         jLabel3 = new javax.swing.JLabel();
-        btnExit = new javax.swing.JButton();
-        lblWelcome = new javax.swing.JLabel();
         btnArticulos = new javax.swing.JButton();
-        btnFindFicha = new javax.swing.JButton();
         btnIngresarStock = new javax.swing.JButton();
-        btnSaleSummary = new javax.swing.JButton();
+        jSeparator2 = new javax.swing.JSeparator();
+        jLabel1 = new javax.swing.JLabel();
+        btnCiudades = new javax.swing.JButton();
+        btnMarcas = new javax.swing.JButton();
+        btnPayMethod = new javax.swing.JButton();
+        btnUser = new javax.swing.JButton();
+        btnExit = new javax.swing.JButton();
+        jButton1 = new javax.swing.JButton();
         jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuOp = new javax.swing.JMenu();
@@ -90,61 +89,17 @@ public class Menu extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
+        lblWelcome.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
+        lblWelcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblWelcome.setText("Bienvenido");
+
+        jLabel2.setText("Clientes/Pacientes");
+
         btnFicha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/id-card.png"))); // NOI18N
         btnFicha.setText("Ficha de Cliente");
         btnFicha.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnFichaActionPerformed(evt);
-            }
-        });
-
-        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
-        btnClientes.setText("Clientes");
-        btnClientes.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClientesActionPerformed(evt);
-            }
-        });
-
-        btnCiudades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/city.png"))); // NOI18N
-        btnCiudades.setText("Ciudades");
-        btnCiudades.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnCiudadesActionPerformed(evt);
-            }
-        });
-
-        jLabel1.setText("Configuración");
-
-        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/price-tag.png"))); // NOI18N
-        btnMarcas.setText("Marcas");
-        btnMarcas.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnMarcasActionPerformed(evt);
-            }
-        });
-
-        jLabel2.setText("Clientes/Pacientes");
-
-        jLabel3.setText("Artículos");
-
-        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
-        btnExit.setText("Salir");
-        btnExit.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnExitActionPerformed(evt);
-            }
-        });
-
-        lblWelcome.setFont(new java.awt.Font("Segoe UI", 2, 14)); // NOI18N
-        lblWelcome.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
-        lblWelcome.setText("Bienvenido");
-
-        btnArticulos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delivery.png"))); // NOI18N
-        btnArticulos.setText("Artículos");
-        btnArticulos.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnArticulosActionPerformed(evt);
             }
         });
 
@@ -156,14 +111,6 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        btnIngresarStock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/addbox.png"))); // NOI18N
-        btnIngresarStock.setText("Ingresar Stock");
-        btnIngresarStock.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnIngresarStockActionPerformed(evt);
-            }
-        });
-
         btnSaleSummary.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
         btnSaleSummary.setText("Resumen de Ventas");
         btnSaleSummary.addActionListener(new java.awt.event.ActionListener() {
@@ -172,13 +119,84 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/complete.png"))); // NOI18N
-        jButton2.setText("Métodos de Pago");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
+        btnClientes.setText("Clientes");
+        btnClientes.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                btnClientesActionPerformed(evt);
             }
         });
+
+        jLabel3.setText("Artículos");
+
+        btnArticulos.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/delivery.png"))); // NOI18N
+        btnArticulos.setText("Artículos");
+        btnArticulos.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnArticulosActionPerformed(evt);
+            }
+        });
+
+        btnIngresarStock.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/addbox.png"))); // NOI18N
+        btnIngresarStock.setText("Stock de Artículos");
+        btnIngresarStock.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnIngresarStockActionPerformed(evt);
+            }
+        });
+
+        jLabel1.setText("Configuración");
+
+        btnCiudades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/city.png"))); // NOI18N
+        btnCiudades.setText("Ciudades");
+        btnCiudades.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCiudadesActionPerformed(evt);
+            }
+        });
+
+        btnMarcas.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/price-tag.png"))); // NOI18N
+        btnMarcas.setText("Marcas");
+        btnMarcas.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnMarcasActionPerformed(evt);
+            }
+        });
+
+        btnPayMethod.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/complete.png"))); // NOI18N
+        btnPayMethod.setText("Métodos de Pago");
+        btnPayMethod.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnPayMethodActionPerformed(evt);
+            }
+        });
+
+        btnUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contrasena.png"))); // NOI18N
+        btnUser.setText("Usuarios");
+        btnUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnUserActionPerformed(evt);
+            }
+        });
+
+        btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
+        btnExit.setText("Cerrar Sistema");
+        btnExit.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnExitActionPerformed(evt);
+            }
+        });
+
+        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
+        jButton1.setText("Cerrar Sesión");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
+
+        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
+        jButton2.setText("Reporte de Existencia");
 
         menuOp.setText("Operaciones");
 
@@ -243,7 +261,7 @@ public class Menu extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        menuRef.setText("Referenciales");
+        menuRef.setText("Configuración");
 
         itemCiudades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/city.png"))); // NOI18N
         itemCiudades.setText("Ciudades");
@@ -290,31 +308,37 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(lblWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1)
                     .addComponent(jSeparator2)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel2)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnFindFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnSaleSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnClientes, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnArticulos, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnIngresarStock, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnIngresarStock, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jLabel3)
                             .addComponent(jLabel1)
                             .addGroup(layout.createSequentialGroup()
-                                .addComponent(btnCiudades, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(btnCiudades, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(btnMarcas, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(btnMarcas, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnPayMethod, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(btnUser, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(btnFindFicha, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnSaleSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -332,7 +356,8 @@ public class Menu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFindFicha)
-                    .addComponent(btnSaleSummary))
+                    .addComponent(btnSaleSummary)
+                    .addComponent(jButton2))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -348,11 +373,14 @@ public class Menu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnCiudades)
-                    .addComponent(btnMarcas))
+                    .addComponent(btnMarcas)
+                    .addComponent(btnPayMethod))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jButton2)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addComponent(btnExit)
+                .addComponent(btnUser)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btnExit)
+                    .addComponent(jButton1))
                 .addContainerGap())
         );
 
@@ -535,7 +563,7 @@ public class Menu extends javax.swing.JFrame {
         contenedor.setVisible(true);
     }//GEN-LAST:event_itemChangelogActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void btnPayMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayMethodActionPerformed
         try {
             contenedor = new JDialog();
             contenedor.getContentPane().add(new PayMethods());
@@ -551,7 +579,7 @@ public class Menu extends javax.swing.JFrame {
         } catch (SQLException ex) {
             Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_btnPayMethodActionPerformed
 
     private void btnSaleSummaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSaleSummaryActionPerformed
         contenedor = new JDialog();
@@ -574,6 +602,26 @@ public class Menu extends javax.swing.JFrame {
     private void itemSaleSummaryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemSaleSummaryActionPerformed
         btnSaleSummary.doClick();
     }//GEN-LAST:event_itemSaleSummaryActionPerformed
+
+    private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
+        contenedor = new JDialog();
+        contenedor.getContentPane().add(new Users());
+        contenedor.setModal(false);
+        contenedor.setTitle("Usuarios");
+        URL url = getClass().getResource("/images/idcardicon.png");
+        ImageIcon imgicon = new ImageIcon(url);
+        contenedor.setIconImage(imgicon.getImage());
+        contenedor.pack();
+        contenedor.setLocationRelativeTo(null);
+        contenedor.setResizable(false);
+        contenedor.setVisible(true);
+    }//GEN-LAST:event_btnUserActionPerformed
+
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        JFrame loginFrame = new Login();
+        loginFrame.setVisible(true);
+        dispose();
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments
@@ -619,7 +667,9 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton btnFindFicha;
     private javax.swing.JButton btnIngresarStock;
     private javax.swing.JButton btnMarcas;
+    private javax.swing.JButton btnPayMethod;
     private javax.swing.JButton btnSaleSummary;
+    private javax.swing.JButton btnUser;
     private javax.swing.JMenuItem itemArticulos;
     private javax.swing.JMenuItem itemChangelog;
     private javax.swing.JMenuItem itemCiudades;
@@ -629,6 +679,7 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemSaleSummary;
     private javax.swing.JMenuItem itemSearchOT;
     private javax.swing.JMenuItem itemStock;
+    private javax.swing.JButton jButton1;
     private javax.swing.JButton jButton2;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;

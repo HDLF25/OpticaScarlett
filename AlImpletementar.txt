@@ -1,14 +1,9 @@
 ---Pasos para nueva implementación---
-1- Insertar Nuevos Estados Principales
+A. Insertar Nuevos Estados Principales
 • Activo
 • Inactivo
 
-2- Insertar Usuarios
-
-3- Insertar un Depósito
-• Default
-
-4- Insertar Nuevos Métodos de Pago
+B. Insertar Nuevos Métodos de Pago
 • Efectivo
 • Pago con QR
 • Transferencia Bancaria
@@ -16,4 +11,19 @@
 • Tarjeta de Crédito
 • Giros
 
-Insertar todos los datos de la base de datos original
+C. Insertar todos los datos de la base de datos original
+Se pueden exportar los datos de la BD anterior e importar en la nueva DB, en formato CSV
+Orden para importar:
+1. Depósito
+2. Usuario (Modificar primero)
+3. Marca
+4. Artículo
+5. Ciudad
+6. Cliente
+7. Stock
+8. Orden de Trabajo
+9. Detalle de Orden de Trabajo
+
+• Se debe modificar los CSV donde se cambiaron las columnas de las algunas tablas
+Editar CSV de:
+- Usuario (Se cambió ESTADO y se añadió ADMIN)

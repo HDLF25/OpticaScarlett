@@ -1,0 +1,5 @@
+• Añadir validaciones de menú por usuario, para dar solo ciertas opciones a cada usuario
+• Crear reporte de Resumen de Stock
+• Crear menú para creación de usuario
+
+• Crear usuario en la DB, sucasu - asu2024

@@ -69,10 +69,6 @@
 				<textElement textAlignment="Left" verticalAlignment="Bottom"/>
 				<textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
 			</textField>
-			<image>
-				<reportElement x="25" y="5" width="55" height="55" uuid="ae58292f-b980-42cc-be04-c31890f027bb"/>
-				<imageExpression><![CDATA["C:\\Users\\ccti\\Desktop\\OpticaScarlett\\src\\Reportes\\logoOptica.png"]]></imageExpression>
-			</image>
 		</band>
 	</title>
 	<pageHeader>
