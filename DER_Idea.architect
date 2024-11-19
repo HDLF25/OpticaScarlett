@@ -4,7 +4,16 @@
  <print-settings numCopies="1" zoom="1.0" pageNumbersPrinted="true" orientation="1" paperWidth="612.0" paperHeight="792.0" leftBorder="50.0" rightBorder="50.0" topBorder="50.0" bottomBorder="50.0" />
  <project-data-sources>
   <data-source id="DS0">
+   <property key="Connection Type" value="PostgreSQL" />
    <property key="Logical" value="PlayPen Database" />
+   <property key="JDBC URL" value="jdbc:postgresql://localhost:5432/OpticaScarlett" />
+   <property key="UID" value="postgres" />
+   <property key="PWD" value="serpiente25" />
+   <property key="ca.sqlpower.architect.etl.kettle.database" value="" />
+   <property key="ca.sqlpower.architect.etl.kettle.port" value="" />
+   <property key="ca.sqlpower.architect.etl.kettle.hostname" value="" />
+   <property key="ca.sqlpower.architect.etl.kettle.repos.login" value="" />
+   <property key="ca.sqlpower.architect.etl.kettle.repos.password" value="" />
   </data-source>
  </project-data-sources>
  <source-databases>
@@ -404,16 +413,16 @@
     </index>
    </folder>
   </table>
-  <table id="TAB115" populated="true" UUID="6cccc65e-776a-4a12-ae64-fd50b2952b2e" name="permission" objectType="TABLE" physicalName="permission" >
+  <table id="TAB115" populated="true" UUID="6cccc65e-776a-4a12-ae64-fd50b2952b2e" name="permissions" objectType="TABLE" physicalName="permissions" >
    <remarks></remarks>
    <folder id="FOLTAB1151" populated="true" name="Columns" physicalName="Columns" type="1">
-    <column id="COL116" populated="true" UUID="0c9bcd11-8129-462b-be85-f0b80cf2dc16" autoIncrement="true" autoIncrementSequenceName="permission_id_permission_seq" defaultValue="" name="id_permission" nullable="0" physicalName="id_permission" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
+    <column id="COL116" populated="true" UUID="0c9bcd11-8129-462b-be85-f0b80cf2dc16" autoIncrement="true" autoIncrementSequenceName="permissions_id_permission_seq" defaultValue="" name="id_permission" nullable="0" physicalName="id_permission" precision="0" primaryKeySeq="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="4" userDefinedTypeUUID="63b011c7-c81f-4c75-8271-632b3c87f727" >
      <remarks></remarks>
     </column>
-    <column id="COL117" populated="true" UUID="e580a7a2-d5e4-4d27-ae20-e785021c6b1b" autoIncrement="false" autoIncrementSequenceName="permission_name_permission_seq" defaultValue="" name="name_permission" nullable="0" physicalName="name_permission" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL117" populated="true" UUID="e580a7a2-d5e4-4d27-ae20-e785021c6b1b" autoIncrement="false" autoIncrementSequenceName="permissions_name_permission_seq" defaultValue="" name="name_permission" nullable="0" physicalName="name_permission" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
-    <column id="COL118" populated="true" UUID="0c4da8b6-2bf3-411a-bd6e-b493ce718539" autoIncrement="false" autoIncrementSequenceName="permission_descr_permission_seq" defaultValue="" name="descr_permission" nullable="0" physicalName="descr_permission" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
+    <column id="COL118" populated="true" UUID="0c4da8b6-2bf3-411a-bd6e-b493ce718539" autoIncrement="false" autoIncrementSequenceName="permissions_descr_permission_seq" defaultValue="" name="descr_permission" nullable="0" physicalName="descr_permission" precision="0" referenceCount="1" scale="0" sourceDataTypeName="UserDefinedSQLType" type="12" userDefinedTypeUUID="831ac2d4-0e65-47ec-a0b7-62b7f6b8760a" >
      <remarks></remarks>
     </column>
     </folder>
@@ -422,7 +431,7 @@
     <folder id="FOLTAB1152" populated="true" name="Imported Keys" physicalName="Imported Keys" type="2">
     </folder>
     <folder id="FOLTAB1154" populated="true" name="Indices" physicalName="Indices" type="4">
-    <index id="IDX119" populated="true" UUID="c480c18c-9c28-4596-ab28-5c5776b1c6d3" clustered="false" name="permission_pk" physicalName="permission_pk" primaryKeyIndex="true" unique="false" >
+    <index id="IDX119" populated="true" UUID="c480c18c-9c28-4596-ab28-5c5776b1c6d3" clustered="false" name="permissions_pk" physicalName="permission_pk" primaryKeyIndex="true" unique="false" >
      <index-column id="IDC120" populated="true" UUID="b1129c16-8360-4052-a830-21e74f5f6c47" ascendingOrDescending="UNSPECIFIED" column-ref="COL116" name="id_permission" physicalName="id_permission" />
     </index>
    </folder>

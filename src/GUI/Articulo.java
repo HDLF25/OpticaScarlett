@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package GUI;
 
 import Otros.Conexion;
@@ -14,23 +10,19 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author David
- */
 public class Articulo extends javax.swing.JPanel {
 
     Conexion con;
     ResultSet rs;
     int Flag = 0;
-    DefaultTableModel Search = new DefaultTableModel(){
-    @Override
-        public boolean isCellEditable(int row, int column){
+    DefaultTableModel Search = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
             return false;
         }
     };
 
-    public Articulo() throws SQLException {
+    public Articulo(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -38,9 +30,10 @@ public class Articulo extends javax.swing.JPanel {
         DeshabilitarTxt();
         CabeceraTabla();
         CargarCboMarca();
+        CheckUserPermissions(idUsuario);
     }
 
-    private void HabilitarBtn(){
+    private void HabilitarBtn() {
         btnAdd.setEnabled(false);
         btnEdit.setEnabled(false);
         btnErase.setEnabled(false);
@@ -49,8 +42,15 @@ public class Articulo extends javax.swing.JPanel {
         btnCancelar.setEnabled(true);
         btnTransfer.setEnabled(true);
     }
+    
+    private void DehabilitarMainBtn() {
+        btnAdd.setEnabled(false);
+        btnEdit.setEnabled(false);
+        btnErase.setEnabled(false);
+        btnSearch.setEnabled(false);
+    }
 
-    private void DeshabilitarBtn(){
+    private void DeshabilitarBtn() {
         btnAdd.setEnabled(true);
         btnEdit.setEnabled(true);
         btnErase.setEnabled(true);
@@ -60,7 +60,7 @@ public class Articulo extends javax.swing.JPanel {
         btnTransfer.setEnabled(false);
     }
 
-    private void HabilitarTxt(){
+    private void HabilitarTxt() {
         txtidArticulo.setEnabled(true);
         txtArticulo.setEnabled(true);
         cboxCategoria.setEnabled(true);
@@ -73,7 +73,7 @@ public class Articulo extends javax.swing.JPanel {
         txtStock.setEnabled(true);
     }
 
-    private void DeshabilitarTxt(){
+    private void DeshabilitarTxt() {
         txtidArticulo.setEnabled(false);
         txtArticulo.setEnabled(false);
         cboxCategoria.setEnabled(false);
@@ -86,7 +86,7 @@ public class Articulo extends javax.swing.JPanel {
         txtStock.setEnabled(false);
     }
 
-    private void LimpiarTxt(){
+    private void LimpiarTxt() {
         txtidArticulo.setText("");
         txtArticulo.setText("");
         txtColor.setText("");
@@ -96,13 +96,42 @@ public class Articulo extends javax.swing.JPanel {
         txtPrecio.setText("");
         txtStock.setText("");
     }
-    
-    private void RestartCbox(){
+
+    private void RestartCbox() {
         cboxCategoria.setSelectedIndex(0);
         cboxMarca.setSelectedIndex(0);
     }
+    
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DehabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "ArtCreate":
+                        btnAdd.setEnabled(true);
+                        break;
+                    case "ArtEdit":
+                        btnEdit.setEnabled(true);
+                        break;
+                    case "ArtDelete":
+                        btnErase.setEnabled(true);
+                        break;
+                    case "ArtList":
+                        btnSearch.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: "+idPermission+", "+namePermission);
+                }
+            }
+        }
+    }
 
-    private void GuardarDatos() throws SQLException{
+    private void GuardarDatos() throws SQLException {
         String idarticulo = txtidArticulo.getText();
         String articulo = txtArticulo.getText();
         String categoria = null;
@@ -121,17 +150,17 @@ public class Articulo extends javax.swing.JPanel {
         String precio = txtPrecio.getText();
         String stock = txtStock.getText();
         if (Flag == 1) {
-            con.InsertarDatos("articulos","id_articulo,descripcion_articulo,categoria_articulo,costoactual_articulo,costoanterior_articulo,precioventa_articulo,id_marca,color,material","'"+idarticulo+"','"+articulo+"','"+categoria+"','"+costoactual+"','"+costoanterior+"','"+precio+"','"+marca+"','"+color+"','"+material+"'");
-            con.InsertarDatos("stock","id_articulo,id_deposito,cantidad","'"+idarticulo+"',1,"+stock);
+            con.InsertarDatos("articulos", "id_articulo,descripcion_articulo,categoria_articulo,costoactual_articulo,costoanterior_articulo,precioventa_articulo,id_marca,color,material", "'" + idarticulo + "','" + articulo + "','" + categoria + "','" + costoactual + "','" + costoanterior + "','" + precio + "','" + marca + "','" + color + "','" + material + "'");
+            con.InsertarDatosDetalle("stock", "id_articulo,id_deposito,cantidad", "'" + idarticulo + "',1," + stock);
         } else if (Flag == 2) {
-            con.EditarDatos("articulos","descripcion_articulo='"+articulo+"',"+"categoria_articulo='"+categoria+"',"+"costoactual_articulo='"+costoactual+"',"+"costoanterior_articulo='"+costoanterior+"',"+"precioventa_articulo='"+precio+"',"+"id_marca='"+marca+"',"+"color='"+color+"',"+"material='"+material+"'","id_articulo='"+txtidArticulo.getText()+"'");
-            con.EditarDatos("stock","cantidad="+stock,"id_articulo='"+txtidArticulo.getText()+"' and id_deposito=1");
+            con.EditarDatos("articulos", "descripcion_articulo='" + articulo + "'," + "categoria_articulo='" + categoria + "'," + "costoactual_articulo='" + costoactual + "'," + "costoanterior_articulo='" + costoanterior + "'," + "precioventa_articulo='" + precio + "'," + "id_marca='" + marca + "'," + "color='" + color + "'," + "material='" + material + "'", "id_articulo='" + txtidArticulo.getText() + "'");
+            con.EditarDatosDetalle("stock", "cantidad=" + stock, "id_articulo='" + txtidArticulo.getText() + "' and id_deposito=1");
         } else if (Flag == 3) {
-            con.BorrarDatos("stock", "id_articulo='"+txtidArticulo.getText()+"'");
-            con.BorrarDatos("articulos", "id_articulo='"+txtidArticulo.getText()+"'");
+            con.BorrarDatosDetalle("stock", "id_articulo='" + txtidArticulo.getText() + "'");
+            con.BorrarDatos("articulos", "id_articulo='" + txtidArticulo.getText() + "'");
         }
     }
-    
+
     /* private void NewArticle() throws SQLException {
         String ArticleFound = "Select * from articulos";
         rs = con.Results(ArticleFound);
@@ -149,11 +178,10 @@ public class Articulo extends javax.swing.JPanel {
             }
         }
     } */
-
-    private void Recuperar(String id) throws SQLException{
-        String SQL_Recuperar = "select art.*, mar.descripcion_marca, stk.cantidad from articulos art, marca mar, stock stk where art.id_articulo=stk.id_articulo and art.id_marca=mar.id_marca and art.id_articulo='"+String.valueOf(id)+"'";
+    private void Recuperar(String id) throws SQLException {
+        String SQL_Recuperar = "select art.*, mar.descripcion_marca, stk.cantidad from articulos art, marca mar, stock stk where art.id_articulo=stk.id_articulo and art.id_marca=mar.id_marca and art.id_articulo='" + String.valueOf(id) + "'";
         rs = con.Results(SQL_Recuperar);
-        if(rs.next()){
+        if (rs.next()) {
             txtArticulo.setText(rs.getString("descripcion_articulo"));
             cboxCategoria.setSelectedItem(rs.getString("categoria_articulo"));
             cboxMarca.setSelectedItem(rs.getString("descripcion_marca"));
@@ -165,11 +193,12 @@ public class Articulo extends javax.swing.JPanel {
             txtStock.setText(rs.getString("cantidad"));
             txtArticulo.setEnabled(true);
             txtArticulo.requestFocus();
-        }else{
+        } else {
             JOptionPane.showMessageDialog(null, "No se encontraron resultados");
         }
     }
-    private void CabeceraTabla(){
+
+    private void CabeceraTabla() {
         Search.addColumn("ID");
         Search.addColumn("Descripción");
         Search.addColumn("Categoría");
@@ -185,10 +214,11 @@ public class Articulo extends javax.swing.JPanel {
         TSearcher.getColumnModel().getColumn(5).setPreferredWidth(80);
         TSearcher.getColumnModel().getColumn(6).setPreferredWidth(50);
     }
-    private void LoadTable() throws SQLException{
+
+    private void LoadTable() throws SQLException {
         rs = con.Results("select art.*, mar.descripcion_marca, stk.cantidad from articulos art, marca mar, stock stk where art.id_articulo=stk.id_articulo and art.id_marca=mar.id_marca");
         Search.setRowCount(0);
-        while(rs.next()){
+        while (rs.next()) {
             Object[] row = new Object[7];
             row[0] = rs.getString("id_articulo");
             row[1] = rs.getString("descripcion_articulo");
@@ -200,12 +230,13 @@ public class Articulo extends javax.swing.JPanel {
             Search.addRow(row);
         }
     }
-    private Boolean Validaciones(){
-        if(txtidArticulo.getText().equals("")){
+
+    private Boolean Validaciones() {
+        if (txtidArticulo.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Código vacío. Ingrese un código para el artículo.");
             return false;
         }
-        if(txtArticulo.getText().equals("")){
+        if (txtArticulo.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Descripción vacía. Ingrese artículo a registrar.");
             return false;
         }
@@ -238,32 +269,34 @@ public class Articulo extends javax.swing.JPanel {
         return true;
     }
 
-    private Integer RecuperarMarca(String marca) throws SQLException{
+    private Integer RecuperarMarca(String marca) throws SQLException {
         Integer id = null;
-        String SQL_Marca = "select id_marca from marca where descripcion_marca = '"+marca+"'";
+        String SQL_Marca = "select id_marca from marca where descripcion_marca = '" + marca + "'";
         rs = con.Results(SQL_Marca);
-        if(rs.next())
+        if (rs.next()) {
             id = rs.getInt("id_marca");
+        }
         return id;
     }
 
-        private void CargarCboMarca() throws SQLException{
+    private void CargarCboMarca() throws SQLException {
         cboxMarca.removeAllItems();
         cboxMarca.addItem("Selecciona");
         rs = con.Results("select descripcion_marca from marca order by descripcion_marca asc;");
-        while(rs.next()){
+        while (rs.next()) {
             cboxMarca.addItem(rs.getString("descripcion_marca"));
         }
-        ItemListener itemListener = new ItemListener(){
+        ItemListener itemListener = new ItemListener() {
             @Override
-            public void itemStateChanged(ItemEvent itemEvent){
-                if(!cboxMarca.getSelectedItem().toString().equals("Selecciona")){
+            public void itemStateChanged(ItemEvent itemEvent) {
+                if (!cboxMarca.getSelectedItem().toString().equals("Selecciona")) {
                     txtArticulo.setEnabled(true);
                     txtArticulo.requestFocus();
                 }
             }
         };
     }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -617,12 +650,13 @@ public class Articulo extends javax.swing.JPanel {
                 Searcher.setVisible(false);
                 txtidArticulo.setText(id);
                 Recuperar(txtidArticulo.getText());
-                if(Flag == 3){
+                if (Flag == 3) {
                     int respuesta = JOptionPane.showConfirmDialog(null, "Está seguro?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
-                    if(respuesta == 0)
-                    btnConfirmar.doClick();
-                else
-                    btnCancelar.doClick();
+                    if (respuesta == 0) {
+                        btnConfirmar.doClick();
+                    } else {
+                        btnCancelar.doClick();
+                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Articulo.class.getName()).log(Level.SEVERE, null, ex);
@@ -642,10 +676,10 @@ public class Articulo extends javax.swing.JPanel {
             } else if (cboxFiltrar.getSelectedItem().equals("Categoría")) {
                 filtro = "art.categoria_articulo";
             }
-            String SQL_Search = "select art.*, mar.descripcion_marca, stk.cantidad from articulos art, marca mar, stock stk where art.id_articulo=stk.id_articulo and art.id_marca=mar.id_marca and "+filtro+" ilike '%"+txtFilter.getText()+"%'";
+            String SQL_Search = "select art.*, mar.descripcion_marca, stk.cantidad from articulos art, marca mar, stock stk where art.id_articulo=stk.id_articulo and art.id_marca=mar.id_marca and " + filtro + " ilike '%" + txtFilter.getText() + "%'";
             rs = con.Results(SQL_Search);
             Search.setRowCount(0);
-            while(rs.next()){
+            while (rs.next()) {
                 Object[] row = new Object[7];
                 row[0] = rs.getString("id_articulo");
                 row[1] = rs.getString("descripcion_articulo");
@@ -727,9 +761,9 @@ public class Articulo extends javax.swing.JPanel {
         try {
             LoadTable();
             lblMensaje.setText("Listado de Artículos");
-            if(Flag == 2){
+            if (Flag == 2) {
                 lblMensaje.setText("Seleccione un artículo que desee modificar");
-            }else if(Flag == 3){
+            } else if (Flag == 3) {
                 lblMensaje.setText("Seleccione un artículo que desee eliminar");
             }
             Searcher.setTitle("Buscar Artículo");
@@ -745,24 +779,24 @@ public class Articulo extends javax.swing.JPanel {
 
     private void txtidArticuloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtidArticuloKeyPressed
         if (evt.getKeyCode() == 10 && !txtidArticulo.getText().equals("")) {
-            try{
+            try {
                 Recuperar(txtidArticulo.getText());
                 if (Flag == 3) {
-                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro?", "Atención!",JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
-                    if(resp == 0){
+                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    if (resp == 0) {
                         btnConfirmar.doClick();
-                    }else{
+                    } else {
                         btnCancelar.doClick();
                     }
                 }
             } catch (SQLException ex) {
             }
-        }else if(evt.getKeyCode() == 10 && txtidArticulo.getText().equals("")){
+        } else if (evt.getKeyCode() == 10 && txtidArticulo.getText().equals("")) {
             try {
                 LoadTable();
-                if(Flag == 2){
+                if (Flag == 2) {
                     lblMensaje.setText("Seleccione una marca que desee modificar");
-                }else if(Flag == 3){
+                } else if (Flag == 3) {
                     lblMensaje.setText("Seleccione una marca que desee eliminar");
                 }
                 Searcher.setTitle("Buscar Marcas");

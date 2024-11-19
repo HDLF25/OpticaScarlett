@@ -3,26 +3,21 @@
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
 	<property name="ireport.y" value="0"/>
-	<parameter name="date_first" class="java.util.Date"/>
-	<parameter name="date_last" class="java.util.Date"/>
+	<parameter name="brand_name" class="java.lang.String"/>
+	<parameter name="art_product" class="java.lang.String"/>
+	<parameter name="art_cristal" class="java.lang.String"/>
+	<parameter name="art_service" class="java.lang.String"/>
+	<parameter name="stock_art" class="java.lang.Boolean"/>
 	<queryString>
-		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot, cliente cli WHERE cli.id_cliente = ot.id_paciente AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
+		<![CDATA[SELECT art.id_articulo, art.descripcion_articulo, art.categoria_articulo, mar.descripcion_marca, art.costoactual_articulo, art.precioventa_articulo, stk.cantidad FROM articulos art, marca mar, stock stk WHERE art.id_marca = mar.id_marca AND art.id_articulo = stk.id_articulo AND stk.id_deposito = 1 AND ($P{brand_name} = 'null' OR mar.descripcion_marca = $P{brand_name}) AND art.categoria_articulo in ($P{art_product}, $P{art_cristal}, $P{art_service}) AND ($P{stock_art} = TRUE OR stk.cantidad > 0) ORDER BY art.id_articulo ASC;]]>
 	</queryString>
-	<field name="id_ordentrabajo" class="java.lang.Integer"/>
-	<field name="fecha_ordentrabajo" class="java.sql.Date"/>
-	<field name="paciente" class="java.lang.String"/>
-	<field name="subtotal" class="java.lang.Integer"/>
-	<field name="sena" class="java.lang.Integer"/>
-	<field name="total" class="java.lang.Integer"/>
-	<variable name="TotalSubt" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
-	</variable>
-	<variable name="TotalSena" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{sena}]]></variableExpression>
-	</variable>
-	<variable name="TotalSaldo" class="java.lang.Integer" calculation="Sum">
-		<variableExpression><![CDATA[$F{total}]]></variableExpression>
-	</variable>
+	<field name="id_articulo" class="java.lang.String"/>
+	<field name="descripcion_articulo" class="java.lang.String"/>
+	<field name="categoria_articulo" class="java.lang.String"/>
+	<field name="descripcion_marca" class="java.lang.String"/>
+	<field name="costoactual_articulo" class="java.lang.Integer"/>
+	<field name="precioventa_articulo" class="java.lang.Integer"/>
+	<field name="cantidad" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -43,7 +38,7 @@
 				<textElement textAlignment="Center" verticalAlignment="Top">
 					<font fontName="Calibri" size="18" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Resumen de Ventas]]></text>
+				<text><![CDATA[Reporte de Existencia]]></text>
 			</staticText>
 			<staticText>
 				<reportElement x="348" y="8" width="35" height="20" uuid="432e4a30-bdba-4512-ac26-6eab7673a058"/>
@@ -74,32 +69,32 @@
 	<pageHeader>
 		<band height="30" splitType="Stretch">
 			<staticText>
-				<reportElement x="5" y="5" width="60" height="20" uuid="d306e5a3-3a57-4d63-86d4-924b1906939a"/>
+				<reportElement x="0" y="5" width="60" height="20" uuid="d306e5a3-3a57-4d63-86d4-924b1906939a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Desde:]]></text>
+				<text><![CDATA[Marca:]]></text>
 			</staticText>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="69" y="5" width="120" height="20" uuid="819a95e9-aa36-45e0-af8a-02154e3ece81"/>
+				<reportElement x="70" y="5" width="120" height="20" uuid="819a95e9-aa36-45e0-af8a-02154e3ece81"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{date_first}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id_articulo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="253" y="5" width="120" height="20" uuid="046be810-3f1c-4ff1-84f1-ef9b457b8c98"/>
+				<reportElement x="300" y="5" width="120" height="20" uuid="046be810-3f1c-4ff1-84f1-ef9b457b8c98"/>
 				<textElement verticalAlignment="Middle">
 					<font size="12"/>
 				</textElement>
-				<textFieldExpression><![CDATA[$P{date_last}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id_articulo}]]></textFieldExpression>
 			</textField>
 			<staticText>
-				<reportElement x="189" y="5" width="60" height="20" uuid="c1411d2d-c9c2-4663-b320-5ce2edd3c2b1"/>
+				<reportElement x="220" y="5" width="70" height="20" uuid="c1411d2d-c9c2-4663-b320-5ce2edd3c2b1"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle">
 					<font size="12" isBold="true"/>
 				</textElement>
-				<text><![CDATA[Hasta:]]></text>
+				<text><![CDATA[Categoría:]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="0" width="555" height="1" uuid="90551c81-21c4-4247-b57b-f6778604d93e"/>
@@ -112,117 +107,88 @@
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="65" height="19" uuid="9218a176-512f-40c6-8efb-c88d57794200"/>
+				<reportElement x="0" y="0" width="90" height="20" uuid="9218a176-512f-40c6-8efb-c88d57794200"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Nro OT]]></text>
+				<text><![CDATA[ID]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="65" y="0" width="70" height="19" uuid="ec95097c-46e4-4962-a63b-ef433cacae75"/>
+				<reportElement x="90" y="0" width="210" height="20" uuid="272e8f22-4045-4041-9fce-eedd2dab4f99"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Fecha]]></text>
+				<text><![CDATA[Descripción]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="135" y="0" width="210" height="19" uuid="272e8f22-4045-4041-9fce-eedd2dab4f99"/>
+				<reportElement x="300" y="0" width="80" height="20" uuid="da2a5731-b36c-4bb8-881a-bc1cebfc1c4c"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Paciente]]></text>
+				<text><![CDATA[Marca]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="345" y="0" width="70" height="19" uuid="da2a5731-b36c-4bb8-881a-bc1cebfc1c4c"/>
+				<reportElement x="515" y="0" width="40" height="20" uuid="5cee596f-e2d7-4576-8c1c-14257b6b2b19"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Total]]></text>
+				<text><![CDATA[Stock]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="485" y="0" width="70" height="19" uuid="5cee596f-e2d7-4576-8c1c-14257b6b2b19"/>
+				<reportElement x="380" y="0" width="70" height="20" uuid="091ad5ea-b62f-456e-b72c-ee2d2c837ec1"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
-				<text><![CDATA[Saldo]]></text>
-			</staticText>
-			<staticText>
-				<reportElement x="415" y="0" width="70" height="19" uuid="091ad5ea-b62f-456e-b72c-ee2d2c837ec1"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[Pago]]></text>
+				<text><![CDATA[Costo]]></text>
 			</staticText>
 			<line>
 				<reportElement x="0" y="20" width="555" height="1" uuid="e81d1d0d-8792-44d5-9fde-76681819b5a3"/>
 			</line>
+			<staticText>
+				<reportElement x="450" y="0" width="65" height="20" uuid="c85d09ae-c80a-41ad-b85a-fe46a1b7776f"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Precio]]></text>
+			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="60" splitType="Stretch">
+		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="65" height="20" uuid="b1f4f3e8-2f53-4a7c-98a3-bf03c4e8ddc3"/>
+				<reportElement x="0" y="0" width="90" height="20" uuid="b1f4f3e8-2f53-4a7c-98a3-bf03c4e8ddc3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{id_ordentrabajo}]]></textFieldExpression>
-			</textField>
-			<textField pattern="dd/MM/yyyy">
-				<reportElement x="65" y="0" width="70" height="20" uuid="a635792d-7fb7-40b9-97f9-86cca75f2d5f"/>
-				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{fecha_ordentrabajo}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{id_articulo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="135" y="0" width="210" height="20" uuid="c565cf7b-1bb1-46b6-90ea-54c0a4ff8be7"/>
+				<reportElement x="90" y="0" width="210" height="20" uuid="c565cf7b-1bb1-46b6-90ea-54c0a4ff8be7"/>
 				<textElement verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{paciente}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{descripcion_articulo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="485" y="0" width="70" height="20" uuid="dd49e66a-3490-4bb3-ad69-e145024c9c85"/>
+				<reportElement x="515" y="0" width="40" height="20" uuid="dd49e66a-3490-4bb3-ad69-e145024c9c85"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{cantidad}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="345" y="0" width="70" height="20" uuid="a76376a6-8228-4863-b484-5a9b4360bb69"/>
+				<reportElement x="300" y="0" width="80" height="20" uuid="a76376a6-8228-4863-b484-5a9b4360bb69"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{descripcion_marca}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="415" y="0" width="70" height="20" uuid="a5e00094-2702-4547-be5c-160ccd7f0679"/>
+				<reportElement x="380" y="0" width="70" height="20" uuid="a5e00094-2702-4547-be5c-160ccd7f0679"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{sena}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{costoactual_articulo}]]></textFieldExpression>
+			</textField>
+			<textField pattern="#,##0;-#,##0">
+				<reportElement x="450" y="0" width="65" height="20" uuid="48825604-532c-4170-a542-aaa53b1301dd"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{precioventa_articulo}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
 	<columnFooter>
-		<band height="20" splitType="Stretch">
-			<textField pattern="#,##0;-#,##0">
-				<reportElement x="345" y="0" width="70" height="20" uuid="6b3c74e4-8076-4c23-ab1a-a244824c94bb"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalSubt}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0;-#,##0">
-				<reportElement x="415" y="0" width="70" height="20" uuid="15f895be-baa5-4716-8e4e-c0f52fc87ee9"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalSena}]]></textFieldExpression>
-			</textField>
-			<textField pattern="#,##0;-#,##0">
-				<reportElement x="485" y="0" width="70" height="20" uuid="740ad7da-03ed-478a-999b-70ca64e4f03f"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true" isUnderline="false" isStrikeThrough="false"/>
-				</textElement>
-				<textFieldExpression><![CDATA[$V{TotalSaldo}]]></textFieldExpression>
-			</textField>
-			<staticText>
-				<reportElement x="275" y="0" width="70" height="20" uuid="68405f1e-4bca-4579-901f-7fb42065e4ef"/>
-				<textElement textAlignment="Right" verticalAlignment="Middle">
-					<font isBold="true"/>
-				</textElement>
-				<text><![CDATA[TOTAL:]]></text>
-			</staticText>
-		</band>
+		<band height="2" splitType="Stretch"/>
 	</columnFooter>
 	<pageFooter>
 		<band height="20" splitType="Stretch">

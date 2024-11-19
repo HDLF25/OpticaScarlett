@@ -3,3 +3,9 @@
 • Crear menú para creación de usuario
 
 • Crear usuario en la DB, sucasu - asu2024
+
+Para el Reporte de Existencia (Se puede hacer listado y reporte)
+Buscar según:
+• Todos los artículos
+• Por Marca
+• Por Categoría

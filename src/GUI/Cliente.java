@@ -1,13 +1,8 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package GUI;
 
 import Otros.Conexion;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -17,10 +12,6 @@ import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author David
- */
 public class Cliente extends javax.swing.JPanel {
 
     Conexion con;

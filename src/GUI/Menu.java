@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
- */
 package GUI;
 
 import Otros.Conexion;
@@ -21,7 +17,7 @@ public class Menu extends javax.swing.JFrame {
     static JDialog contenedor = null;
     public static int idUsuario = 0;
 
-    public Menu(String Username, int idUsuario) {
+    public Menu(String Username, int idUsuario) throws SQLException {
         initComponents();
         this.idUsuario = idUsuario;
         this.setLocationRelativeTo(null);
@@ -32,13 +28,93 @@ public class Menu extends javax.swing.JFrame {
         lblWelcome.setText("Bienvenido, " + Username + "!");
         con = new Conexion();
         con.Login();
-        CheckUserPermissions();
+        DisableAllBtns();
+        CheckUserPermissions(idUsuario);
     }
 
-    private void CheckUserPermissions() {
-        
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "FichaMain":
+                        btnFicha.setEnabled(true);
+                        itemFicha.setEnabled(true);
+                        break;
+                    case "CliMain":
+                        btnClientes.setEnabled(true);
+                        itemClientes.setEnabled(true);
+                        break;
+                    case "ArtMain":
+                        btnArticulos.setEnabled(true);
+                        itemArticulos.setEnabled(true);
+                        break;
+                    case "StockMain":
+                        btnIngresarStock.setEnabled(true);
+                        itemStock.setEnabled(true);
+                        break;
+                    case "CityMain":
+                        btnCiudades.setEnabled(true);
+                        itemCiudades.setEnabled(true);
+                        break;
+                    case "BrandMain":
+                        btnMarcas.setEnabled(true);
+                        itemMarcas.setEnabled(true);
+                        break;
+                    case "PayMain":
+                        btnPayMethod.setEnabled(true);
+                        itemPayMethod.setEnabled(true);
+                        break;
+                    case "UserMain":
+                        btnUser.setEnabled(true);
+                        itemUser.setEnabled(true);
+                        break;
+                    case "ReportFicha":
+                        btnFindFicha.setEnabled(true);
+                        itemSearchOT.setEnabled(true);
+                        break;
+                    case "ReportSales":
+                        btnSaleSummary.setEnabled(true);
+                        itemSaleSummary.setEnabled(true);
+                        break;
+                    case "ReportStock":
+                        btnStockReport.setEnabled(true);
+                        itemStockReport.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: "+idPermission+", "+namePermission);
+                }
+            }
+        }
     }
     
+    private void DisableAllBtns(){
+        btnFicha.setEnabled(false);
+        btnClientes.setEnabled(false);
+        btnFindFicha.setEnabled(false);
+        btnSaleSummary.setEnabled(false);
+        btnStockReport.setEnabled(false);
+        btnArticulos.setEnabled(false);
+        btnIngresarStock.setEnabled(false);
+        btnCiudades.setEnabled(false);
+        btnMarcas.setEnabled(false);
+        btnPayMethod.setEnabled(false);
+        btnUser.setEnabled(false);
+        itemFicha.setEnabled(false);
+        itemClientes.setEnabled(false);
+        itemSearchOT.setEnabled(false);
+        itemSaleSummary.setEnabled(false);
+        itemStockReport.setEnabled(false);
+        itemArticulos.setEnabled(false);
+        itemStock.setEnabled(false);
+        itemCiudades.setEnabled(false);
+        itemMarcas.setEnabled(false);
+    }
+
     private Menu() {
         throw new UnsupportedOperationException("Not supported yet."); // Generated from nbfs://nbhost/SystemFileSystem/Templates/Classes/Code/GeneratedMethodBody
     }
@@ -55,9 +131,10 @@ public class Menu extends javax.swing.JFrame {
         lblWelcome = new javax.swing.JLabel();
         jLabel2 = new javax.swing.JLabel();
         btnFicha = new javax.swing.JButton();
+        btnClientes = new javax.swing.JButton();
         btnFindFicha = new javax.swing.JButton();
         btnSaleSummary = new javax.swing.JButton();
-        btnClientes = new javax.swing.JButton();
+        btnStockReport = new javax.swing.JButton();
         jSeparator1 = new javax.swing.JSeparator();
         jLabel3 = new javax.swing.JLabel();
         btnArticulos = new javax.swing.JButton();
@@ -68,9 +145,8 @@ public class Menu extends javax.swing.JFrame {
         btnMarcas = new javax.swing.JButton();
         btnPayMethod = new javax.swing.JButton();
         btnUser = new javax.swing.JButton();
+        btnLogout = new javax.swing.JButton();
         btnExit = new javax.swing.JButton();
-        jButton1 = new javax.swing.JButton();
-        jButton2 = new javax.swing.JButton();
         jMenuBar1 = new javax.swing.JMenuBar();
         menuOp = new javax.swing.JMenu();
         itemFicha = new javax.swing.JMenuItem();
@@ -81,9 +157,12 @@ public class Menu extends javax.swing.JFrame {
         jMenu1 = new javax.swing.JMenu();
         itemSearchOT = new javax.swing.JMenuItem();
         itemSaleSummary = new javax.swing.JMenuItem();
+        itemStockReport = new javax.swing.JMenuItem();
         menuRef = new javax.swing.JMenu();
         itemCiudades = new javax.swing.JMenuItem();
         itemMarcas = new javax.swing.JMenuItem();
+        itemPayMethod = new javax.swing.JMenuItem();
+        itemUser = new javax.swing.JMenuItem();
         menuHelp = new javax.swing.JMenu();
         itemChangelog = new javax.swing.JMenuItem();
 
@@ -103,6 +182,14 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
+        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
+        btnClientes.setText("Clientes");
+        btnClientes.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnClientesActionPerformed(evt);
+            }
+        });
+
         btnFindFicha.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
         btnFindFicha.setText("Buscar Ficha/OT");
         btnFindFicha.addActionListener(new java.awt.event.ActionListener() {
@@ -119,11 +206,11 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
-        btnClientes.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/user.png"))); // NOI18N
-        btnClientes.setText("Clientes");
-        btnClientes.addActionListener(new java.awt.event.ActionListener() {
+        btnStockReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
+        btnStockReport.setText("Reporte de Existencia");
+        btnStockReport.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                btnClientesActionPerformed(evt);
+                btnStockReportActionPerformed(evt);
             }
         });
 
@@ -179,24 +266,21 @@ public class Menu extends javax.swing.JFrame {
             }
         });
 
+        btnLogout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
+        btnLogout.setText("Cerrar Sesión");
+        btnLogout.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnLogoutActionPerformed(evt);
+            }
+        });
+
         btnExit.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/exit.png"))); // NOI18N
-        btnExit.setText("Cerrar Sistema");
+        btnExit.setText("Salir del Sistema");
         btnExit.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 btnExitActionPerformed(evt);
             }
         });
-
-        jButton1.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
-        jButton1.setText("Cerrar Sesión");
-        jButton1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton1ActionPerformed(evt);
-            }
-        });
-
-        jButton2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
-        jButton2.setText("Reporte de Existencia");
 
         menuOp.setText("Operaciones");
 
@@ -259,9 +343,23 @@ public class Menu extends javax.swing.JFrame {
         });
         jMenu1.add(itemSaleSummary);
 
+        itemStockReport.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
+        itemStockReport.setText("Reporte de Existencia");
+        itemStockReport.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemStockReportActionPerformed(evt);
+            }
+        });
+        jMenu1.add(itemStockReport);
+
         jMenuBar1.add(jMenu1);
 
         menuRef.setText("Configuración");
+        menuRef.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                menuRefActionPerformed(evt);
+            }
+        });
 
         itemCiudades.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/city.png"))); // NOI18N
         itemCiudades.setText("Ciudades");
@@ -280,6 +378,19 @@ public class Menu extends javax.swing.JFrame {
             }
         });
         menuRef.add(itemMarcas);
+
+        itemPayMethod.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/complete.png"))); // NOI18N
+        itemPayMethod.setText("Métodos de Pago");
+        menuRef.add(itemPayMethod);
+
+        itemUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/contrasena.png"))); // NOI18N
+        itemUser.setText("Usuarios");
+        itemUser.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                itemUserActionPerformed(evt);
+            }
+        });
+        menuRef.add(itemUser);
 
         jMenuBar1.add(menuRef);
 
@@ -308,9 +419,9 @@ public class Menu extends javax.swing.JFrame {
                     .addComponent(lblWelcome, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                         .addGap(0, 0, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnLogout, javax.swing.GroupLayout.PREFERRED_SIZE, 125, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnExit, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator1)
                     .addComponent(jSeparator2)
                     .addGroup(layout.createSequentialGroup()
@@ -338,7 +449,7 @@ public class Menu extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(btnSaleSummary, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jButton2, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                                .addComponent(btnStockReport, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)))
                         .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
@@ -357,7 +468,7 @@ public class Menu extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnFindFicha)
                     .addComponent(btnSaleSummary)
-                    .addComponent(jButton2))
+                    .addComponent(btnStockReport))
                 .addGap(18, 18, 18)
                 .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -380,7 +491,7 @@ public class Menu extends javax.swing.JFrame {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnExit)
-                    .addComponent(jButton1))
+                    .addComponent(btnLogout))
                 .addContainerGap())
         );
 
@@ -450,7 +561,7 @@ public class Menu extends javax.swing.JFrame {
     private void btnArticulosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArticulosActionPerformed
         try {
             contenedor = new JDialog();
-            contenedor.getContentPane().add(new Articulo());
+            contenedor.getContentPane().add(new Articulo(idUsuario));
             contenedor.setModal(true);
             contenedor.setTitle("Articulos");
             URL url = getClass().getResource("/images/boxicon.png");
@@ -486,7 +597,7 @@ public class Menu extends javax.swing.JFrame {
     private void btnFichaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnFichaActionPerformed
         try {
             contenedor = new JDialog();
-            contenedor.getContentPane().add(new FichaCliente());
+            contenedor.getContentPane().add(new FichaCliente(idUsuario));
             contenedor.setModal(false);
             contenedor.setTitle("Ficha del Cliente");
             URL url = getClass().getResource("/images/idcardicon.png");
@@ -617,11 +728,41 @@ public class Menu extends javax.swing.JFrame {
         contenedor.setVisible(true);
     }//GEN-LAST:event_btnUserActionPerformed
 
-    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+    private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed
         JFrame loginFrame = new Login();
         loginFrame.setVisible(true);
         dispose();
-    }//GEN-LAST:event_jButton1ActionPerformed
+    }//GEN-LAST:event_btnLogoutActionPerformed
+
+    private void itemStockReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemStockReportActionPerformed
+        btnStockReport.doClick();
+    }//GEN-LAST:event_itemStockReportActionPerformed
+
+    private void menuRefActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_menuRefActionPerformed
+        btnPayMethod.doClick();
+    }//GEN-LAST:event_menuRefActionPerformed
+
+    private void itemUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemUserActionPerformed
+        btnUser.doClick();
+    }//GEN-LAST:event_itemUserActionPerformed
+
+    private void btnStockReportActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnStockReportActionPerformed
+        try {
+            contenedor = new JDialog();
+            contenedor.getContentPane().add(new StockReport());
+            contenedor.setModal(false);
+            contenedor.setTitle("Reporte de Exitencia de Artículos");
+            URL url = getClass().getResource("/images/searchicon.png");
+            ImageIcon imgicon = new ImageIcon(url);
+            contenedor.setIconImage(imgicon.getImage());
+            contenedor.pack();
+            contenedor.setLocationRelativeTo(null);
+            contenedor.setResizable(false);
+            contenedor.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnStockReportActionPerformed
 
     /**
      * @param args the command line arguments
@@ -666,9 +807,11 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JButton btnFicha;
     private javax.swing.JButton btnFindFicha;
     private javax.swing.JButton btnIngresarStock;
+    private javax.swing.JButton btnLogout;
     private javax.swing.JButton btnMarcas;
     private javax.swing.JButton btnPayMethod;
     private javax.swing.JButton btnSaleSummary;
+    private javax.swing.JButton btnStockReport;
     private javax.swing.JButton btnUser;
     private javax.swing.JMenuItem itemArticulos;
     private javax.swing.JMenuItem itemChangelog;
@@ -676,11 +819,12 @@ public class Menu extends javax.swing.JFrame {
     private javax.swing.JMenuItem itemClientes;
     private javax.swing.JMenuItem itemFicha;
     private javax.swing.JMenuItem itemMarcas;
+    private javax.swing.JMenuItem itemPayMethod;
     private javax.swing.JMenuItem itemSaleSummary;
     private javax.swing.JMenuItem itemSearchOT;
     private javax.swing.JMenuItem itemStock;
-    private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
+    private javax.swing.JMenuItem itemStockReport;
+    private javax.swing.JMenuItem itemUser;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;

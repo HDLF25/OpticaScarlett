@@ -48,7 +48,7 @@ public class FichaCliente extends javax.swing.JPanel {
         }
     };
 
-    public FichaCliente() throws SQLException {
+    public FichaCliente(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -63,8 +63,38 @@ public class FichaCliente extends javax.swing.JPanel {
         CabeceraTablaOT();
         CabeceraTablaPayMethod();
         CargarCboxPMethod();
+        CheckUserPermissions(idUsuario);
         dtOTDate.setDateFormatString("dd/MM/yyyy");
         btnPayDelete.setRequestFocusEnabled(false);
+    }
+
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DeshabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "FichaCreate":
+                        btnOTNew.setEnabled(true);
+                        break;
+                    case "FichaEdit":
+                        btnOTEdit.setEnabled(true);
+                        break;
+                    case "FichaNull":
+                        btnOTNull.setEnabled(true);
+                        break;
+                    case "FichaClose":
+                        btnOTClose.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
 
     private void DeshabilitarMainBtn() {
@@ -533,7 +563,6 @@ public class FichaCliente extends javax.swing.JPanel {
             }
         } else if (Flag == 4) {
             con.EditarDatos("ordentrabajo", "sena=" + txtCOTSena.getText() + ", total=" + txtCOTSaldo.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
-            //FALTA AGREGAR CAMBIOS EN EL DB DE LOS MÉTODOS DE PAGO
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
                 String CurrPay = PayMethod.getValueAt(i, 0).toString();
                 String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
@@ -561,7 +590,6 @@ public class FichaCliente extends javax.swing.JPanel {
         String SQL_Recuperar = "select ot.*,us.username,sum(dot.subtotal_articulo) as subtotal_articulo from ordentrabajo ot, detalle_ordentrabajo dot, cliente cl, usuario us where cl.id_cliente=ot.id_cliente and ot.id_usuario=us.id_usuario and dot.id_ordentrabajo=ot.id_ordentrabajo and ot.id_ordentrabajo='" + id + "' group by ot.id_ordentrabajo,cl.ci_cliente,cl.nombre_cliente,cl.apellido_cliente,us.username order by fecha_ordentrabajo desc";
         rs = con.Results(SQL_Recuperar);
         if (rs.next()) {
-
             String NroOT = rs.getString("id_ordentrabajo");
             String CiSol = rs.getString("id_cliente");
             String CiPa = rs.getString("id_paciente");
@@ -619,7 +647,6 @@ public class FichaCliente extends javax.swing.JPanel {
                 txtCristalCode.setText(rs.getString("id_articulo"));
                 txtCristalDescr.setText(rs.getString("descripcion_articulo"));
             }
-            /* FALTA RECUPERAR ARTICULOS Y AÑADIR EN LA TABLA DETALLE */
             String SQLArticulos = "select dot.id_articulo,art.descripcion_articulo,dot.cantidad_articulo,dot.precio_articulo,dot.subtotal_articulo from detalle_ordentrabajo dot, ordentrabajo ot, articulos art where dot.id_ordentrabajo=ot.id_ordentrabajo and dot.id_articulo=art.id_articulo and dot.id_ordentrabajo=" + NroOT;
             rs = con.Results(SQLArticulos);
             while (rs.next()) {
@@ -2543,11 +2570,6 @@ public class FichaCliente extends javax.swing.JPanel {
         lblOTSubtotal.setHorizontalTextPosition(javax.swing.SwingConstants.RIGHT);
 
         txtOTSubtotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
-        txtOTSubtotal.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                txtOTSubtotalActionPerformed(evt);
-            }
-        });
 
         lblSena.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblSena.setText("Seña");
@@ -2784,13 +2806,18 @@ public class FichaCliente extends javax.swing.JPanel {
     }//GEN-LAST:event_btnConfirmarCliActionPerformed
 
     private void btnOTCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOTCancelActionPerformed
-        Flag = 0;
-        DeshabilitarBtn1();
-        DeshabilitarBtn2();
-        DeshabilitarTxt1();
-        DeshabilitarTxt2();
-        LimpiarTxt();
-        LimpiarTxt2();
+        try {
+            Flag = 0;
+            DeshabilitarBtn1();
+            DeshabilitarBtn2();
+            DeshabilitarTxt1();
+            DeshabilitarTxt2();
+            LimpiarTxt();
+            LimpiarTxt2();
+            CheckUserPermissions(Menu.idUsuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnOTCancelActionPerformed
 
     private void btnOTConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOTConfirmActionPerformed
@@ -2804,6 +2831,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     DeshabilitarBtn2();
                     DeshabilitarTxt1();
                     DeshabilitarTxt2();
+                    CheckUserPermissions(Menu.idUsuario);
                     Flag = 0;
                 } catch (SQLException ex) {
                     Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -3325,14 +3353,9 @@ public class FichaCliente extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnSearchOTActionPerformed
 
-    private void txtOTSubtotalActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_txtOTSubtotalActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_txtOTSubtotalActionPerformed
-
     private void btnOTCloseActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOTCloseActionPerformed
         Flag = 4;
-        /* HabilitarBtn1();
-        HabilitarTxt1(); */
+        DeshabilitarMainBtn();
         txtOTNro.setEnabled(true);
         btnSearchOT.setEnabled(true);
         txtOTNro.setEditable(true);
@@ -3424,8 +3447,6 @@ public class FichaCliente extends javax.swing.JPanel {
         } else {
             JOptionPane.showMessageDialog(null, "Acceso denegado.");
         }
-
-
     }//GEN-LAST:event_btnOKUserActionPerformed
 
     private void btnCancelUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelUserActionPerformed
@@ -3518,59 +3539,6 @@ public class FichaCliente extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "Ingrese un monto antes de continuar.");
             txtPayMount.requestFocus();
         }
-        /*if (!txtPayMount.getText().equals("")) { //Comprueba de que el monto no esté vacio
-            if (!txtPayCompr.getText().equals("")) { //Comprueba de que el nro de comprobante no esté vacio
-                if (Integer.parseInt(txtPayMount.getText()) > 0) { //Comprueba de que el monto sea mayor a 0
-                    if (Integer.parseInt(txtPayCompr.getText()) >= 0) { //Comprueba de que el nro de comprobante sea mayor a 0
-                        //String PayMethodSelected = (String) cboxPayMethod.getSelectedItem();
-                        String PayMethodSelected = "Efectivo";
-                        if (Check(PayMethod, 0, PayMethodSelected) == true) {
-                            Object[] fila = new Object[3];
-                            fila[0] = cboxPayMethod.getSelectedItem();
-                            fila[1] = txtPayMount.getText();
-                            fila[2] = txtPayCompr.getText();
-                            PayMethod.addRow(fila);
-                            cboxPayMethod.setSelectedIndex(0);
-                            cboxPayMethod.requestFocus();
-                            CalcPayMethod();
-                            txtPayMount.setText("");
-                            txtPayCompr.setText("");
-                        } else {
-                            int Option = JOptionPane.showConfirmDialog(null, "Este método de pago ya ha sido insertado. Desea sumar a la lista?", "Atención", JOptionPane.YES_NO_OPTION);
-                            if (Option == 0) {
-                                int row = 0;
-                                for (int a = 0; a < PayMethod.getRowCount(); a++) {
-                                    if (PayMethod.getValueAt(a, 0).toString().equals(PayMethodSelected)) {
-                                        row = a;
-                                    }
-                                }
-                                int LastValue = Integer.parseInt(PayMethod.getValueAt(row, 1).toString());
-                                int NewValue = Integer.parseInt(txtPayMount.getText());
-                                PayMethod.setValueAt(String.valueOf(LastValue + NewValue), row, 1);
-                                CalcPayMethod();
-                                cboxPayMethod.setSelectedIndex(0);
-                                txtPayMount.setText("");
-                                txtPayCompr.setText("");
-                            }
-                        }
-                    } else {
-                        JOptionPane.showMessageDialog(null, "Nro. Comprobante no puede contener valores negativos. Vuelve a intentarlo.");
-                        txtPayCompr.setText("");
-                        txtPayCompr.requestFocus();
-                    }
-                } else if (Integer.parseInt(txtPayMount.getText()) <= 0) {
-                    JOptionPane.showMessageDialog(null, "Monto inválido, ingrese solo valores positivos y mayores a 0.");
-                    txtPayMount.setText("");
-                    txtPayMount.requestFocus();
-                }
-            } else {
-                JOptionPane.showMessageDialog(null, "Ingrese el número de comprobante antes de continuar.");
-                txtPayCompr.requestFocus();
-            }
-        } else {
-            JOptionPane.showMessageDialog(null, "Ingrese un monto antes de continuar.");
-            txtPayMount.requestFocus();
-        }*/
     }//GEN-LAST:event_btnPayAddActionPerformed
 
     private void txtPayMountKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtPayMountKeyPressed
