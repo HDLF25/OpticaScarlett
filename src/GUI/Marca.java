@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package GUI;
 
 import Otros.Conexion;
@@ -13,10 +9,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author David
- */
 public class Marca extends javax.swing.JPanel {
 
     Conexion con;
@@ -29,13 +21,14 @@ public class Marca extends javax.swing.JPanel {
         }
     };
 
-    public Marca() {
+    public Marca(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
         DeshabilitarTxt();
         DeshabilitarBtn();
         CabeceraTabla();
+        CheckUserPermissions(idUsuario);
     }
 
     private void HabilitarBtn(){
@@ -55,6 +48,13 @@ public class Marca extends javax.swing.JPanel {
         btnConfirmar.setEnabled(false);
         btnCancelar.setEnabled(false);
     }
+    
+    private void DeshabilitarMainBtn(){
+        btnAdd.setEnabled(false);
+        btnEdit.setEnabled(false);
+        btnErase.setEnabled(false);
+        btnSearch.setEnabled(false);
+    }
 
     private void HabilitarTxt(){
         txtidMarca.setEnabled(true);
@@ -69,6 +69,35 @@ public class Marca extends javax.swing.JPanel {
     private void LimpiarTxt(){
         txtidMarca.setText("");
         txtMarca.setText("");
+    }
+    
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DeshabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (26,27,28,29) AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "BrandCreate":
+                        btnAdd.setEnabled(true);
+                        break;
+                    case "BrandEdit":
+                        btnEdit.setEnabled(true);
+                        break;
+                    case "BrandDelete":
+                        btnErase.setEnabled(true);
+                        break;
+                    case "BrandList":
+                        btnSearch.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
     
     private void NuevaMarca() throws SQLException{
@@ -351,10 +380,15 @@ public class Marca extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Flag = 0;
-        LimpiarTxt();
-        DeshabilitarBtn();
-        DeshabilitarTxt();
+        try {
+            Flag = 0;
+            LimpiarTxt();
+            DeshabilitarBtn();
+            DeshabilitarTxt();
+            CheckUserPermissions(Menu.idUsuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(Marca.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -413,11 +447,16 @@ public class Marca extends javax.swing.JPanel {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         if (Validaciones() == true) {
-            GuardarDatos();
-            LimpiarTxt();
-            DeshabilitarTxt();
-            DeshabilitarBtn();
-            Flag = 0;
+            try {
+                GuardarDatos();
+                LimpiarTxt();
+                DeshabilitarTxt();
+                DeshabilitarBtn();
+                CheckUserPermissions(Menu.idUsuario);
+                Flag = 0;
+            } catch (SQLException ex) {
+                Logger.getLogger(Marca.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 

@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 import net.sf.jasperreports.engine.JRException;
 import net.sf.jasperreports.engine.JasperFillManager;
@@ -79,6 +80,8 @@ public class ListadoFicha extends javax.swing.JPanel {
     }
 
     private void CabeceraTablaCliente() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         SearchCliente.addColumn("ID");
         SearchCliente.addColumn("CI/RUC");
         SearchCliente.addColumn("Nombres");
@@ -88,12 +91,17 @@ public class ListadoFicha extends javax.swing.JPanel {
         SearchCliente.addColumn("Ciudad");
         SearchCliente.addColumn("Dirección");
         TSearcherCliente.getColumnModel().getColumn(0).setPreferredWidth(30);
+        TSearcherCliente.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         TSearcherCliente.getColumnModel().getColumn(1).setPreferredWidth(80);
+        TSearcherCliente.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         TSearcherCliente.getColumnModel().getColumn(2).setPreferredWidth(100);
         TSearcherCliente.getColumnModel().getColumn(3).setPreferredWidth(100);
         TSearcherCliente.getColumnModel().getColumn(4).setPreferredWidth(30);
+        TSearcherCliente.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         TSearcherCliente.getColumnModel().getColumn(5).setPreferredWidth(60);
+        TSearcherCliente.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         TSearcherCliente.getColumnModel().getColumn(6).setPreferredWidth(60);
+        TSearcherCliente.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         TSearcherCliente.getColumnModel().getColumn(7).setPreferredWidth(150);
     }
 
@@ -491,7 +499,12 @@ public class ListadoFicha extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void cboxFiltrarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxFiltrarItemStateChanged
-        txtFilter.setText("");
+        try {
+            txtFilter.setText("");
+            CargarTablaClientes();
+        } catch (SQLException ex) {
+            Logger.getLogger(ListadoFicha.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cboxFiltrarItemStateChanged
 
     private void TSearcherClienteMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSearcherClienteMouseClicked

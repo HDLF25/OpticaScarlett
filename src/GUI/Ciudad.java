@@ -29,13 +29,14 @@ public class Ciudad extends javax.swing.JPanel {
         }
     };
 
-    public Ciudad() {
+    public Ciudad(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
         DeshabilitarBtn();
         DeshabilitarTxt();
         CabeceraTabla();
+        CheckUserPermissions(idUsuario);
     }
 
     private void HabilitarBtn(){
@@ -55,6 +56,13 @@ public class Ciudad extends javax.swing.JPanel {
         btnConfirmar.setEnabled(false);
         btnCancelar.setEnabled(false);
     }
+    
+    private void DeshabilitarMainBtn(){
+        btnAdd.setEnabled(false);
+        btnEdit.setEnabled(false);
+        btnErase.setEnabled(false);
+        btnSearch.setEnabled(false);
+    }
 
     private void HabilitarTxt(){
         txtidCiudad.setEnabled(true);
@@ -69,6 +77,35 @@ public class Ciudad extends javax.swing.JPanel {
     private void LimpiarTxt(){
         txtidCiudad.setText("");
         txtCiudad.setText("");
+    }
+    
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DeshabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (21,22,23,24) AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "CityCreate":
+                        btnAdd.setEnabled(true);
+                        break;
+                    case "CityEdit":
+                        btnEdit.setEnabled(true);
+                        break;
+                    case "CityDelete":
+                        btnErase.setEnabled(true);
+                        break;
+                    case "CityList":
+                        btnSearch.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
     
     private void NuevaCiudad() throws SQLException{
@@ -406,19 +443,29 @@ public class Ciudad extends javax.swing.JPanel {
     }//GEN-LAST:event_btnSearchActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Flag = 0;
-        LimpiarTxt();
-        DeshabilitarBtn();
-        DeshabilitarTxt();
+        try {
+            Flag = 0;
+            LimpiarTxt();
+            DeshabilitarBtn();
+            DeshabilitarTxt();
+            CheckUserPermissions(Menu.idUsuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(Ciudad.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         if (Validaciones() == true) {
-            GuardarDatos();
-            LimpiarTxt();
-            DeshabilitarTxt();
-            DeshabilitarBtn();
-            Flag = 0;
+            try {
+                GuardarDatos();
+                LimpiarTxt();
+                DeshabilitarTxt();
+                DeshabilitarBtn();
+                CheckUserPermissions(Menu.idUsuario);
+                Flag = 0;
+            } catch (SQLException ex) {
+                Logger.getLogger(Ciudad.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 

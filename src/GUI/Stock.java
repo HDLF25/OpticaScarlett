@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JPanel.java to edit this template
- */
 package GUI;
 
 import Otros.Conexion;
@@ -12,10 +8,6 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 
-/**
- *
- * @author david
- */
 public class Stock extends javax.swing.JPanel {
 
     Conexion con;
@@ -29,13 +21,15 @@ public class Stock extends javax.swing.JPanel {
     };
     String costoactualcomp = "";
     
-    public Stock() throws SQLException {
+    public Stock(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
         DeshabilitarBtn();
         DeshabilitarTxt();
         CabeceraTabla();
+        txtArticulo.setEditable(false);
+        CheckUserPermissions(idUsuario);
     }
     
     private void HabilitarBtn(){
@@ -52,6 +46,12 @@ public class Stock extends javax.swing.JPanel {
         btnSearch.setEnabled(true);
         btnConfirmar.setEnabled(false);
         btnCancelar.setEnabled(false);
+    }
+    
+    private void DeshabilitarMainBtn(){
+        btnAdd.setEnabled(false);
+        btnErase.setEnabled(false);
+        btnSearch.setEnabled(false);
     }
 
     private void HabilitarTxt(){
@@ -78,6 +78,32 @@ public class Stock extends javax.swing.JPanel {
         txtCostoActual.setText("");
         txtPrecio.setText("");
         txtStock.setText("");
+    }
+    
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DeshabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (17,18,19) AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "StockAdd":
+                        btnAdd.setEnabled(true);
+                        break;
+                    case "StockRemove":
+                        btnErase.setEnabled(true);
+                        break;
+                    case "StockList":
+                        btnSearch.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
 
     private void GuardarDatos() throws SQLException{
@@ -163,15 +189,19 @@ public class Stock extends javax.swing.JPanel {
         }
         if (txtCostoActual.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Costo Actual vacío. Ingrese un costo para el artículo.");
+            return false;
         }
         if (txtPrecio.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Precio de Venta vacío. Ingrese un precio para el artículo.");
+            return false;
         }
         if (txtStock.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Campo de Stock vacío. Ingrese un Stock para el artículo.");
+            return false;
         }
         if (txtNuevoStock.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Agregue una cantidad a modificar antes de continuar.");
+            return false;
         }
         return true;
     }
@@ -258,7 +288,7 @@ public class Stock extends javax.swing.JPanel {
             .addGroup(SearcherLayout.createSequentialGroup()
                 .addContainerGap()
                 .addGroup(SearcherLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 708, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 898, Short.MAX_VALUE)
                     .addGroup(SearcherLayout.createSequentialGroup()
                         .addComponent(lblFiltrar)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -285,7 +315,7 @@ public class Stock extends javax.swing.JPanel {
                     .addComponent(cboxFiltrar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(jButton1))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 508, Short.MAX_VALUE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnCerrar)
                 .addContainerGap())
@@ -488,6 +518,7 @@ public class Stock extends javax.swing.JPanel {
                 LimpiarTxt();
                 DeshabilitarTxt();
                 DeshabilitarBtn();
+                CheckUserPermissions(Menu.idUsuario);
                 Flag = 0;
             } catch (SQLException ex) {
                 Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
@@ -496,11 +527,16 @@ public class Stock extends javax.swing.JPanel {
     }//GEN-LAST:event_btnConfirmarActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Flag = 0;
-        LimpiarTxt();
-        DeshabilitarBtn();
-        DeshabilitarTxt();
-        lblNuevoStock.setText("Cantidad...");
+        try {
+            Flag = 0;
+            LimpiarTxt();
+            DeshabilitarBtn();
+            DeshabilitarTxt();
+            CheckUserPermissions(Menu.idUsuario);
+            lblNuevoStock.setText("Cantidad...");
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void txtidArticuloKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtidArticuloKeyPressed
@@ -535,7 +571,12 @@ public class Stock extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void cboxFiltrarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxFiltrarItemStateChanged
-        txtFilter.setText("");
+        try {
+            txtFilter.setText("");
+            LoadTable();
+        } catch (SQLException ex) {
+            Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cboxFiltrarItemStateChanged
 
     private void TSearcherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSearcherMouseClicked
@@ -557,13 +598,13 @@ public class Stock extends javax.swing.JPanel {
         try {
             String filtro = "";
             if (cboxFiltrar.getSelectedItem().equals("Descripción")) {
-                filtro = "descripcion_articulo";
+                filtro = "art.descripcion_articulo";
             } else if (cboxFiltrar.getSelectedItem().equals("Código/ID")) {
-                filtro = "id_articulo";
+                filtro = "art.id_articulo";
             } else if (cboxFiltrar.getSelectedItem().equals("Marca")) {
-                filtro = "descripcion_marca";
+                filtro = "mar.descripcion_marca";
             } else if (cboxFiltrar.getSelectedItem().equals("Categoría")) {
-                filtro = "categoria_articulo";
+                filtro = "art.categoria_articulo";
             }
             String SQL_Search = "select art.*, mar.descripcion_marca, stk.cantidad from articulos art, marca mar, stock stk where art.id_articulo=stk.id_articulo and art.id_marca=mar.id_marca and art.categoria_articulo!='Servicio' and "+filtro+" ilike '%"+txtFilter.getText()+"%'";
             rs = con.Results(SQL_Search);

@@ -10,6 +10,7 @@ import java.time.LocalDate;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class FichaCliente extends javax.swing.JPanel {
@@ -70,7 +71,7 @@ public class FichaCliente extends javax.swing.JPanel {
 
     private void CheckUserPermissions(int idUser) throws SQLException {
         DeshabilitarMainBtn();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + idUser + ";";
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (2,3,4,5) AND id_usuario = " + idUser + ";";
         rs = con.Results(SQLUserCheck);
         while (rs.next()) {
             int idPermission = rs.getInt("id_permission");
@@ -165,8 +166,10 @@ public class FichaCliente extends javax.swing.JPanel {
         txtOTState.setEnabled(true);
         dtOTDate.setEnabled(true);
         txtCiSol.setEnabled(true);
+        txtCiSol.setEditable(true);
         txtClienteSol.setEnabled(true);
         txtCiPa.setEnabled(true);
+        txtCiPa.setEditable(true);
         txtClientePa.setEnabled(true);
     }
 
@@ -213,6 +216,18 @@ public class FichaCliente extends javax.swing.JPanel {
         txtClienteSol.setEnabled(false);
         txtCiPa.setEnabled(false);
         txtClientePa.setEnabled(false);
+    }
+    private void DeshabilitarClientPanel() {
+        txtCiSol.setEditable(false);
+        txtClienteSol.setEditable(false);
+        txtCiPa.setEditable(false);
+        txtClientePa.setEditable(false);
+        btnSearchSol.setEnabled(false);
+        btnClearSol.setEnabled(false);
+        btnSearchPa.setEnabled(false);
+        btnClearPa.setEnabled(false);
+        btnCopy.setEnabled(false);
+        btnConfirmarCli.setEnabled(false);
     }
 
     private void DeshabilitarTxt2() {
@@ -448,7 +463,7 @@ public class FichaCliente extends javax.swing.JPanel {
         if (rs.next()) {
             IDPa = rs.getString("id_cliente");
         }
-        if (Flag == 1) {
+        if (Flag == 1) { // Guardar datos
             con.InsertarDatos("ordentrabajo",
                     "id_cliente,id_paciente,id_usuario,ot_estado,fecha_ordentrabajo,oi_esferico,oi_cilindrico,oi_eje,oi_adicion,oi_cantidad,od_esferico,od_cilindrico,od_eje,od_adicion,od_cantidad,di,dnd,dni,alturafocal,id_cristal,preciocristal,observacion,subtotal,sena,total",
                     "'" + IDSol + "','" + IDPa + "','" + 1 + "','" + Estado + "','" + fecha + "','" + OIEsferico + "','" + OICilindrico + "','" + OIEje + "','" + OIAdicion + "','" + OICant + "','" + ODEsferico + "','" + ODCilindrico + "','" + ODEje + "','" + ODAdicion + "','" + ODCant + "','" + DI + "','" + DND + "','" + DNI + "','" + AlturaFocal + "','" + IDCristal + "','" + PrecioCristal + "','" + Observacion + "','" + SubTotal + "','" + Sena + "','" + Saldo + "'");
@@ -476,7 +491,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + Pay_Mount + "," + Pay_Nro);
                 }
             }
-        } else if (Flag == 2) {
+        } else if (Flag == 2) { // Editar Datos
             for (int a = 0; a < DetalleArt.getRowCount(); a++) {
                 String IDArt = DetalleArt.getValueAt(a, 0).toString();
                 String PrecioArt = DetalleArt.getValueAt(a, 2).toString();
@@ -534,7 +549,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 }
             }
             con.EditarDatos("ordentrabajo", "id_cliente='" + IDSol + "',id_paciente='" + IDPa + "',id_usuario='" + 1 + "',ot_estado='" + Estado + "',fecha_ordentrabajo='" + fecha + "',oi_esferico='" + OIEsferico + "',oi_cilindrico='" + OICilindrico + "',oi_eje='" + OIEje + "',oi_adicion='" + OIAdicion + "',oi_cantidad='" + OICant + "',od_esferico='" + ODEsferico + "',od_cilindrico='" + ODCilindrico + "',od_eje='" + ODEje + "',od_adicion='" + ODAdicion + "',od_cantidad='" + ODCant + "',di='" + DI + "',dnd='" + DND + "',dni='" + DNI + "',alturafocal='" + AlturaFocal + "',id_cristal='" + IDCristal + "',preciocristal='" + PrecioCristal + "',observacion='" + Observacion + "',subtotal='" + SubTotal + "',sena='" + Sena + "',total='" + Saldo + "'", "id_ordentrabajo=" + NroOT);
-        } else if (Flag == 3) {
+        } else if (Flag == 3) { //Elimiar Datos
             con.EditarDatos("ordentrabajo", "ot_estado='Anulado'", "id_ordentrabajo='" + NroOT + "'");
             String RecuCant = "select oi_cantidad, od_cantidad from ordentrabajo where id_ordentrabajo='" + NroOT + "'";
             rs = con.Results(RecuCant);
@@ -561,7 +576,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
                 }
             }
-        } else if (Flag == 4) {
+        } else if (Flag == 4) { // Cerrar OT (Editar datos)
             con.EditarDatos("ordentrabajo", "sena=" + txtCOTSena.getText() + ", total=" + txtCOTSaldo.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
                 String CurrPay = PayMethod.getValueAt(i, 0).toString();
@@ -740,19 +755,31 @@ public class FichaCliente extends javax.swing.JPanel {
     }
 
     private void CabeceraTablaDetalleArticulo() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
         DetalleArt.addColumn("ID");
         DetalleArt.addColumn("Descripción");
         DetalleArt.addColumn("Precio Unit.");
         DetalleArt.addColumn("Stock");
         DetalleArt.addColumn("Subtotal");
         TSearcherDetalle.getColumnModel().getColumn(0).setPreferredWidth(50);
+        TSearcherDetalle.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         TSearcherDetalle.getColumnModel().getColumn(1).setPreferredWidth(100);
         TSearcherDetalle.getColumnModel().getColumn(2).setPreferredWidth(45);
+        TSearcherDetalle.getColumnModel().getColumn(2).setCellRenderer(rightRenderer);
         TSearcherDetalle.getColumnModel().getColumn(3).setPreferredWidth(15);
+        TSearcherDetalle.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         TSearcherDetalle.getColumnModel().getColumn(4).setPreferredWidth(30);
+        TSearcherDetalle.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
     }
 
     private void CabeceraTablaArticulo() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
         SearchArticulo.addColumn("ID");
         SearchArticulo.addColumn("Descripción");
         SearchArticulo.addColumn("Categoría");
@@ -761,15 +788,23 @@ public class FichaCliente extends javax.swing.JPanel {
         SearchArticulo.addColumn("Precio");
         SearchArticulo.addColumn("Stock");
         TSearcherArt.getColumnModel().getColumn(0).setPreferredWidth(50);
+        TSearcherArt.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         TSearcherArt.getColumnModel().getColumn(1).setPreferredWidth(200);
         TSearcherArt.getColumnModel().getColumn(2).setPreferredWidth(80);
+        TSearcherArt.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         TSearcherArt.getColumnModel().getColumn(3).setPreferredWidth(80);
+        TSearcherArt.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         TSearcherArt.getColumnModel().getColumn(4).setPreferredWidth(80);
+        TSearcherArt.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
         TSearcherArt.getColumnModel().getColumn(5).setPreferredWidth(80);
+        TSearcherArt.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
         TSearcherArt.getColumnModel().getColumn(6).setPreferredWidth(50);
+        TSearcherArt.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
     }
 
     private void CabeceraTablaCliente() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         SearchCliente.addColumn("ID");
         SearchCliente.addColumn("CI/RUC");
         SearchCliente.addColumn("Nombres");
@@ -779,16 +814,25 @@ public class FichaCliente extends javax.swing.JPanel {
         SearchCliente.addColumn("Ciudad");
         SearchCliente.addColumn("Dirección");
         TSearcherCli.getColumnModel().getColumn(0).setPreferredWidth(30);
+        TSearcherCli.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         TSearcherCli.getColumnModel().getColumn(1).setPreferredWidth(80);
+        TSearcherCli.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         TSearcherCli.getColumnModel().getColumn(2).setPreferredWidth(100);
         TSearcherCli.getColumnModel().getColumn(3).setPreferredWidth(100);
         TSearcherCli.getColumnModel().getColumn(4).setPreferredWidth(30);
+        TSearcherCli.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         TSearcherCli.getColumnModel().getColumn(5).setPreferredWidth(60);
+        TSearcherCli.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         TSearcherCli.getColumnModel().getColumn(6).setPreferredWidth(60);
+        TSearcherCli.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         TSearcherCli.getColumnModel().getColumn(7).setPreferredWidth(150);
     }
 
     private void CabeceraTablaOT() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
         SearchOT.addColumn("Nro OT"); // Columna 0
         SearchOT.addColumn("CI Paciente"); // Columna 1
         SearchOT.addColumn("Nombre Paciente"); // Columna 2
@@ -802,26 +846,42 @@ public class FichaCliente extends javax.swing.JPanel {
         SearchOT.addColumn("Seña"); // Columna 9
         SearchOT.addColumn("Total");  // Columna 10
         TSearcherOT.getColumnModel().getColumn(0).setPreferredWidth(15); //Nro OT
+        TSearcherOT.getColumnModel().getColumn(0).setCellRenderer(centerRenderer); //Nro OT
         TSearcherOT.getColumnModel().getColumn(1).setPreferredWidth(20); //CI Paciente
+        TSearcherOT.getColumnModel().getColumn(1).setCellRenderer(centerRenderer); //CI Paciente
         TSearcherOT.getColumnModel().getColumn(2).setPreferredWidth(90); //Nombre Paciente
         TSearcherOT.getColumnModel().getColumn(3).setPreferredWidth(20); //Fecha
+        TSearcherOT.getColumnModel().getColumn(3).setCellRenderer(centerRenderer); //Fecha
         TSearcherOT.getColumnModel().getColumn(4).setPreferredWidth(20); //Estado
+        TSearcherOT.getColumnModel().getColumn(4).setCellRenderer(centerRenderer); //Estado
         TSearcherOT.getColumnModel().getColumn(5).setPreferredWidth(120); //Observación
         TSearcherOT.getColumnModel().getColumn(6).setPreferredWidth(20); //Total de Cristal
+        TSearcherOT.getColumnModel().getColumn(6).setCellRenderer(rightRenderer); //Total de Cristal
         TSearcherOT.getColumnModel().getColumn(7).setPreferredWidth(10); // Cantidad de Artículos
+        TSearcherOT.getColumnModel().getColumn(7).setCellRenderer(centerRenderer); // Cantidad de Artículos
         TSearcherOT.getColumnModel().getColumn(8).setPreferredWidth(20); // Total de Artículos
+        TSearcherOT.getColumnModel().getColumn(8).setCellRenderer(rightRenderer); // Total de Artículos
         TSearcherOT.getColumnModel().getColumn(9).setPreferredWidth(20); // Subtotal OT
+        TSearcherOT.getColumnModel().getColumn(9).setCellRenderer(rightRenderer); // Subtotal OT
         TSearcherOT.getColumnModel().getColumn(10).setPreferredWidth(20); // Seña
+        TSearcherOT.getColumnModel().getColumn(10).setCellRenderer(rightRenderer); // Seña
         TSearcherOT.getColumnModel().getColumn(11).setPreferredWidth(20); // Total por Pagar Restante
+        TSearcherOT.getColumnModel().getColumn(11).setCellRenderer(rightRenderer); // Total por Pagar Restante
     }
 
     private void CabeceraTablaPayMethod() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
         PayMethod.addColumn("Método de Pago"); // Columna 0
         PayMethod.addColumn("Monto"); // Columna 1
         PayMethod.addColumn("Nro de Comprobante"); // Columna 2
-        TSearcherOT.getColumnModel().getColumn(0).setPreferredWidth(20); //Método de Pago
-        TSearcherOT.getColumnModel().getColumn(1).setPreferredWidth(20); //Monto
-        TSearcherOT.getColumnModel().getColumn(2).setPreferredWidth(50); //Nro de Comprobante
+        TSeacherPay.getColumnModel().getColumn(0).setPreferredWidth(20); //Método de Pago
+        TSeacherPay.getColumnModel().getColumn(1).setPreferredWidth(50); //Monto
+        TSeacherPay.getColumnModel().getColumn(1).setCellRenderer(rightRenderer); //Monto
+        TSeacherPay.getColumnModel().getColumn(2).setPreferredWidth(100); //Nro de Comprobante
+        TSeacherPay.getColumnModel().getColumn(2).setCellRenderer(centerRenderer); //Nro de Comprobante
     }
 
     private void UserCheck(String ObtUser, String ObtPass) throws SQLException {
@@ -2798,7 +2858,7 @@ public class FichaCliente extends javax.swing.JPanel {
 
     private void btnConfirmarCliActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarCliActionPerformed
         if (ValidarCliente() == true) {
-            DeshabilitarTxt1();
+            DeshabilitarClientPanel();
             HabilitarBtn2();
             HabilitarTxt2();
             txtODEsferico.requestFocus();
@@ -2845,7 +2905,12 @@ public class FichaCliente extends javax.swing.JPanel {
     }//GEN-LAST:event_btnCerrarCliActionPerformed
 
     private void cboxFiltrarCliItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxFiltrarCliItemStateChanged
-        txtFilterCli.setText("");
+        try {
+            txtFilterCli.setText("");
+            CargarTablaClientes();
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cboxFiltrarCliItemStateChanged
 
     private void TSearcherCliMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSearcherCliMouseClicked

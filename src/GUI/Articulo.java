@@ -8,6 +8,7 @@ import java.sql.SQLException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class Articulo extends javax.swing.JPanel {
@@ -30,6 +31,7 @@ public class Articulo extends javax.swing.JPanel {
         DeshabilitarTxt();
         CabeceraTabla();
         CargarCboMarca();
+        txtCostoAnterior.setEditable(false);
         CheckUserPermissions(idUsuario);
     }
 
@@ -42,7 +44,7 @@ public class Articulo extends javax.swing.JPanel {
         btnCancelar.setEnabled(true);
         btnTransfer.setEnabled(true);
     }
-    
+
     private void DehabilitarMainBtn() {
         btnAdd.setEnabled(false);
         btnEdit.setEnabled(false);
@@ -101,10 +103,10 @@ public class Articulo extends javax.swing.JPanel {
         cboxCategoria.setSelectedIndex(0);
         cboxMarca.setSelectedIndex(0);
     }
-    
+
     private void CheckUserPermissions(int idUser) throws SQLException {
         DehabilitarMainBtn();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + idUser + ";";
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (12,13,14,15) AND id_usuario = " + idUser + ";";
         rs = con.Results(SQLUserCheck);
         while (rs.next()) {
             int idPermission = rs.getInt("id_permission");
@@ -125,7 +127,7 @@ public class Articulo extends javax.swing.JPanel {
                         btnSearch.setEnabled(true);
                         break;
                     default:
-                        System.out.println("Permiso desconocido: "+idPermission+", "+namePermission);
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
                 }
             }
         }
@@ -199,6 +201,10 @@ public class Articulo extends javax.swing.JPanel {
     }
 
     private void CabeceraTabla() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
         Search.addColumn("ID");
         Search.addColumn("Descripción");
         Search.addColumn("Categoría");
@@ -207,12 +213,18 @@ public class Articulo extends javax.swing.JPanel {
         Search.addColumn("Precio");
         Search.addColumn("Stock");
         TSearcher.getColumnModel().getColumn(0).setPreferredWidth(50);
+        TSearcher.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(1).setPreferredWidth(200);
         TSearcher.getColumnModel().getColumn(2).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(3).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(3).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(4).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(4).setCellRenderer(rightRenderer);
         TSearcher.getColumnModel().getColumn(5).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
         TSearcher.getColumnModel().getColumn(6).setPreferredWidth(50);
+        TSearcher.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
     }
 
     private void LoadTable() throws SQLException {
@@ -250,21 +262,27 @@ public class Articulo extends javax.swing.JPanel {
         }
         if (txtColor.getText().equals("") && !cboxCategoria.getSelectedItem().toString().equals("Servicio")) {
             JOptionPane.showMessageDialog(null, "El campo Color está vacío. Ingrese un color para el artículo.");
+            return false;
         }
         if (txtMaterial.getText().equals("") && !cboxCategoria.getSelectedItem().toString().equals("Servicio")) {
             JOptionPane.showMessageDialog(null, "El campo Material está vacío. Ingrese un material para el artículo.");
+            return false;
         }
         if (txtCostoActual.getText().equals("") && !cboxCategoria.getSelectedItem().toString().equals("Servicio")) {
             JOptionPane.showMessageDialog(null, "Costo Actual vacío. Ingrese un costo para el artículo.");
+            return false;
         }
         if (txtCostoAnterior.getText().equals("") && !cboxCategoria.getSelectedItem().toString().equals("Servicio")) {
             JOptionPane.showMessageDialog(null, "Costo Anterior vacío. Ingrese un costo para el artículo.");
+            return false;
         }
         if (txtPrecio.getText().equals("")) {
             JOptionPane.showMessageDialog(null, "Precio de Venta vacío. Ingrese un precio para el artículo.");
+            return false;
         }
         if (txtStock.getText().equals("") && !cboxCategoria.getSelectedItem().toString().equals("Servicio")) {
             JOptionPane.showMessageDialog(null, "Campo de Stock vacío. Ingrese un Stock para el artículo.");
+            return false;
         }
         return true;
     }
@@ -707,6 +725,7 @@ public class Articulo extends javax.swing.JPanel {
                 RestartCbox();
                 DeshabilitarTxt();
                 DeshabilitarBtn();
+                CheckUserPermissions(Menu.idUsuario);
                 Flag = 0;
             }
         } catch (SQLException ex) {
@@ -743,12 +762,17 @@ public class Articulo extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEraseActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Flag = 0;
-        LimpiarTxt();
-        DeshabilitarBtn();
-        DeshabilitarTxt();
-        RestartCbox();
-        lblStock.setText("Stock...");
+        try {
+            Flag = 0;
+            LimpiarTxt();
+            DeshabilitarBtn();
+            DeshabilitarTxt();
+            RestartCbox();
+            CheckUserPermissions(Menu.idUsuario);
+            lblStock.setText("Stock...");
+        } catch (SQLException ex) {
+            Logger.getLogger(Articulo.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnTransferActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnTransferActionPerformed

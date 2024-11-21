@@ -33,7 +33,7 @@ public class Menu extends javax.swing.JFrame {
     }
 
     private void CheckUserPermissions(int idUser) throws SQLException {
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + idUser + ";";
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (1,6,11,16,20,25,30,35,41,42,43) AND id_usuario = " + idUser + ";";
         rs = con.Results(SQLUserCheck);
         while (rs.next()) {
             int idPermission = rs.getInt("id_permission");
@@ -106,13 +106,15 @@ public class Menu extends javax.swing.JFrame {
         btnUser.setEnabled(false);
         itemFicha.setEnabled(false);
         itemClientes.setEnabled(false);
+        itemArticulos.setEnabled(false);
+        itemStock.setEnabled(false);
         itemSearchOT.setEnabled(false);
         itemSaleSummary.setEnabled(false);
         itemStockReport.setEnabled(false);
-        itemArticulos.setEnabled(false);
-        itemStock.setEnabled(false);
         itemCiudades.setEnabled(false);
         itemMarcas.setEnabled(false);
+        itemPayMethod.setEnabled(false);
+        itemUser.setEnabled(false);
     }
 
     private Menu() {
@@ -503,59 +505,47 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_btnExitActionPerformed
 
     private void btnMarcasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnMarcasActionPerformed
-        contenedor = new JDialog();
-        contenedor.getContentPane().add(new Marca());
-        contenedor.setModal(true);
-        contenedor.setTitle("Marcas");
-        URL url = getClass().getResource("/images/icon.png");
-        ImageIcon imgicon = new ImageIcon(url);
-        contenedor.setIconImage(imgicon.getImage());
-        contenedor.pack();
-        contenedor.setLocationRelativeTo(null);
-        contenedor.setResizable(false);
-        contenedor.setVisible(true);
+        try {
+            contenedor = new JDialog();
+            contenedor.getContentPane().add(new Marca(idUsuario));
+            contenedor.setModal(true);
+            contenedor.setTitle("Marcas");
+            URL url = getClass().getResource("/images/icon.png");
+            ImageIcon imgicon = new ImageIcon(url);
+            contenedor.setIconImage(imgicon.getImage());
+            contenedor.pack();
+            contenedor.setLocationRelativeTo(null);
+            contenedor.setResizable(false);
+            contenedor.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnMarcasActionPerformed
 
     private void itemMarcasActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemMarcasActionPerformed
-        contenedor = new JDialog();
-        contenedor.getContentPane().add(new Marca());
-        contenedor.setModal(true);
-        contenedor.setTitle("Marcas");
-        URL url = getClass().getResource("/images/icon.png");
-        ImageIcon imgicon = new ImageIcon(url);
-        contenedor.setIconImage(imgicon.getImage());
-        contenedor.pack();
-        contenedor.setLocationRelativeTo(null);
-        contenedor.setResizable(false);
-        contenedor.setVisible(true);
+        btnMarcas.doClick();
     }//GEN-LAST:event_itemMarcasActionPerformed
 
     private void btnCiudadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCiudadesActionPerformed
-        contenedor = new JDialog();
-        contenedor.getContentPane().add(new Ciudad());
-        contenedor.setModal(true);
-        contenedor.setTitle("Ciudades");
-        URL url = getClass().getResource("/images/icon.png");
-        ImageIcon imgicon = new ImageIcon(url);
-        contenedor.setIconImage(imgicon.getImage());
-        contenedor.pack();
-        contenedor.setLocationRelativeTo(null);
-        contenedor.setResizable(false);
-        contenedor.setVisible(true);
+        try {
+            contenedor = new JDialog();
+            contenedor.getContentPane().add(new Ciudad(idUsuario));
+            contenedor.setModal(true);
+            contenedor.setTitle("Ciudades");
+            URL url = getClass().getResource("/images/icon.png");
+            ImageIcon imgicon = new ImageIcon(url);
+            contenedor.setIconImage(imgicon.getImage());
+            contenedor.pack();
+            contenedor.setLocationRelativeTo(null);
+            contenedor.setResizable(false);
+            contenedor.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCiudadesActionPerformed
 
     private void itemCiudadesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_itemCiudadesActionPerformed
-        contenedor = new JDialog();
-        contenedor.getContentPane().add(new Ciudad());
-        contenedor.setModal(true);
-        contenedor.setTitle("Ciudades");
-        URL url = getClass().getResource("/images/icon.png");
-        ImageIcon imgicon = new ImageIcon(url);
-        contenedor.setIconImage(imgicon.getImage());
-        contenedor.pack();
-        contenedor.setLocationRelativeTo(null);
-        contenedor.setResizable(false);
-        contenedor.setVisible(true);
+        btnCiudades.doClick();
     }//GEN-LAST:event_itemCiudadesActionPerformed
 
     private void btnArticulosActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnArticulosActionPerformed
@@ -579,7 +569,7 @@ public class Menu extends javax.swing.JFrame {
     private void btnClientesActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnClientesActionPerformed
         try {
             contenedor = new JDialog();
-            contenedor.getContentPane().add(new Cliente());
+            contenedor.getContentPane().add(new Cliente(idUsuario));
             contenedor.setModal(true);
             contenedor.setTitle("Clientes");
             URL url = getClass().getResource("/images/usericon.png");
@@ -615,7 +605,7 @@ public class Menu extends javax.swing.JFrame {
     private void btnIngresarStockActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarStockActionPerformed
         try {
             contenedor = new JDialog();
-            contenedor.getContentPane().add(new Stock());
+            contenedor.getContentPane().add(new Stock(idUsuario));
             contenedor.setModal(true);
             contenedor.setTitle("Ingresar Stock");
             URL url = getClass().getResource("/images/addicon.png");
@@ -677,7 +667,7 @@ public class Menu extends javax.swing.JFrame {
     private void btnPayMethodActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnPayMethodActionPerformed
         try {
             contenedor = new JDialog();
-            contenedor.getContentPane().add(new PayMethods());
+            contenedor.getContentPane().add(new PayMethods(idUsuario));
             contenedor.setModal(true);
             contenedor.setTitle("Métodos de Pago");
             URL url = getClass().getResource("/images/icon.png");
@@ -715,17 +705,21 @@ public class Menu extends javax.swing.JFrame {
     }//GEN-LAST:event_itemSaleSummaryActionPerformed
 
     private void btnUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnUserActionPerformed
-        contenedor = new JDialog();
-        contenedor.getContentPane().add(new Users());
-        contenedor.setModal(false);
-        contenedor.setTitle("Usuarios");
-        URL url = getClass().getResource("/images/idcardicon.png");
-        ImageIcon imgicon = new ImageIcon(url);
-        contenedor.setIconImage(imgicon.getImage());
-        contenedor.pack();
-        contenedor.setLocationRelativeTo(null);
-        contenedor.setResizable(false);
-        contenedor.setVisible(true);
+        try {
+            contenedor = new JDialog();
+            contenedor.getContentPane().add(new Users(idUsuario));
+            contenedor.setModal(false);
+            contenedor.setTitle("Usuarios");
+            URL url = getClass().getResource("/images/idcardicon.png");
+            ImageIcon imgicon = new ImageIcon(url);
+            contenedor.setIconImage(imgicon.getImage());
+            contenedor.pack();
+            contenedor.setLocationRelativeTo(null);
+            contenedor.setResizable(false);
+            contenedor.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Menu.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnUserActionPerformed
 
     private void btnLogoutActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnLogoutActionPerformed

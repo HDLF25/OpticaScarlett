@@ -6,7 +6,7 @@
 	<parameter name="date_first" class="java.util.Date"/>
 	<parameter name="date_last" class="java.util.Date"/>
 	<queryString>
-		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot, cliente cli WHERE cli.id_cliente = ot.id_paciente AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
+		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total, ot.observacion FROM ordentrabajo ot, cliente cli WHERE cli.id_cliente = ot.id_paciente AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
 	</queryString>
 	<field name="id_ordentrabajo" class="java.lang.Integer"/>
 	<field name="fecha_ordentrabajo" class="java.sql.Date"/>
@@ -14,6 +14,7 @@
 	<field name="subtotal" class="java.lang.Integer"/>
 	<field name="sena" class="java.lang.Integer"/>
 	<field name="total" class="java.lang.Integer"/>
+	<field name="observacion" class="java.lang.String"/>
 	<variable name="TotalSubt" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
 	</variable>
@@ -159,36 +160,46 @@
 		</band>
 	</columnHeader>
 	<detail>
-		<band height="60" splitType="Stretch">
+		<band height="35" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="0" width="65" height="20" uuid="b1f4f3e8-2f53-4a7c-98a3-bf03c4e8ddc3"/>
+				<reportElement x="0" y="5" width="65" height="15" uuid="b1f4f3e8-2f53-4a7c-98a3-bf03c4e8ddc3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{id_ordentrabajo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="65" y="0" width="70" height="20" uuid="a635792d-7fb7-40b9-97f9-86cca75f2d5f"/>
+				<reportElement x="65" y="5" width="70" height="15" uuid="a635792d-7fb7-40b9-97f9-86cca75f2d5f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fecha_ordentrabajo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="135" y="0" width="210" height="20" uuid="c565cf7b-1bb1-46b6-90ea-54c0a4ff8be7"/>
+				<reportElement x="135" y="5" width="210" height="15" uuid="c565cf7b-1bb1-46b6-90ea-54c0a4ff8be7"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{paciente}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="485" y="0" width="70" height="20" uuid="dd49e66a-3490-4bb3-ad69-e145024c9c85"/>
+				<reportElement x="485" y="5" width="70" height="15" uuid="dd49e66a-3490-4bb3-ad69-e145024c9c85"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="345" y="0" width="70" height="20" uuid="a76376a6-8228-4863-b484-5a9b4360bb69"/>
+				<reportElement x="345" y="5" width="70" height="15" uuid="a76376a6-8228-4863-b484-5a9b4360bb69"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="415" y="0" width="70" height="20" uuid="a5e00094-2702-4547-be5c-160ccd7f0679"/>
+				<reportElement x="415" y="5" width="70" height="15" uuid="a5e00094-2702-4547-be5c-160ccd7f0679"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{sena}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="0" y="20" width="70" height="15" uuid="7bffc244-c963-4e0e-8fe5-84e49561a736"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Observación:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="75" y="20" width="480" height="15" uuid="95c844d0-f1c4-4efc-b5a9-521aae53da48"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

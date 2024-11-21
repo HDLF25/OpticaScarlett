@@ -1,26 +1,37 @@
 package GUI;
 
 import Otros.Conexion;
+import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
 
 public class Users extends javax.swing.JPanel {
 
     Conexion con;
     ResultSet rs;
     int Flag = 0;
+    DefaultTableModel Search = new DefaultTableModel() {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
 
-    public Users() {
+    public Users(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
         EnableBtns();
         DisableActionBtns();
         DisableAllValues();
+        CabeceraTabla();
+        CheckUserPermissions(idUsuario);
     }
 
     private void EnableBtns() {
@@ -63,6 +74,20 @@ public class Users extends javax.swing.JPanel {
         btnCancel.setEnabled(false);
     }
 
+    private void RestartCheckBoxes() {
+        chbFichaMain.setSelected(false);
+        chbCliMain.setSelected(false);
+        chbArtMain.setSelected(false);
+        chbStockMain.setSelected(false);
+        chbRepFicha.setSelected(false);
+        chbResSales.setSelected(false);
+        chbRepStock.setSelected(false);
+        chbCityMain.setSelected(false);
+        chbBrandMain.setSelected(false);
+        chbMethodMain.setSelected(false);
+        chbUserMain.setSelected(false);
+    }
+
     private void EnableValuesCreate() {
         txtIDUser.setEnabled(true);
         txtIDUser.setEditable(false);
@@ -85,10 +110,26 @@ public class Users extends javax.swing.JPanel {
         chbUserMain.setEnabled(true);
     }
 
-    private void EnableValuesEdit() {
+    private void EnableValuesEditDelete() {
         txtIDUser.setEnabled(true);
         txtIDUser.setEditable(true);
-        txtUsername.setEnabled(true);
+    }
+
+    private void EnableValuesEdit_UserLoaded() {
+        txtFullname.setEnabled(true);
+        txtCIUser.setEnabled(true);
+        chbAdmin.setEnabled(true);
+        chbFichaMain.setEnabled(true);
+        chbCliMain.setEnabled(true);
+        chbArtMain.setEnabled(true);
+        chbStockMain.setEnabled(true);
+        chbRepFicha.setEnabled(true);
+        chbResSales.setEnabled(true);
+        chbRepStock.setEnabled(true);
+        chbCityMain.setEnabled(true);
+        chbBrandMain.setEnabled(true);
+        chbMethodMain.setEnabled(true);
+        chbUserMain.setEnabled(true);
     }
 
     private void EnableAllValues() {
@@ -203,11 +244,45 @@ public class Users extends javax.swing.JPanel {
         chbMethod3.setEnabled(false);
         chbMethod4.setEnabled(false);
         chbUserMain.setEnabled(false);
+        chbUserMain.setSelected(false);
         chbUser1.setEnabled(false);
         chbUser2.setEnabled(false);
         chbUser3.setEnabled(false);
         chbUser4.setEnabled(false);
         chbUser5.setEnabled(false);
+    }
+
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DisableBtns();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (36,37,38,39,40) AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "UserCreate":
+                        btnCreate.setEnabled(true);
+                        break;
+                    case "UserEdit":
+                        btnEdit.setEnabled(true);
+                        break;
+                    case "UserDelete":
+                        btnDelete.setEnabled(true);
+                        break;
+                    case "UserOnOff":
+                        btnDisable.setEnabled(true);
+                        btnEnable.setEnabled(true);
+                        break;
+                    case "UserChangePass":
+                        btnChangePass.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
 
     private void NewUser() throws SQLException {
@@ -246,7 +321,6 @@ public class Users extends javax.swing.JPanel {
             }
         }
     }*/
-
     private boolean CheckUserLoaded(String username) throws SQLException {
         if (Flag == 1) {
             String SQLUser = "Select * from usuario where username = '" + username + "'";
@@ -256,8 +330,68 @@ public class Users extends javax.swing.JPanel {
             } else {
                 return true;
             }
-        } else {
-            return false;
+        } else if (Flag == 2) {
+            return true;
+        } else if (Flag == 3) {
+            return true;
+        } else if (Flag == 4) {
+            return true;
+        } else if (Flag == 5) {
+            return true;
+        } else if (Flag == 6) {
+            return true;
+        }
+        return false;
+    }
+
+    private boolean CheckUserStatus(int idUser) throws SQLException {
+        String SQL_UserStatus = "Select * from usuario where id_usuario = " + idUser;
+        if (Flag == 4) {
+            rs = con.Results(SQL_UserStatus);
+            if (rs.next()) {
+                int UserStatus = rs.getInt("id_estado");
+                if (UserStatus == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else if (Flag == 5) {
+            rs = con.Results(SQL_UserStatus);
+            if (rs.next()) {
+                int UserStatus = rs.getInt("id_estado");
+                if (UserStatus == 2) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        }
+        return false;
+    }
+    
+    private boolean CheckUserLogged_Admin(int idUser) throws SQLException {
+        String SQL_UserStatus = "Select * from usuario where id_usuario = " + idUser;
+        if (Flag == 4) {
+            rs = con.Results(SQL_UserStatus);
+            if (rs.next()) {
+                int UserStatus = rs.getInt("id_estado");
+                if (UserStatus == 1) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        } else if (Flag == 5) {
+            rs = con.Results(SQL_UserStatus);
+            if (rs.next()) {
+                int UserStatus = rs.getInt("id_estado");
+                if (UserStatus == 2) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         }
         return false;
     }
@@ -266,6 +400,28 @@ public class Users extends javax.swing.JPanel {
         char[] PassNew = txtPassNew.getPassword();
         char[] PassConf = txtPassRepeat.getPassword();
         if (Flag == 1) {
+            if (Arrays.equals(PassNew, PassConf)) {
+                Arrays.fill(PassNew, '0');
+                Arrays.fill(PassConf, '0');
+                return true;
+            } else {
+                JOptionPane.showMessageDialog(null, "Las contraseñas ingresadas no coinciden, intentelo de nuevo.");
+                txtPassNew.setText("");
+                txtPassRepeat.setText("");
+                txtPassNew.requestFocus();
+                Arrays.fill(PassNew, '0');
+                Arrays.fill(PassConf, '0');
+                return false;
+            }
+        } else if (Flag == 2) {
+            return true;
+        } else if (Flag == 3) {
+            return true;
+        } else if (Flag == 4) {
+            return true;
+        } else if (Flag == 5) {
+            return true;
+        } else if (Flag == 6) {
             if (Arrays.equals(PassNew, PassConf)) {
                 Arrays.fill(PassNew, '0');
                 Arrays.fill(PassConf, '0');
@@ -398,52 +554,52 @@ public class Users extends javax.swing.JPanel {
             con.InsertarDatosDetalle("users_permissions", "id_usuario, id_permission, active", IDUser + ", " + "43, " + RepStock);
         } else if (Flag == 2) {
             con.EditarDatos("usuario", "username = '" + Username + "', fullname = '" + Fullname + "', user_ci = '" + CIUser + "', admin = " + Admin, "id_usuario = " + IDUser);
-            con.EditarDatosDetalle("users_permissions", "active = " + FichaMain, "id_usuario = " + IDUser + ", id_permission = 1");
-            con.EditarDatosDetalle("users_permissions", "active = " + Ficha1, "id_usuario = " + IDUser + ", id_permission = 2");
-            con.EditarDatosDetalle("users_permissions", "active = " + Ficha2, "id_usuario = " + IDUser + ", id_permission = 3");
-            con.EditarDatosDetalle("users_permissions", "active = " + Ficha3, "id_usuario = " + IDUser + ", id_permission = 4");
-            con.EditarDatosDetalle("users_permissions", "active = " + Ficha4, "id_usuario = " + IDUser + ", id_permission = 5");
-            con.EditarDatosDetalle("users_permissions", "active = " + CliMain, "id_usuario = " + IDUser + ", id_permission = 6");
-            con.EditarDatosDetalle("users_permissions", "active = " + Cli1, "id_usuario = " + IDUser + ", id_permission = 7");
-            con.EditarDatosDetalle("users_permissions", "active = " + Cli2, "id_usuario = " + IDUser + ", id_permission = 8");
-            con.EditarDatosDetalle("users_permissions", "active = " + Cli3, "id_usuario = " + IDUser + ", id_permission = 9");
-            con.EditarDatosDetalle("users_permissions", "active = " + Cli4, "id_usuario = " + IDUser + ", id_permission = 10");
-            con.EditarDatosDetalle("users_permissions", "active = " + ArtMain, "id_usuario = " + IDUser + ", id_permission = 11");
-            con.EditarDatosDetalle("users_permissions", "active = " + Art1, "id_usuario = " + IDUser + ", id_permission = 12");
-            con.EditarDatosDetalle("users_permissions", "active = " + Art2, "id_usuario = " + IDUser + ", id_permission = 13");
-            con.EditarDatosDetalle("users_permissions", "active = " + Art3, "id_usuario = " + IDUser + ", id_permission = 14");
-            con.EditarDatosDetalle("users_permissions", "active = " + Art4, "id_usuario = " + IDUser + ", id_permission = 15");
-            con.EditarDatosDetalle("users_permissions", "active = " + StockMain, "id_usuario = " + IDUser + ", id_permission = 16");
-            con.EditarDatosDetalle("users_permissions", "active = " + Stock1, "id_usuario = " + IDUser + ", id_permission = 17");
-            con.EditarDatosDetalle("users_permissions", "active = " + Stock2, "id_usuario = " + IDUser + ", id_permission = 18");
-            con.EditarDatosDetalle("users_permissions", "active = " + Stock3, "id_usuario = " + IDUser + ", id_permission = 19");
-            con.EditarDatosDetalle("users_permissions", "active = " + CityMain, "id_usuario = " + IDUser + ", id_permission = 20");
-            con.EditarDatosDetalle("users_permissions", "active = " + City1, "id_usuario = " + IDUser + ", id_permission = 21");
-            con.EditarDatosDetalle("users_permissions", "active = " + City2, "id_usuario = " + IDUser + ", id_permission = 22");
-            con.EditarDatosDetalle("users_permissions", "active = " + City3, "id_usuario = " + IDUser + ", id_permission = 23");
-            con.EditarDatosDetalle("users_permissions", "active = " + City4, "id_usuario = " + IDUser + ", id_permission = 24");
-            con.EditarDatosDetalle("users_permissions", "active = " + BrandMain, "id_usuario = " + IDUser + ", id_permission = 25");
-            con.EditarDatosDetalle("users_permissions", "active = " + Brand1, "id_usuario = " + IDUser + ", id_permission = 26");
-            con.EditarDatosDetalle("users_permissions", "active = " + Brand2, "id_usuario = " + IDUser + ", id_permission = 27");
-            con.EditarDatosDetalle("users_permissions", "active = " + Brand3, "id_usuario = " + IDUser + ", id_permission = 28");
-            con.EditarDatosDetalle("users_permissions", "active = " + Brand4, "id_usuario = " + IDUser + ", id_permission = 29");
-            con.EditarDatosDetalle("users_permissions", "active = " + MethodMain, "id_usuario = " + IDUser + ", id_permission = 30");
-            con.EditarDatosDetalle("users_permissions", "active = " + Method1, "id_usuario = " + IDUser + ", id_permission = 31");
-            con.EditarDatosDetalle("users_permissions", "active = " + Method2, "id_usuario = " + IDUser + ", id_permission = 32");
-            con.EditarDatosDetalle("users_permissions", "active = " + Method3, "id_usuario = " + IDUser + ", id_permission = 33");
-            con.EditarDatosDetalle("users_permissions", "active = " + Method4, "id_usuario = " + IDUser + ", id_permission = 34");
-            con.EditarDatosDetalle("users_permissions", "active = " + UserMain, "id_usuario = " + IDUser + ", id_permission = 35");
-            con.EditarDatosDetalle("users_permissions", "active = " + User1, "id_usuario = " + IDUser + ", id_permission = 36");
-            con.EditarDatosDetalle("users_permissions", "active = " + User2, "id_usuario = " + IDUser + ", id_permission = 37");
-            con.EditarDatosDetalle("users_permissions", "active = " + User3, "id_usuario = " + IDUser + ", id_permission = 38");
-            con.EditarDatosDetalle("users_permissions", "active = " + User4, "id_usuario = " + IDUser + ", id_permission = 39");
-            con.EditarDatosDetalle("users_permissions", "active = " + User5, "id_usuario = " + IDUser + ", id_permission = 40");
-            con.EditarDatosDetalle("users_permissions", "active = " + RepFicha, "id_usuario = " + IDUser + ", id_permission = 41");
-            con.EditarDatosDetalle("users_permissions", "active = " + ResSales, "id_usuario = " + IDUser + ", id_permission = 42");
-            con.EditarDatosDetalle("users_permissions", "active = " + RepStock, "id_usuario = " + IDUser + ", id_permission = 43");
+            con.EditarDatosDetalle("users_permissions", "active = " + FichaMain, "id_usuario = " + IDUser + " AND id_permission = 1");
+            con.EditarDatosDetalle("users_permissions", "active = " + Ficha1, "id_usuario = " + IDUser + " AND id_permission = 2");
+            con.EditarDatosDetalle("users_permissions", "active = " + Ficha2, "id_usuario = " + IDUser + " AND id_permission = 3");
+            con.EditarDatosDetalle("users_permissions", "active = " + Ficha3, "id_usuario = " + IDUser + " AND id_permission = 4");
+            con.EditarDatosDetalle("users_permissions", "active = " + Ficha4, "id_usuario = " + IDUser + " AND id_permission = 5");
+            con.EditarDatosDetalle("users_permissions", "active = " + CliMain, "id_usuario = " + IDUser + " AND id_permission = 6");
+            con.EditarDatosDetalle("users_permissions", "active = " + Cli1, "id_usuario = " + IDUser + " AND id_permission = 7");
+            con.EditarDatosDetalle("users_permissions", "active = " + Cli2, "id_usuario = " + IDUser + " AND id_permission = 8");
+            con.EditarDatosDetalle("users_permissions", "active = " + Cli3, "id_usuario = " + IDUser + " AND id_permission = 9");
+            con.EditarDatosDetalle("users_permissions", "active = " + Cli4, "id_usuario = " + IDUser + " AND id_permission = 10");
+            con.EditarDatosDetalle("users_permissions", "active = " + ArtMain, "id_usuario = " + IDUser + " AND id_permission = 11");
+            con.EditarDatosDetalle("users_permissions", "active = " + Art1, "id_usuario = " + IDUser + " AND id_permission = 12");
+            con.EditarDatosDetalle("users_permissions", "active = " + Art2, "id_usuario = " + IDUser + " AND id_permission = 13");
+            con.EditarDatosDetalle("users_permissions", "active = " + Art3, "id_usuario = " + IDUser + " AND id_permission = 14");
+            con.EditarDatosDetalle("users_permissions", "active = " + Art4, "id_usuario = " + IDUser + " AND id_permission = 15");
+            con.EditarDatosDetalle("users_permissions", "active = " + StockMain, "id_usuario = " + IDUser + " AND id_permission = 16");
+            con.EditarDatosDetalle("users_permissions", "active = " + Stock1, "id_usuario = " + IDUser + " AND id_permission = 17");
+            con.EditarDatosDetalle("users_permissions", "active = " + Stock2, "id_usuario = " + IDUser + " AND id_permission = 18");
+            con.EditarDatosDetalle("users_permissions", "active = " + Stock3, "id_usuario = " + IDUser + " AND id_permission = 19");
+            con.EditarDatosDetalle("users_permissions", "active = " + CityMain, "id_usuario = " + IDUser + " AND id_permission = 20");
+            con.EditarDatosDetalle("users_permissions", "active = " + City1, "id_usuario = " + IDUser + " AND id_permission = 21");
+            con.EditarDatosDetalle("users_permissions", "active = " + City2, "id_usuario = " + IDUser + " AND id_permission = 22");
+            con.EditarDatosDetalle("users_permissions", "active = " + City3, "id_usuario = " + IDUser + " AND id_permission = 23");
+            con.EditarDatosDetalle("users_permissions", "active = " + City4, "id_usuario = " + IDUser + " AND id_permission = 24");
+            con.EditarDatosDetalle("users_permissions", "active = " + BrandMain, "id_usuario = " + IDUser + " AND id_permission = 25");
+            con.EditarDatosDetalle("users_permissions", "active = " + Brand1, "id_usuario = " + IDUser + " AND id_permission = 26");
+            con.EditarDatosDetalle("users_permissions", "active = " + Brand2, "id_usuario = " + IDUser + " AND id_permission = 27");
+            con.EditarDatosDetalle("users_permissions", "active = " + Brand3, "id_usuario = " + IDUser + " AND id_permission = 28");
+            con.EditarDatosDetalle("users_permissions", "active = " + Brand4, "id_usuario = " + IDUser + " AND id_permission = 29");
+            con.EditarDatosDetalle("users_permissions", "active = " + MethodMain, "id_usuario = " + IDUser + " AND id_permission = 30");
+            con.EditarDatosDetalle("users_permissions", "active = " + Method1, "id_usuario = " + IDUser + " AND id_permission = 31");
+            con.EditarDatosDetalle("users_permissions", "active = " + Method2, "id_usuario = " + IDUser + " AND id_permission = 32");
+            con.EditarDatosDetalle("users_permissions", "active = " + Method3, "id_usuario = " + IDUser + " AND id_permission = 33");
+            con.EditarDatosDetalle("users_permissions", "active = " + Method4, "id_usuario = " + IDUser + " AND id_permission = 34");
+            con.EditarDatosDetalle("users_permissions", "active = " + UserMain, "id_usuario = " + IDUser + " AND id_permission = 35");
+            con.EditarDatosDetalle("users_permissions", "active = " + User1, "id_usuario = " + IDUser + " AND id_permission = 36");
+            con.EditarDatosDetalle("users_permissions", "active = " + User2, "id_usuario = " + IDUser + " AND id_permission = 37");
+            con.EditarDatosDetalle("users_permissions", "active = " + User3, "id_usuario = " + IDUser + " AND id_permission = 38");
+            con.EditarDatosDetalle("users_permissions", "active = " + User4, "id_usuario = " + IDUser + " AND id_permission = 39");
+            con.EditarDatosDetalle("users_permissions", "active = " + User5, "id_usuario = " + IDUser + " AND id_permission = 40");
+            con.EditarDatosDetalle("users_permissions", "active = " + RepFicha, "id_usuario = " + IDUser + " AND id_permission = 41");
+            con.EditarDatosDetalle("users_permissions", "active = " + ResSales, "id_usuario = " + IDUser + " AND id_permission = 42");
+            con.EditarDatosDetalle("users_permissions", "active = " + RepStock, "id_usuario = " + IDUser + " AND id_permission = 43");
         } else if (Flag == 3) {
-            con.BorrarDatos("usuario", "id_usuario = " + IDUser);
             con.BorrarDatosDetalle("users_permissions", "id_usuario = " + IDUser);
+            con.BorrarDatos("usuario", "id_usuario = " + IDUser);
         } else if (Flag == 4) {
             con.EditarDatos("usuario", "id_estado = 2", "id_usuario = " + IDUser);
         } else if (Flag == 5) {
@@ -453,10 +609,243 @@ public class Users extends javax.swing.JPanel {
         }
     }
 
+    private void GetUserSQL(int id) throws SQLException {
+        String SQL_GetUser = "SELECT * FROM usuario WHERE id_usuario =  " + String.valueOf(id);
+        rs = con.Results(SQL_GetUser);
+        if (rs.next()) {
+            EnableValuesEdit_UserLoaded();
+            txtUsername.setText(rs.getString("username"));
+            txtFullname.setText(rs.getString("fullname"));
+            txtCIUser.setText(rs.getString("user_ci"));
+            Boolean userAdmin = rs.getBoolean("admin");
+            chbAdmin.setSelected(userAdmin);
+            String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND id_usuario = " + id + ";";
+            rs = con.Results(SQLUserCheck);
+            while (rs.next()) {
+                int idPermission = rs.getInt("id_permission");
+                String namePermission = rs.getString("name_permission");
+                Boolean isActive = rs.getBoolean("active");
+                if (isActive) {
+                    switch (namePermission) {
+                        case "FichaMain": //1
+                            chbFichaMain.setSelected(true);
+                            chbFicha1.setSelected(false);
+                            chbFicha2.setSelected(false);
+                            chbFicha3.setSelected(false);
+                            chbFicha4.setSelected(false);
+                            break;
+                        case "FichaCreate": //2
+                            chbFicha1.setSelected(true);
+                            break;
+                        case "FichaEdit": //3
+                            chbFicha2.setSelected(true);
+                            break;
+                        case "FichaNull": //4
+                            chbFicha3.setSelected(true);
+                            break;
+                        case "FichaClose": //5
+                            chbFicha4.setSelected(true);
+                            break;
+                        case "CliMain": //6
+                            chbCliMain.setSelected(true);
+                            chbCli1.setSelected(false);
+                            chbCli2.setSelected(false);
+                            chbCli3.setSelected(false);
+                            chbCli4.setSelected(false);
+                            break;
+                        case "CliCreate": //7
+                            chbCli1.setSelected(true);
+                            break;
+                        case "CliEdit": //8
+                            chbCli2.setSelected(true);
+                            break;
+                        case "CliDelete": //9
+                            chbCli3.setSelected(true);
+                            break;
+                        case "CliList": //10
+                            chbCli4.setSelected(true);
+                            break;
+                        case "ArtMain": //11
+                            chbArtMain.setSelected(true);
+                            chbArt1.setSelected(false);
+                            chbArt2.setSelected(false);
+                            chbArt3.setSelected(false);
+                            chbArt4.setSelected(false);
+                            break;
+                        case "ArtCreate": //12
+                            chbArt1.setSelected(true);
+                            break;
+                        case "ArtEdit": //13
+                            chbArt2.setSelected(true);
+                            break;
+                        case "ArtDelete": //14
+                            chbArt3.setSelected(true);
+                            break;
+                        case "ArtList": //15
+                            chbArt4.setSelected(true);
+                            break;
+                        case "StockMain": //16
+                            chbStockMain.setSelected(true);
+                            chbStock1.setSelected(false);
+                            chbStock2.setSelected(false);
+                            chbStock3.setSelected(false);
+                            break;
+                        case "StockAdd": //17
+                            chbStock1.setSelected(true);
+                            break;
+                        case "StockRemove": //18
+                            chbStock2.setSelected(true);
+                            break;
+                        case "StockList": //19
+                            chbStock3.setSelected(true);
+                            break;
+                        case "CityMain": //20
+                            chbCityMain.setSelected(true);
+                            chbCity1.setSelected(false);
+                            chbCity2.setSelected(false);
+                            chbCity3.setSelected(false);
+                            chbCity4.setSelected(false);
+                            break;
+                        case "CityCreate": //21
+                            chbCity1.setSelected(true);
+                            break;
+                        case "CityEdit": //22
+                            chbCity2.setSelected(true);
+                            break;
+                        case "CityDelete": //23
+                            chbCity3.setSelected(true);
+                            break;
+                        case "CityList": //24
+                            chbCity4.setSelected(true);
+                            break;
+                        case "BrandMain": //25
+                            chbBrandMain.setSelected(true);
+                            chbBrand1.setSelected(false);
+                            chbBrand2.setSelected(false);
+                            chbBrand3.setSelected(false);
+                            chbBrand4.setSelected(false);
+                            break;
+                        case "BrandCreate": //26
+                            chbBrand1.setSelected(true);
+                            break;
+                        case "BrandEdit": //27
+                            chbBrand2.setSelected(true);
+                            break;
+                        case "BrandDelete": //28
+                            chbBrand3.setSelected(true);
+                            break;
+                        case "BrandList": //29
+                            chbBrand4.setSelected(true);
+                            break;
+                        case "PayMain": //30
+                            chbMethodMain.setSelected(true);
+                            chbMethod1.setSelected(false);
+                            chbMethod2.setSelected(false);
+                            chbMethod3.setSelected(false);
+                            chbMethod4.setSelected(false);
+                            break;
+                        case "PayCreate": //31
+                            chbMethod1.setSelected(true);
+                            break;
+                        case "PayEdit": //32
+                            chbMethod2.setSelected(true);
+                            break;
+                        case "PayDelete": //33
+                            chbMethod3.setSelected(true);
+                            break;
+                        case "PayList": //34
+                            chbMethod4.setSelected(true);
+                            break;
+                        case "UserMain": //35
+                            chbUserMain.setSelected(true);
+                            chbUser1.setSelected(false);
+                            chbUser2.setSelected(false);
+                            chbUser3.setSelected(false);
+                            chbUser4.setSelected(false);
+                            chbUser5.setSelected(false);
+                            break;
+                        case "UserCreate": //36
+                            chbUser1.setSelected(true);
+                            break;
+                        case "UserEdit": //37
+                            chbUser2.setSelected(true);
+                            break;
+                        case "UserDelete": //39
+                            chbUser3.setSelected(true);
+                            break;
+                        case "UserOnOff": //39
+                            chbUser4.setSelected(true);
+                            break;
+                        case "UserChangePass": //40
+                            chbUser5.setSelected(true);
+                            break;
+                        case "ReportFicha": //41
+                            chbRepFicha.setSelected(true);
+                            break;
+                        case "ReportSales": //42
+                            chbResSales.setSelected(true);
+                            break;
+                        case "ReportStock": //43
+                            chbRepStock.setSelected(true);
+                            break;
+                        default:
+                            System.out.println("Permiso no concedido: " + idPermission + ", " + namePermission);
+                    }
+                }
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontraron resultados");
+        }
+
+    }
+
+    private void LoadTable() throws SQLException {
+        rs = con.Results("SELECT usr.id_usuario, usr.username, st.estado, usr.fullname, usr.user_ci, usr.admin FROM usuario usr, estado st WHERE usr.id_estado = st.id_estado ORDER BY usr.id_usuario ASC");
+        Search.setRowCount(0);
+        while (rs.next()) {
+            Object[] row = new Object[6];
+            row[0] = rs.getString("id_usuario");
+            row[1] = rs.getString("username");
+            row[2] = rs.getString("estado");
+            row[3] = rs.getString("fullname");
+            row[4] = rs.getString("user_ci");
+            row[5] = rs.getBoolean("admin");
+            Search.addRow(row);
+        }
+    }
+
+    private void CabeceraTabla() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        Search.addColumn("ID");
+        Search.addColumn("Usuario");
+        Search.addColumn("Estado");
+        Search.addColumn("Nombre Completo");
+        Search.addColumn("CI N°");
+        Search.addColumn("Admin");
+        TSearcher.getColumnModel().getColumn(0).setPreferredWidth(20);
+        TSearcher.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        TSearcher.getColumnModel().getColumn(1).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        TSearcher.getColumnModel().getColumn(2).setPreferredWidth(30);
+        TSearcher.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        TSearcher.getColumnModel().getColumn(3).setPreferredWidth(140);
+        TSearcher.getColumnModel().getColumn(4).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(5).setPreferredWidth(20);
+        TSearcher.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        UserList = new javax.swing.JDialog();
+        lblMessage = new javax.swing.JLabel();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        TSearcher = new javax.swing.JTable();
+        txtFilter = new javax.swing.JTextField();
+        lblFiltrar = new javax.swing.JLabel();
+        btnCerrar = new javax.swing.JButton();
         jPanel1 = new javax.swing.JPanel();
         btnCreate = new javax.swing.JButton();
         btnDisable = new javax.swing.JButton();
@@ -531,6 +920,69 @@ public class Users extends javax.swing.JPanel {
         chbUser3 = new javax.swing.JCheckBox();
         chbUser4 = new javax.swing.JCheckBox();
         chbUser5 = new javax.swing.JCheckBox();
+
+        lblMessage.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        lblMessage.setText("null");
+
+        TSearcher.setModel(Search);
+        TSearcher.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                TSearcherMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(TSearcher);
+
+        txtFilter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtFilterKeyReleased(evt);
+            }
+        });
+
+        lblFiltrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/filtrar.png"))); // NOI18N
+        lblFiltrar.setText("Buscar usuario:");
+
+        btnCerrar.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/cancel.png"))); // NOI18N
+        btnCerrar.setText("Cerrar");
+        btnCerrar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnCerrarActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout UserListLayout = new javax.swing.GroupLayout(UserList.getContentPane());
+        UserList.getContentPane().setLayout(UserListLayout);
+        UserListLayout.setHorizontalGroup(
+            UserListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(UserListLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(UserListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                    .addGroup(UserListLayout.createSequentialGroup()
+                        .addComponent(lblFiltrar)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 422, Short.MAX_VALUE))
+                    .addComponent(lblMessage, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, UserListLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(btnCerrar)))
+                .addContainerGap())
+        );
+        UserListLayout.setVerticalGroup(
+            UserListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(UserListLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(lblMessage)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(UserListLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(lblFiltrar))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 329, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnCerrar)
+                .addContainerGap())
+        );
 
         btnCreate.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/plus.png"))); // NOI18N
         btnCreate.setText("Crear");
@@ -628,6 +1080,11 @@ public class Users extends javax.swing.JPanel {
         lblIDUser.setText("ID Usuario");
 
         txtIDUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtIDUser.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                txtIDUserKeyPressed(evt);
+            }
+        });
 
         btnListUser.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
         btnListUser.addActionListener(new java.awt.event.ActionListener() {
@@ -1164,7 +1621,7 @@ public class Users extends javax.swing.JPanel {
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
         Flag = 2;
-        EnableValuesEdit();
+        EnableValuesEditDelete();
         DisableBtns();
         EnableActionBtns();
         lblUserInfo.setText("Datos Generales - Edición de Usuario");
@@ -1172,6 +1629,7 @@ public class Users extends javax.swing.JPanel {
 
     private void btnDeleteActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDeleteActionPerformed
         Flag = 3;
+        EnableValuesEditDelete();
         DisableBtns();
         EnableActionBtns();
         lblUserInfo.setText("Datos Generales - Eliminación de Usuario");
@@ -1179,6 +1637,7 @@ public class Users extends javax.swing.JPanel {
 
     private void btnDisableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnDisableActionPerformed
         Flag = 4;
+        EnableValuesEditDelete();
         DisableBtns();
         EnableActionBtns();
         lblUserInfo.setText("Datos Generales - Deshabilitación de Usuario");
@@ -1186,25 +1645,40 @@ public class Users extends javax.swing.JPanel {
 
     private void btnEnableActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEnableActionPerformed
         Flag = 5;
+        EnableValuesEditDelete();
         DisableBtns();
         EnableActionBtns();
         lblUserInfo.setText("Datos Generales - Habilitación de Usuario");
     }//GEN-LAST:event_btnEnableActionPerformed
 
     private void btnChangePassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnChangePassActionPerformed
-        Flag = 6;
-        DisableBtns();
-        EnableActionBtns();
-        lblUserInfo.setText("Datos Generales - Cambio de Contraseña");
+        try {
+            Flag = 6;
+            DisableBtns();
+            EnableActionBtns();
+            lblUserInfo.setText("Datos Generales - Cambio de Contraseña");
+            if (CheckUserLogged_Admin(Menu.idUsuario)) { // Si es TRUE el usuario podrá cambiar contraseña de otros usuarios
+                EnableValuesEditDelete();
+            } else { // Si no es Admin, podrá cambiar solo su contraseña
+                
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnChangePassActionPerformed
 
     private void btnCancelActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelActionPerformed
-        Flag = 0;
-        CleanAllTxts();
-        DisableAllValues();
-        EnableBtns();
-        DisableActionBtns();
-        lblUserInfo.setText("Datos Generales");
+        try {
+            Flag = 0;
+            CleanAllTxts();
+            DisableAllValues();
+            EnableBtns();
+            DisableActionBtns();
+            CheckUserPermissions(Menu.idUsuario);
+            lblUserInfo.setText("Datos Generales");
+        } catch (SQLException ex) {
+            Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelActionPerformed
 
     private void btnConfirmActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmActionPerformed
@@ -1216,6 +1690,7 @@ public class Users extends javax.swing.JPanel {
                     DisableAllValues();
                     EnableBtns();
                     DisableActionBtns();
+                    CheckUserPermissions(Menu.idUsuario);
                     lblUserInfo.setText("Datos Generales");
                     Flag = 0;
                 }
@@ -1226,7 +1701,24 @@ public class Users extends javax.swing.JPanel {
     }//GEN-LAST:event_btnConfirmActionPerformed
 
     private void btnListUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnListUserActionPerformed
-        // TODO add your handling code here:
+        try {
+            LoadTable();
+            if (Flag == 2) {
+                lblMessage.setText("Seleccione un usuario que desee modificar");
+            } else if (Flag == 3) {
+                lblMessage.setText("Seleccione un usuario que desee eliminar");
+            } else {
+                lblMessage.setText("Listado de Usuarios del Sistema");
+            }
+            UserList.setTitle("Buscar Usuario");
+            UserList.setModal(true);
+            UserList.pack();
+            UserList.setResizable(false);
+            UserList.setLocationRelativeTo(null);
+            UserList.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnListUserActionPerformed
 
     private void chbFichaMainItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chbFichaMainItemStateChanged
@@ -1449,9 +1941,157 @@ public class Users extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_txtPassRepeatKeyPressed
 
+    private void txtIDUserKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtIDUserKeyPressed
+        if (!Character.isDigit(evt.getKeyChar()) && !Character.isISOControl(evt.getKeyChar())) {
+            Toolkit.getDefaultToolkit().beep();
+            evt.consume();
+            JOptionPane.showMessageDialog(null, "Ingrese solo números.");
+            txtIDUser.setText("");
+        }
+        if (evt.getKeyCode() == 10 && !txtIDUser.getText().equals("")) {
+            try {
+                RestartCheckBoxes();
+                GetUserSQL(Integer.parseInt(txtIDUser.getText()));
+                if (Flag == 3) {
+                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de eliminar el usuario " + txtIDUser.getText().toString() + ": " + txtUsername.getText().toString() + "?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    if (resp == 0) {
+                        btnConfirm.doClick();
+                    } else {
+                        btnCancel.doClick();
+                    }
+                } else if (Flag == 4) {
+                    int IDUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    if (CheckUserStatus(IDUsuario)) {
+                        int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de inactivar el usuario " + txtIDUser.getText().toString() + ": " + txtUsername.getText().toString() + "?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                        if (resp == 0) {
+                            btnConfirm.doClick();
+                        } else {
+                            btnCancel.doClick();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Este usuario se encuentra inactivo.");
+                        btnCancel.doClick();
+                    }
+                } else if (Flag == 5) {
+                    int IDUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    if (CheckUserStatus(IDUsuario)) {
+                        int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de activar el usuario " + txtIDUser.getText().toString() + ": " + txtUsername.getText().toString() + "?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                        if (resp == 0) {
+                            btnConfirm.doClick();
+                        } else {
+                            btnCancel.doClick();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Este usuario se encuentra activo.");
+                        btnCancel.doClick();
+                    }
+                }
+            } catch (SQLException ex) {
+            }
+        } else if (evt.getKeyCode() == 10 && txtIDUser.getText().equals("")) {
+            try {
+                LoadTable();
+                if (Flag == 2) {
+                    lblMessage.setText("Seleccione un usuario que desee modificar");
+                } else if (Flag == 3) {
+                    lblMessage.setText("Seleccione un usuario que desee eliminar");
+                } else if (Flag == 4) {
+                    lblMessage.setText("Seleccione un usuario que desee inactivar");
+                } else if (Flag == 5) {
+                    lblMessage.setText("Seleccione un usuario que desee activar");
+                } else if (Flag == 6) {
+                    lblMessage.setText("Seleccione un usuario que desee cambiar contraseña");
+                }
+                UserList.setTitle("Buscar Usuario");
+                UserList.setModal(true);
+                UserList.pack();
+                UserList.setResizable(false);
+                UserList.setLocationRelativeTo(null);
+                UserList.setVisible(true);
+            } catch (SQLException ex) {
+                Logger.getLogger(Ciudad.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_txtIDUserKeyPressed
+
+    private void TSearcherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSearcherMouseClicked
+        if (Flag != 0) {
+            try {
+                int row = TSearcher.getSelectedRow();
+                String id = TSearcher.getModel().getValueAt(row, 0).toString();
+                UserList.setModal(false);
+                UserList.setVisible(false);
+                txtIDUser.setText(id);
+                GetUserSQL(Integer.parseInt(txtIDUser.getText()));
+                if (Flag == 3) {
+                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de eliminar el usuario " + txtIDUser.getText().toString() + ": " + txtUsername.getText().toString() + "?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    if (resp == 0) {
+                        btnConfirm.doClick();
+                    } else {
+                        btnCancel.doClick();
+                    }
+                } else if (Flag == 4) {
+                    int IDUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    if (CheckUserStatus(IDUsuario)) {
+                        int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de inactivar el usuario " + txtIDUser.getText().toString() + ": " + txtUsername.getText().toString() + "?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                        if (resp == 0) {
+                            btnConfirm.doClick();
+                        } else {
+                            btnCancel.doClick();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Este usuario se encuentra inactivo.");
+                        btnCancel.doClick();
+                    }
+                } else if (Flag == 5) {
+                    int IDUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    if (CheckUserStatus(IDUsuario)) {
+                        int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de activar el usuario " + txtIDUser.getText().toString() + ": " + txtUsername.getText().toString() + "?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                        if (resp == 0) {
+                            btnConfirm.doClick();
+                        } else {
+                            btnCancel.doClick();
+                        }
+                    } else {
+                        JOptionPane.showMessageDialog(null, "Este usuario se encuentra activo.");
+                        btnCancel.doClick();
+                    }
+                }
+            } catch (SQLException ex) {
+                Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+    }//GEN-LAST:event_TSearcherMouseClicked
+
+    private void txtFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtFilterKeyReleased
+        try {
+            rs = con.Results("SELECT usr.id_usuario, usr.username, st.estado, usr.fullname, usr.user_ci, usr.admin FROM usuario usr, estado st WHERE usr.id_estado = st.id_estado AND username ilike '%" + txtFilter.getText() + "%'");
+            Search.setRowCount(0);
+            while (rs.next()) {
+                Object[] row = new Object[6];
+                row[0] = rs.getString("id_usuario");
+                row[1] = rs.getString("username");
+                row[2] = rs.getString("estado");
+                row[3] = rs.getString("fullname");
+                row[4] = rs.getString("user_ci");
+                row[5] = rs.getBoolean("admin");
+                Search.addRow(row);
+            }
+        } catch (SQLException ex) {
+            Logger.getLogger(Ciudad.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_txtFilterKeyReleased
+
+    private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
+        UserList.setVisible(false);
+    }//GEN-LAST:event_btnCerrarActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JTable TSearcher;
+    private javax.swing.JDialog UserList;
     private javax.swing.JButton btnCancel;
+    private javax.swing.JButton btnCerrar;
     private javax.swing.JButton btnChangePass;
     private javax.swing.JButton btnConfirm;
     private javax.swing.JButton btnCreate;
@@ -1507,11 +2147,14 @@ public class Users extends javax.swing.JPanel {
     private javax.swing.JLabel dlgPass;
     private javax.swing.JLabel dlgUser;
     private javax.swing.JPanel jPanel1;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JLabel lblAdmin;
     private javax.swing.JLabel lblCIUser;
+    private javax.swing.JLabel lblFiltrar;
     private javax.swing.JLabel lblFullname;
     private javax.swing.JLabel lblIDUser;
+    private javax.swing.JLabel lblMessage;
     private javax.swing.JLabel lblPassCurr;
     private javax.swing.JLabel lblPassNew;
     private javax.swing.JLabel lblPassRepeat;
@@ -1519,6 +2162,7 @@ public class Users extends javax.swing.JPanel {
     private javax.swing.JLabel lblUserInfo;
     private javax.swing.JLabel lblUsername;
     private javax.swing.JTextField txtCIUser;
+    private javax.swing.JTextField txtFilter;
     private javax.swing.JTextField txtFullname;
     private javax.swing.JTextField txtIDUser;
     private javax.swing.JPasswordField txtPassCurr;

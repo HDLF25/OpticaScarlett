@@ -23,7 +23,7 @@ public class PayMethods extends javax.swing.JPanel {
         }
     };
 
-    public PayMethods() throws SQLException {
+    public PayMethods(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -31,6 +31,7 @@ public class PayMethods extends javax.swing.JPanel {
         DeshabilitarTxt();
         CabeceraTabla();
         CargarCboxStatus();
+        CheckUserPermissions(idUsuario);
     }
 
     private void HabilitarBtn() {
@@ -50,6 +51,13 @@ public class PayMethods extends javax.swing.JPanel {
         btnConfirmar.setEnabled(false);
         btnCancelar.setEnabled(false);
     }
+    
+    private void DeshabilitarMainBtn() {
+        btnAdd.setEnabled(false);
+        btnEdit.setEnabled(false);
+        btnErase.setEnabled(false);
+        btnSearch.setEnabled(false);
+    }
 
     private void HabilitarTxt() {
         txtidMethod.setEnabled(true);
@@ -66,6 +74,35 @@ public class PayMethods extends javax.swing.JPanel {
     private void LimpiarTxt() {
         txtidMethod.setText("");
         txtMethod.setText("");
+    }
+    
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DeshabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (26,27,28,29) AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "PayCreate":
+                        btnAdd.setEnabled(true);
+                        break;
+                    case "PayEdit":
+                        btnEdit.setEnabled(true);
+                        break;
+                    case "PayDelete":
+                        btnErase.setEnabled(true);
+                        break;
+                    case "PayList":
+                        btnSearch.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
 
     private void NewPayMethod() throws SQLException {
@@ -494,11 +531,16 @@ public class PayMethods extends javax.swing.JPanel {
     }//GEN-LAST:event_btnAddActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Flag = 0;
-        LimpiarTxt();
-        DeshabilitarBtn();
-        DeshabilitarTxt();
-        cboxStatus.setSelectedIndex(0);
+        try {
+            Flag = 0;
+            LimpiarTxt();
+            DeshabilitarBtn();
+            DeshabilitarTxt();
+            cboxStatus.setSelectedIndex(0);
+            CheckUserPermissions(Menu.idUsuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(PayMethods.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnEditActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnEditActionPerformed
@@ -581,11 +623,16 @@ public class PayMethods extends javax.swing.JPanel {
 
     private void btnConfirmarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnConfirmarActionPerformed
         if (Validaciones() == true) {
-            GuardarDatos();
-            LimpiarTxt();
-            DeshabilitarTxt();
-            DeshabilitarBtn();
-            Flag = 0;
+            try {
+                GuardarDatos();
+                LimpiarTxt();
+                DeshabilitarTxt();
+                DeshabilitarBtn();
+                CheckUserPermissions(Menu.idUsuario);
+                Flag = 0;
+            } catch (SQLException ex) {
+                Logger.getLogger(PayMethods.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
     }//GEN-LAST:event_btnConfirmarActionPerformed
 

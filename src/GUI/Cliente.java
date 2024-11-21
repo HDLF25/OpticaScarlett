@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import javax.swing.ToolTipManager;
+import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
 
 public class Cliente extends javax.swing.JPanel {
@@ -24,7 +25,7 @@ public class Cliente extends javax.swing.JPanel {
         }
     };
 
-    public Cliente() throws SQLException {
+    public Cliente(int idUsuario) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -32,6 +33,7 @@ public class Cliente extends javax.swing.JPanel {
         DeshabilitarTxt();
         CabeceraTabla();
         CargarCboCiudad();
+        CheckUserPermissions(idUsuario);
     }
 
     private void HabilitarBtn() {
@@ -50,6 +52,13 @@ public class Cliente extends javax.swing.JPanel {
         btnSearch.setEnabled(true);
         btnConfirmar.setEnabled(false);
         btnCancelar.setEnabled(false);
+    }
+    
+    private void DeshabilitarMainBtn() {
+        btnAdd.setEnabled(false);
+        btnEdit.setEnabled(false);
+        btnErase.setEnabled(false);
+        btnSearch.setEnabled(false);
     }
 
     private void HabilitarTxt() {
@@ -100,6 +109,35 @@ public class Cliente extends javax.swing.JPanel {
         txtTelefono.setText("");
         txtDireccion.setText("");
         chboxMenor.setSelected(false);
+    }
+    
+    private void CheckUserPermissions(int idUser) throws SQLException {
+        DeshabilitarMainBtn();
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (7,8,9,10) AND id_usuario = " + idUser + ";";
+        rs = con.Results(SQLUserCheck);
+        while (rs.next()) {
+            int idPermission = rs.getInt("id_permission");
+            String namePermission = rs.getString("name_permission");
+            Boolean isActive = rs.getBoolean("active");
+            if (isActive) {
+                switch (namePermission) {
+                    case "CliCreate":
+                        btnAdd.setEnabled(true);
+                        break;
+                    case "CliEdit":
+                        btnEdit.setEnabled(true);
+                        break;
+                    case "CliDelete":
+                        btnErase.setEnabled(true);
+                        break;
+                    case "CliList":
+                        btnSearch.setEnabled(true);
+                        break;
+                    default:
+                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                }
+            }
+        }
     }
 
     private void NuevoCliente() throws SQLException {
@@ -192,6 +230,8 @@ public class Cliente extends javax.swing.JPanel {
     }
 
     private void CabeceraTabla() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
         Search.addColumn("ID");
         Search.addColumn("CI/RUC");
         Search.addColumn("Nombres");
@@ -201,12 +241,17 @@ public class Cliente extends javax.swing.JPanel {
         Search.addColumn("Ciudad");
         Search.addColumn("Dirección");
         TSearcher.getColumnModel().getColumn(0).setPreferredWidth(30);
+        TSearcher.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(1).setPreferredWidth(80);
+        TSearcher.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(2).setPreferredWidth(100);
         TSearcher.getColumnModel().getColumn(3).setPreferredWidth(100);
         TSearcher.getColumnModel().getColumn(4).setPreferredWidth(30);
+        TSearcher.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(5).setPreferredWidth(60);
+        TSearcher.getColumnModel().getColumn(5).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(6).setPreferredWidth(60);
+        TSearcher.getColumnModel().getColumn(6).setCellRenderer(centerRenderer);
         TSearcher.getColumnModel().getColumn(7).setPreferredWidth(150);
     }
 
@@ -611,7 +656,12 @@ public class Cliente extends javax.swing.JPanel {
     }// </editor-fold>//GEN-END:initComponents
 
     private void cboxFiltrarItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_cboxFiltrarItemStateChanged
-        txtFilter.setText("");
+        try {
+            txtFilter.setText("");
+            LoadTable();
+        } catch (SQLException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_cboxFiltrarItemStateChanged
 
     private void TSearcherMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_TSearcherMouseClicked
@@ -711,12 +761,17 @@ public class Cliente extends javax.swing.JPanel {
     }//GEN-LAST:event_btnEraseActionPerformed
 
     private void btnCancelarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCancelarActionPerformed
-        Flag = 0;
-        LimpiarTxt();
-        DeshabilitarBtn();
-        DeshabilitarTxt();
-        RestartCbox();
-        EditableTxt();
+        try {
+            Flag = 0;
+            LimpiarTxt();
+            DeshabilitarBtn();
+            DeshabilitarTxt();
+            RestartCbox();
+            EditableTxt();
+            CheckUserPermissions(Menu.idUsuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }//GEN-LAST:event_btnCancelarActionPerformed
 
     private void btnSearchActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnSearchActionPerformed
@@ -748,6 +803,7 @@ public class Cliente extends javax.swing.JPanel {
                 DeshabilitarBtn();
                 RestartCbox();
                 Flag = 0;
+                CheckUserPermissions(Menu.idUsuario);
             } catch (SQLException ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }
