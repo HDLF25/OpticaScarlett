@@ -16,6 +16,7 @@ public class Users extends javax.swing.JPanel {
     Conexion con;
     ResultSet rs;
     int Flag = 0;
+    int PassAnswer = 10;
     DefaultTableModel Search = new DefaultTableModel() {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -32,6 +33,7 @@ public class Users extends javax.swing.JPanel {
         DisableAllValues();
         CabeceraTabla();
         CheckUserPermissions(idUsuario);
+        CheckUserLogged_Admin(idUsuario);
     }
 
     private void EnableBtns() {
@@ -62,6 +64,8 @@ public class Users extends javax.swing.JPanel {
         txtPassRepeat.setText("");
         lblPassCurr.setText("Contraseña Actual");
         lblPassNew.setText("Nueva Contraseña");
+        dlgUser.setText("");
+        dlgPass.setText("");
     }
 
     private void EnableActionBtns() {
@@ -184,6 +188,61 @@ public class Users extends javax.swing.JPanel {
         chbUser3.setEnabled(true);
         chbUser4.setEnabled(true);
         chbUser5.setEnabled(true);
+    }
+
+    private void DisableAllValuesPass() {
+        txtIDUser.setEnabled(true);
+        txtIDUser.setEditable(false);
+        txtUsername.setEnabled(true);
+        txtUsername.setEditable(false);
+        txtFullname.setEnabled(true);
+        txtFullname.setEditable(false);
+        txtCIUser.setEnabled(true);
+        txtCIUser.setEditable(false);
+        chbAdmin.setEnabled(false);
+        chbFichaMain.setEnabled(false);
+        chbFicha1.setEnabled(false);
+        chbFicha2.setEnabled(false);
+        chbFicha3.setEnabled(false);
+        chbFicha4.setEnabled(false);
+        chbCliMain.setEnabled(false);
+        chbCli1.setEnabled(false);
+        chbCli2.setEnabled(false);
+        chbCli3.setEnabled(false);
+        chbCli4.setEnabled(false);
+        chbArtMain.setEnabled(false);
+        chbArt1.setEnabled(false);
+        chbArt2.setEnabled(false);
+        chbArt3.setEnabled(false);
+        chbArt4.setEnabled(false);
+        chbStockMain.setEnabled(false);
+        chbStock1.setEnabled(false);
+        chbStock2.setEnabled(false);
+        chbStock3.setEnabled(false);
+        chbRepFicha.setEnabled(false);
+        chbResSales.setEnabled(false);
+        chbRepStock.setEnabled(false);
+        chbCityMain.setEnabled(false);
+        chbCity1.setEnabled(false);
+        chbCity2.setEnabled(false);
+        chbCity3.setEnabled(false);
+        chbCity4.setEnabled(false);
+        chbBrandMain.setEnabled(false);
+        chbBrand1.setEnabled(false);
+        chbBrand2.setEnabled(false);
+        chbBrand3.setEnabled(false);
+        chbBrand4.setEnabled(false);
+        chbMethodMain.setEnabled(false);
+        chbMethod1.setEnabled(false);
+        chbMethod2.setEnabled(false);
+        chbMethod3.setEnabled(false);
+        chbMethod4.setEnabled(false);
+        chbUserMain.setEnabled(false);
+        chbUser1.setEnabled(false);
+        chbUser2.setEnabled(false);
+        chbUser3.setEnabled(false);
+        chbUser4.setEnabled(false);
+        chbUser5.setEnabled(false);
     }
 
     private void DisableAllValues() {
@@ -369,27 +428,26 @@ public class Users extends javax.swing.JPanel {
         }
         return false;
     }
-    
+
     private boolean CheckUserLogged_Admin(int idUser) throws SQLException {
         String SQL_UserStatus = "Select * from usuario where id_usuario = " + idUser;
-        if (Flag == 4) {
+        if (Flag == 6) {
             rs = con.Results(SQL_UserStatus);
             if (rs.next()) {
-                int UserStatus = rs.getInt("id_estado");
-                if (UserStatus == 1) {
+                if (rs.getBoolean("admin")) {
                     return true;
                 } else {
                     return false;
                 }
             }
-        } else if (Flag == 5) {
+        }
+        if (Flag == 0) {
             rs = con.Results(SQL_UserStatus);
             if (rs.next()) {
-                int UserStatus = rs.getInt("id_estado");
-                if (UserStatus == 2) {
-                    return true;
+                if (rs.getBoolean("admin")) {
+                    btnListUser.setEnabled(true);
                 } else {
-                    return false;
+                    btnListUser.setEnabled(false);
                 }
             }
         }
@@ -433,6 +491,23 @@ public class Users extends javax.swing.JPanel {
                 txtPassNew.requestFocus();
                 Arrays.fill(PassNew, '0');
                 Arrays.fill(PassConf, '0');
+                return false;
+            }
+        }
+        return false;
+    }
+
+    private boolean CheckPassSavedEquals(int idUser) throws SQLException {
+        char[] PassCurr = txtPassCurr.getPassword();
+        String PassCu = new String(PassCurr);
+        if (Flag == 6) {
+            String SQL_PassCheck = "Select * from usuario where id_usuario = " + idUser + " and password = md5('" + PassCu + "')";
+            rs = con.Results(SQL_PassCheck);
+            if (rs.next()) {
+                dlgPass.setText("");
+                return true;
+            } else {
+                dlgPass.setText("La contraseña actual ingresada es incorrecta.");
                 return false;
             }
         }
@@ -605,7 +680,33 @@ public class Users extends javax.swing.JPanel {
         } else if (Flag == 5) {
             con.EditarDatos("usuario", "id_estado = 1", "id_usuario = " + IDUser);
         } else if (Flag == 6) {
-            con.EditarDatos("usuario", "password = md5('" + PassNew + "')", "id_usuario = " + IDUser);
+            System.out.println("Entró en ProcessData - Flag 6");
+            if (PassAnswer == 0) {
+                try {
+                    System.out.println("Se edita la clave de este usuario");
+                    int idUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    if (CheckPassSavedEquals(idUsuario)) {
+                        con.EditarDatos("usuario", "password = md5('" + PassNe + "')", "id_usuario = " + IDUser);
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else if (PassAnswer == 1) {
+                try {
+                    if (CheckPassSavedEquals(Menu.idUsuario) == true) {
+                        System.out.println("Se edita la clave del usuario " + Username);
+                        con.EditarDatos("usuario", "password = md5('" + PassNe + "')", "id_usuario = " + IDUser);
+                    } else {
+                        JOptionPane.showMessageDialog(null, "La contraseña actual ingresada es incorrecta. Por favor, corrige antes de continuar.");
+                        txtPassCurr.requestFocus();
+                    }
+                } catch (SQLException ex) {
+                    Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            } else {
+                System.out.println("No entró en ninguno");
+                System.out.println(PassAnswer);
+            }
         }
     }
 
@@ -613,7 +714,9 @@ public class Users extends javax.swing.JPanel {
         String SQL_GetUser = "SELECT * FROM usuario WHERE id_usuario =  " + String.valueOf(id);
         rs = con.Results(SQL_GetUser);
         if (rs.next()) {
-            EnableValuesEdit_UserLoaded();
+            if (Flag != 6) {
+                EnableValuesEdit_UserLoaded();
+            }
             txtUsername.setText(rs.getString("username"));
             txtFullname.setText(rs.getString("fullname"));
             txtCIUser.setText(rs.getString("user_ci"));
@@ -797,6 +900,31 @@ public class Users extends javax.swing.JPanel {
             JOptionPane.showMessageDialog(null, "No se encontraron resultados");
         }
 
+    }
+
+    private String GetUsernameSQL(int id) throws SQLException {
+        String SQL_GetUser = "SELECT * FROM usuario WHERE id_usuario =  " + String.valueOf(id);
+        rs = con.Results(SQL_GetUser);
+        if (rs.next()) {
+            String usernameSQL = rs.getString("username");
+            return usernameSQL;
+        }
+        return null;
+    }
+
+    private void GetUserSQL_Pass(int id) throws SQLException {
+        String SQL_GetUser = "SELECT * FROM usuario WHERE id_usuario =  " + String.valueOf(id);
+        rs = con.Results(SQL_GetUser);
+        if (rs.next()) {
+            txtIDUser.setText(rs.getString("id_usuario"));
+            txtUsername.setText(rs.getString("username"));
+            txtFullname.setText(rs.getString("fullname"));
+            txtCIUser.setText(rs.getString("user_ci"));
+            txtPassNew.setEnabled(true);
+            txtPassNew.setEditable(true);
+            txtPassRepeat.setEnabled(true);
+            txtPassRepeat.setEditable(true);
+        }
     }
 
     private void LoadTable() throws SQLException {
@@ -1114,6 +1242,11 @@ public class Users extends javax.swing.JPanel {
         lblPassCurr.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         lblPassCurr.setText("Contraseña Actual");
 
+        txtPassCurr.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                txtPassCurrFocusLost(evt);
+            }
+        });
         txtPassCurr.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
                 txtPassCurrKeyPressed(evt);
@@ -1658,9 +1791,24 @@ public class Users extends javax.swing.JPanel {
             EnableActionBtns();
             lblUserInfo.setText("Datos Generales - Cambio de Contraseña");
             if (CheckUserLogged_Admin(Menu.idUsuario)) { // Si es TRUE el usuario podrá cambiar contraseña de otros usuarios
-                EnableValuesEditDelete();
+                String[] opciones = {GetUsernameSQL(Menu.idUsuario), "Otro Usuario"};
+                PassAnswer = JOptionPane.showOptionDialog(null, "¿A qué usuario desea cambiar la contraseña?", "Cambio de Contraseña", JOptionPane.DEFAULT_OPTION, JOptionPane.QUESTION_MESSAGE, null, opciones, opciones[0]);
+                if (PassAnswer == 0) {
+                    GetUserSQL_Pass(Menu.idUsuario);
+                    txtPassCurr.setEnabled(true);
+                    txtPassCurr.requestFocus();
+                } else if (PassAnswer == 1) {
+                    EnableValuesEditDelete();
+                    txtIDUser.requestFocus();
+                }
             } else { // Si no es Admin, podrá cambiar solo su contraseña
-                
+                PassAnswer = 1;
+                btnListUser.setEnabled(false);
+                txtPassCurr.setEnabled(true);
+                txtPassCurr.setEditable(true);
+                txtPassCurr.requestFocus();
+                GetUserSQL_Pass(Menu.idUsuario);
+                DisableAllValuesPass();
             }
         } catch (SQLException ex) {
             Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
@@ -1707,6 +1855,12 @@ public class Users extends javax.swing.JPanel {
                 lblMessage.setText("Seleccione un usuario que desee modificar");
             } else if (Flag == 3) {
                 lblMessage.setText("Seleccione un usuario que desee eliminar");
+            } else if (Flag == 4) {
+                lblMessage.setText("Seleccione un usuario que desee inactivar");
+            } else if (Flag == 5) {
+                lblMessage.setText("Seleccione un usuario que desee activar");
+            } else if (Flag == 6) {
+                lblMessage.setText("Seleccione un usuario que desee cambiar contraseña");
             } else {
                 lblMessage.setText("Listado de Usuarios del Sistema");
             }
@@ -1985,6 +2139,11 @@ public class Users extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(null, "Este usuario se encuentra activo.");
                         btnCancel.doClick();
                     }
+                } else if (Flag == 6) {
+                    int IDUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    GetUserSQL_Pass(IDUsuario);
+                    DisableAllValuesPass();
+                    txtPassNew.requestFocus();
                 }
             } catch (SQLException ex) {
             }
@@ -2056,6 +2215,11 @@ public class Users extends javax.swing.JPanel {
                         JOptionPane.showMessageDialog(null, "Este usuario se encuentra activo.");
                         btnCancel.doClick();
                     }
+                } else if (Flag == 6) {
+                    int IDUsuario = (Integer) Integer.parseInt(txtIDUser.getText());
+                    GetUserSQL_Pass(IDUsuario);
+                    DisableAllValuesPass();
+                    txtPassNew.requestFocus();
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
@@ -2085,6 +2249,14 @@ public class Users extends javax.swing.JPanel {
     private void btnCerrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnCerrarActionPerformed
         UserList.setVisible(false);
     }//GEN-LAST:event_btnCerrarActionPerformed
+
+    private void txtPassCurrFocusLost(java.awt.event.FocusEvent evt) {//GEN-FIRST:event_txtPassCurrFocusLost
+        try {
+            CheckPassSavedEquals(Menu.idUsuario);
+        } catch (SQLException ex) {
+            Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_txtPassCurrFocusLost
 
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
