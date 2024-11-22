@@ -78,7 +78,7 @@ public class PayMethods extends javax.swing.JPanel {
     
     private void CheckUserPermissions(int idUser) throws SQLException {
         DeshabilitarMainBtn();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (26,27,28,29) AND id_usuario = " + idUser + ";";
+        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (31,32,33,34) AND id_usuario = " + idUser + ";";
         rs = con.Results(SQLUserCheck);
         while (rs.next()) {
             int idPermission = rs.getInt("id_permission");

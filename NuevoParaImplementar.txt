@@ -9,3 +9,11 @@ Buscar según:
 • Todos los artículos
 • Por Marca
 • Por Categoría
+
+---------------------------------------------------------------------------------------------------
+
+• Agregar observación de cada registro al resumen de ventas
+
+• Corregir Opción de Stock, al darle al botón de Confirmar para que no avance si hay campos vacíos. Corregir apartado de Filtros
+
+• Agregar imagen para los artículos

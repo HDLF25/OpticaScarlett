@@ -52,6 +52,7 @@ public class Login extends javax.swing.JFrame {
         jLabel2.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         jLabel2.setText("Contraseña");
 
+        TxtUser.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         TxtUser.setToolTipText("Inserte usuario");
         TxtUser.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
@@ -59,6 +60,7 @@ public class Login extends javax.swing.JFrame {
             }
         });
 
+        TxtPassword.setHorizontalAlignment(javax.swing.JTextField.CENTER);
         TxtPassword.setToolTipText("Inserte contraseña");
         TxtPassword.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyPressed(java.awt.event.KeyEvent evt) {
