@@ -6,7 +6,7 @@
 	<parameter name="date_first" class="java.util.Date"/>
 	<parameter name="date_last" class="java.util.Date"/>
 	<queryString>
-		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total, ot.observacion FROM ordentrabajo ot, cliente cli WHERE cli.id_cliente = ot.id_paciente AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
+		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total, ot.observacion, usr.username, usr.fullname FROM ordentrabajo ot, cliente cli, usuario usr WHERE cli.id_cliente = ot.id_paciente AND ot.id_usuario = usr.id_usuario AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
 	</queryString>
 	<field name="id_ordentrabajo" class="java.lang.Integer"/>
 	<field name="fecha_ordentrabajo" class="java.sql.Date"/>
@@ -15,6 +15,8 @@
 	<field name="sena" class="java.lang.Integer"/>
 	<field name="total" class="java.lang.Integer"/>
 	<field name="observacion" class="java.lang.String"/>
+	<field name="username" class="java.lang.String"/>
+	<field name="fullname" class="java.lang.String"/>
 	<variable name="TotalSubt" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{subtotal}]]></variableExpression>
 	</variable>
@@ -197,9 +199,19 @@
 				<text><![CDATA[Observación:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="75" y="20" width="480" height="15" uuid="95c844d0-f1c4-4efc-b5a9-521aae53da48"/>
+				<reportElement x="75" y="20" width="250" height="15" uuid="95c844d0-f1c4-4efc-b5a9-521aae53da48"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{observacion}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="325" y="20" width="70" height="15" uuid="12ca1960-ae81-43a7-b429-d4e4b2e4bef3"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle"/>
+				<text><![CDATA[Usuario:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="395" y="20" width="160" height="15" uuid="9550f43c-9d33-4ce9-b2f2-d35b103e4df2"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[" "+$F{username}+" - "+$F{fullname}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>
