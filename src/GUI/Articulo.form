@@ -147,165 +147,169 @@
       <Group type="103" groupAlignment="0" attributes="0">
           <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Component id="lblArticulo" alignment="0" min="-2" max="-2" attributes="0"/>
+              <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
-                      <Component id="btnAdd" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnErase" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Group type="102" attributes="0">
                       <Component id="btnConfirmar" min="-2" pref="115" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="btnCancelar" min="-2" pref="115" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="1" max="-2" attributes="0">
-                          <Component id="txtCostoActual" alignment="0" pref="105" max="32767" attributes="0"/>
-                          <Component id="lblCostoActual" alignment="0" min="-2" max="-2" attributes="0"/>
+                  <Group type="103" alignment="0" groupAlignment="0" max="-2" attributes="0">
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtCostoActual" pref="105" max="32767" attributes="0"/>
+                              <Component id="lblCostoActual" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnTransfer" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="lblCostoAnterior" max="32767" attributes="0"/>
+                              <Component id="txtCostoAnterior" pref="105" max="32767" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtPrecio" max="32767" attributes="0"/>
+                              <Component id="lblPrecio" min="-2" pref="120" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnTransfer" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblCostoAnterior" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtCostoAnterior" min="-2" pref="105" max="-2" attributes="0"/>
+                      <Component id="lblStock" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtStock" alignment="0" max="32767" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Component id="btnAdd" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnEdit" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnErase" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="32767" attributes="0"/>
+                          <Component id="lblidArticulo" min="-2" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="txtidArticulo" min="-2" pref="120" max="-2" attributes="0"/>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Component id="btnSearch" min="-2" max="-2" attributes="0"/>
                       </Group>
-                      <EmptySpace max="32767" attributes="0"/>
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Component id="lblPrecio" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtPrecio" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
+                      <Group type="102" alignment="0" attributes="0">
+                          <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                              <Component id="txtArticulo" alignment="0" max="32767" attributes="0"/>
+                              <Group type="102" alignment="1" attributes="0">
+                                  <Group type="103" groupAlignment="1" max="-2" attributes="0">
+                                      <Component id="cboxMarca" max="32767" attributes="0"/>
+                                      <Component id="lblMarca" min="-2" pref="120" max="-2" attributes="0"/>
+                                  </Group>
+                                  <EmptySpace max="-2" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                                      <Component id="txtColor" max="32767" attributes="0"/>
+                                      <Component id="lblColor" min="-2" pref="120" max="-2" attributes="0"/>
+                                  </Group>
+                              </Group>
+                              <Component id="lblArticulo" min="-2" pref="246" max="-2" attributes="0"/>
+                          </Group>
+                          <EmptySpace max="-2" attributes="0"/>
+                          <Group type="103" groupAlignment="0" max="-2" attributes="0">
+                              <Component id="txtMaterial" max="32767" attributes="0"/>
+                              <Component id="lblMaterial" max="32767" attributes="0"/>
+                              <Component id="cboxCategoria" alignment="0" max="32767" attributes="0"/>
+                              <Component id="lblCategoria" min="-2" pref="120" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
+                      <Component id="jSeparator1" max="32767" attributes="0"/>
                   </Group>
-                  <Group type="102" alignment="1" attributes="0">
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="cboxMarca" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                          <Component id="lblMarca" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="txtColor" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                          <Component id="lblColor" alignment="0" min="-2" max="-2" attributes="0"/>
-                      </Group>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Group type="103" groupAlignment="0" attributes="0">
-                          <Component id="lblMaterial" alignment="0" min="-2" max="-2" attributes="0"/>
-                          <Component id="txtMaterial" alignment="0" min="-2" pref="120" max="-2" attributes="0"/>
-                      </Group>
-                  </Group>
-                  <Component id="lblStock" min="-2" max="-2" attributes="0"/>
-                  <Component id="txtStock" alignment="0" min="-2" pref="90" max="-2" attributes="0"/>
-                  <Component id="jSeparator1" alignment="0" max="32767" attributes="0"/>
-                  <Group type="102" alignment="0" attributes="0">
-                      <Component id="lblidArticulo" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="txtidArticulo" min="-2" pref="120" max="-2" attributes="0"/>
-                      <EmptySpace type="separate" max="-2" attributes="0"/>
-                      <Component id="lblCategoria" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cboxCategoria" min="-2" pref="110" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="txtArticulo" alignment="0" min="-2" pref="370" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="-2" attributes="0"/>
-              <Component id="jSeparator2" min="-2" pref="5" max="-2" attributes="0"/>
+              <EmptySpace type="separate" max="-2" attributes="0"/>
+              <Component id="jSeparator2" min="-2" pref="10" max="-2" attributes="0"/>
               <EmptySpace max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Component id="lblTitleImage" min="-2" max="-2" attributes="0"/>
-                      <EmptySpace max="-2" attributes="0"/>
-                      <Component id="btnImage" max="32767" attributes="0"/>
+                  <Component id="lblImage" max="32767" attributes="0"/>
+                  <Component id="lblTitleImage" alignment="0" min="-2" pref="256" max="-2" attributes="0"/>
+                  <Group type="102" alignment="0" attributes="0">
+                      <EmptySpace min="-2" pref="60" max="-2" attributes="0"/>
+                      <Component id="btnImage" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Component id="lblImage" min="-2" pref="256" max="-2" attributes="0"/>
               </Group>
-              <EmptySpace max="32767" attributes="0"/>
+              <EmptySpace pref="15" max="32767" attributes="0"/>
           </Group>
       </Group>
     </DimensionLayout>
     <DimensionLayout dim="1">
       <Group type="103" groupAlignment="0" attributes="0">
-          <Group type="102" alignment="0" attributes="0">
+          <Group type="102" attributes="0">
               <EmptySpace max="-2" attributes="0"/>
-              <Group type="103" groupAlignment="1" attributes="0">
-                  <Group type="103" alignment="1" groupAlignment="0" attributes="0">
-                      <Component id="btnErase" alignment="1" min="-2" max="-2" attributes="0"/>
-                      <Component id="btnAdd" alignment="0" min="-2" max="-2" attributes="0"/>
-                  </Group>
-                  <Component id="btnEdit" alignment="1" min="-2" max="-2" attributes="0"/>
-                  <Component id="btnSearch" alignment="1" min="-2" max="-2" attributes="0"/>
-              </Group>
-              <EmptySpace type="unrelated" max="-2" attributes="0"/>
               <Group type="103" groupAlignment="0" attributes="0">
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="3" attributes="0">
-                          <Component id="lblTitleImage" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                          <Component id="btnImage" alignment="3" min="-2" max="-2" attributes="0"/>
-                      </Group>
+                  <Group type="102" alignment="0" attributes="0">
+                      <Component id="lblTitleImage" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblImage" min="-2" pref="256" max="-2" attributes="0"/>
-                      <EmptySpace min="0" pref="0" max="32767" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="btnImage" min="-2" max="-2" attributes="0"/>
                   </Group>
-                  <Group type="102" attributes="0">
-                      <Group type="103" groupAlignment="0" max="-2" attributes="0">
-                          <Group type="102" attributes="0">
+                  <Group type="102" alignment="0" attributes="0">
+                      <Group type="103" groupAlignment="0" attributes="0">
+                          <Group type="103" alignment="0" groupAlignment="0" attributes="0">
+                              <Component id="btnSearch" alignment="1" min="-2" max="-2" attributes="0"/>
                               <Group type="103" groupAlignment="3" attributes="0">
                                   <Component id="lblidArticulo" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
                                   <Component id="txtidArticulo" alignment="3" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblCategoria" alignment="3" min="-2" pref="22" max="-2" attributes="0"/>
-                                  <Component id="cboxCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
                               </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="lblArticulo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace max="-2" attributes="0"/>
-                              <Component id="txtArticulo" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Group type="103" groupAlignment="1" attributes="0">
-                                  <Group type="102" alignment="1" attributes="0">
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="lblMarca" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="cboxMarca" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtColor" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                                      <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="lblCostoActual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblCostoAnterior" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="lblPrecio" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                      <EmptySpace max="-2" attributes="0"/>
-                                      <Group type="103" groupAlignment="3" attributes="0">
-                                          <Component id="txtCostoActual" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtCostoAnterior" alignment="3" min="-2" max="-2" attributes="0"/>
-                                          <Component id="txtPrecio" alignment="3" min="-2" max="-2" attributes="0"/>
-                                      </Group>
-                                  </Group>
-                                  <Component id="btnTransfer" min="-2" max="-2" attributes="0"/>
-                              </Group>
-                              <EmptySpace type="unrelated" max="-2" attributes="0"/>
-                              <Component id="lblStock" min="-2" max="-2" attributes="0"/>
-                              <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
-                              <Component id="txtStock" min="-2" max="-2" attributes="0"/>
                           </Group>
-                          <Component id="jSeparator2" max="32767" attributes="0"/>
+                          <Group type="103" alignment="0" groupAlignment="1" attributes="0">
+                              <Group type="103" alignment="1" groupAlignment="0" attributes="0">
+                                  <Component id="btnErase" alignment="1" min="-2" max="-2" attributes="0"/>
+                                  <Component id="btnAdd" alignment="0" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <Component id="btnEdit" alignment="1" min="-2" max="-2" attributes="0"/>
+                          </Group>
                       </Group>
-                      <EmptySpace pref="22" max="32767" attributes="0"/>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblArticulo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="txtArticulo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="cboxCategoria" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblMarca" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblColor" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cboxMarca" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtColor" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtMaterial" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace min="-2" pref="12" max="-2" attributes="0"/>
+                      <Component id="jSeparator1" min="-2" pref="10" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="1" attributes="0">
+                          <Group type="102" alignment="1" attributes="0">
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="lblCostoActual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblCostoAnterior" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="lblPrecio" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                              <EmptySpace max="-2" attributes="0"/>
+                              <Group type="103" groupAlignment="3" attributes="0">
+                                  <Component id="txtCostoActual" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtCostoAnterior" alignment="3" min="-2" max="-2" attributes="0"/>
+                                  <Component id="txtPrecio" alignment="3" min="-2" max="-2" attributes="0"/>
+                              </Group>
+                          </Group>
+                          <Component id="btnTransfer" min="-2" max="-2" attributes="0"/>
+                      </Group>
+                      <EmptySpace type="unrelated" max="-2" attributes="0"/>
+                      <Component id="lblStock" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="-2" attributes="0"/>
+                      <Component id="txtStock" min="-2" max="-2" attributes="0"/>
+                      <EmptySpace max="32767" attributes="0"/>
                       <Group type="103" groupAlignment="3" attributes="0">
                           <Component id="btnConfirmar" alignment="3" min="-2" max="-2" attributes="0"/>
                           <Component id="btnCancelar" alignment="3" min="-2" max="-2" attributes="0"/>
                       </Group>
                   </Group>
+                  <Component id="jSeparator2" alignment="1" max="32767" attributes="0"/>
               </Group>
               <EmptySpace max="-2" attributes="0"/>
           </Group>
@@ -369,13 +373,15 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblArticulo">
       <Properties>
-        <Property name="text" type="java.lang.String" value="Articulo"/>
+        <Property name="horizontalAlignment" type="int" value="0"/>
+        <Property name="text" type="java.lang.String" value="Nombre/Descripci&#xf3;n del Articulo"/>
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="txtArticulo">
     </Component>
     <Component class="javax.swing.JLabel" name="lblCategoria">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Categor&#xed;a"/>
       </Properties>
     </Component>
@@ -399,6 +405,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblMarca">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Marca"/>
       </Properties>
     </Component>
@@ -414,6 +421,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblColor">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Color"/>
       </Properties>
     </Component>
@@ -421,6 +429,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblMaterial">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Material"/>
       </Properties>
     </Component>
@@ -430,6 +439,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCostoActual">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Costo Actual"/>
       </Properties>
     </Component>
@@ -437,6 +447,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblCostoAnterior">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Costo Anterior"/>
       </Properties>
     </Component>
@@ -444,6 +455,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblPrecio">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Precio de Venta"/>
       </Properties>
     </Component>
@@ -451,6 +463,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblStock">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Stock..."/>
       </Properties>
     </Component>
@@ -496,6 +509,7 @@
     </Component>
     <Component class="javax.swing.JLabel" name="lblTitleImage">
       <Properties>
+        <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Imagen del Art&#xed;culo"/>
       </Properties>
     </Component>
@@ -515,7 +529,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/image.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Cambiar imagen"/>
+        <Property name="text" type="java.lang.String" value="Cambiar im&#xe1;gen"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImageActionPerformed"/>

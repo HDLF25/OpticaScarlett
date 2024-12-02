@@ -2,7 +2,7 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" name="DocSearchReport" pageWidth="595" pageHeight="842" columnWidth="555" leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20" uuid="33567800-ffa4-4dd6-9973-6ca8809cb84f">
 	<property name="ireport.zoom" value="1.5"/>
 	<property name="ireport.x" value="0"/>
-	<property name="ireport.y" value="582"/>
+	<property name="ireport.y" value="558"/>
 	<style name="table">
 		<box>
 			<topPen lineWidth="1.0" lineColor="#666666"/>
@@ -113,7 +113,7 @@
 		<defaultValueExpression><![CDATA[]]></defaultValueExpression>
 	</parameter>
 	<queryString>
-		<![CDATA[SELECT us.username, ot.id_ordentrabajo, ot.ot_estado, ot.fecha_ordentrabajo, cl.ci_cliente, CONCAT(cl.nombre_cliente, ' ', cl.apellido_cliente) AS cliente, (SELECT CONCAT(nombre_cliente,' ',apellido_cliente) AS paciente FROM cliente WHERE ot.id_paciente=id_cliente), ot.oi_esferico, ot.oi_cilindrico, ot.oi_eje, ot.oi_adicion, ot.oi_cantidad, ot.od_esferico, ot.od_cilindrico, ot.od_eje, ot.od_adicion, ot.od_cantidad, ot.di, ot.dnd, ot.dni, ot.alturafocal, ot.observacion, ot.subtotal, sum(dot.subtotal_articulo) AS subtotal_articulo, (ot.subtotal + sum(dot.subtotal_articulo)) AS total, ot.sena, ot.total AS restante FROM ordentrabajo ot, detalle_ordentrabajo dot, cliente cl, usuario us WHERE cl.id_cliente=ot.id_cliente AND ot.id_usuario=us.id_usuario AND dot.id_ordentrabajo = ot.id_ordentrabajo AND cl.ci_cliente = $P{ci} AND fecha_ordentrabajo BETWEEN $P{fdesde} AND $P{fhasta} AND ot_estado in ($P{fabierto}, $P{fcerrado}, $P{fanulado}) GROUP BY ot.id_ordentrabajo, cl.ci_cliente, cl.nombre_cliente, cl.apellido_cliente, us.username ORDER BY id_ordentrabajo desc]]>
+		<![CDATA[SELECT us.username, ot.id_ordentrabajo, ot.ot_estado, ot.fecha_ordentrabajo, cl.ci_cliente, CONCAT(cl.nombre_cliente, ' ', cl.apellido_cliente) AS cliente, (SELECT CONCAT(nombre_cliente,' ',apellido_cliente) AS paciente FROM cliente WHERE ot.id_paciente=id_cliente), ot.oi_esferico, ot.oi_cilindrico, ot.oi_eje, ot.oi_adicion, ot.oi_cantidad, ot.od_esferico, ot.od_cilindrico, ot.od_eje, ot.od_adicion, ot.od_cantidad, ot.di, ot.dnd, ot.dni, ot.alturafocal, ot.observacion, ot.subtotal, sum(dot.subtotal_articulo) AS subtotal_articulo, (ot.subtotal + sum(dot.subtotal_articulo)) AS total, ot.sena, ot.total AS restante, id_cristal, oi_cantidad od_cantidad, preciocristal FROM ordentrabajo ot, detalle_ordentrabajo dot, cliente cl, usuario us WHERE cl.id_cliente=ot.id_cliente AND ot.id_usuario=us.id_usuario AND dot.id_ordentrabajo = ot.id_ordentrabajo AND cl.ci_cliente = $P{ci} AND fecha_ordentrabajo BETWEEN $P{fdesde} AND $P{fhasta} AND ot_estado in ($P{fabierto}, $P{fcerrado}, $P{fanulado}) GROUP BY ot.id_ordentrabajo, cl.ci_cliente, cl.nombre_cliente, cl.apellido_cliente, us.username ORDER BY id_ordentrabajo desc]]>
 	</queryString>
 	<field name="username" class="java.lang.String"/>
 	<field name="id_ordentrabajo" class="java.lang.Integer"/>
@@ -142,6 +142,8 @@
 	<field name="total" class="java.lang.Long"/>
 	<field name="sena" class="java.lang.Integer"/>
 	<field name="restante" class="java.lang.Integer"/>
+	<field name="id_cristal" class="java.lang.String"/>
+	<field name="preciocristal" class="java.lang.Integer"/>
 	<background>
 		<band splitType="Stretch"/>
 	</background>
@@ -474,7 +476,7 @@
 				<text><![CDATA[Altura Focal:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="332" y="220" width="50" height="15" uuid="184c973f-6dbf-4206-9172-00f849238f2a"/>
+				<reportElement x="332" y="220" width="40" height="15" uuid="184c973f-6dbf-4206-9172-00f849238f2a"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{alturafocal}]]></textFieldExpression>
 			</textField>
@@ -503,7 +505,7 @@
 			<textField pattern="#,##0;(-#,##0)">
 				<reportElement x="480" y="265" width="60" height="20" uuid="82c6874c-0144-421d-be06-e416df231093"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Integer($F{oi_cantidad})+new Integer($F{od_cantidad}))*$F{preciocristal}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="430" y="290" width="50" height="20" uuid="ea0d366e-e806-4369-a861-3aed9ec1efb2"/>
@@ -530,7 +532,7 @@
 			<textField pattern="#,##0;(-#,##0)">
 				<reportElement x="480" y="315" width="60" height="20" uuid="bbcd043b-c703-4068-8ec0-439a7bc00eff"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="410" y="340" width="70" height="20" uuid="356bb455-22cb-4332-a633-1cbe2b38b7c2"/>
@@ -888,7 +890,7 @@
 				<text><![CDATA[Altura Focal:]]></text>
 			</staticText>
 			<textField>
-				<reportElement x="332" y="585" width="50" height="15" uuid="0089c3e1-04af-48d0-9ab0-4aebd42b8d23"/>
+				<reportElement x="332" y="585" width="40" height="15" uuid="0089c3e1-04af-48d0-9ab0-4aebd42b8d23"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{alturafocal}]]></textFieldExpression>
 			</textField>
@@ -982,7 +984,7 @@
 			<textField pattern="#,##0;(-#,##0)">
 				<reportElement x="480" y="630" width="60" height="20" uuid="64d33be8-6007-4b9a-8b48-3cb977071a84"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[(new Integer($F{oi_cantidad})+new Integer($F{od_cantidad}))*$F{preciocristal}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="430" y="655" width="50" height="20" uuid="c2229358-189f-4c56-ab49-ba87d2301962"/>
@@ -1009,7 +1011,7 @@
 			<textField pattern="#,##0;(-#,##0)">
 				<reportElement x="480" y="680" width="60" height="20" uuid="249b60d4-45b2-4721-9cee-3bd09129cd6a"/>
 				<textElement textAlignment="Right" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[$F{total}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{subtotal}]]></textFieldExpression>
 			</textField>
 			<staticText>
 				<reportElement x="410" y="705" width="70" height="20" uuid="8d990d38-dad6-450f-8e15-a84775e12840"/>
@@ -1067,6 +1069,30 @@
 					<font size="9" isBold="false"/>
 				</textElement>
 				<text><![CDATA[(0972) 536-514]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="435" y="585" width="105" height="15" uuid="6b1832b1-078d-4418-ab28-687fd9b77a81"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_cristal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="372" y="585" width="60" height="15" uuid="6012f641-ae7a-4acf-8899-dfe283fe660f"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Cristal:]]></text>
+			</staticText>
+			<textField>
+				<reportElement x="435" y="220" width="105" height="15" uuid="299d2c29-8917-44a8-8303-2ef5f5d98f2c"/>
+				<textElement verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{id_cristal}]]></textFieldExpression>
+			</textField>
+			<staticText>
+				<reportElement x="372" y="220" width="60" height="15" uuid="2b4f66b0-3578-4089-85d8-491dcc298251"/>
+				<textElement textAlignment="Right" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Tipo Cristal:]]></text>
 			</staticText>
 		</band>
 	</detail>

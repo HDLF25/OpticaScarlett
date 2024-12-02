@@ -1,6 +1,6 @@
 • Añadir validaciones de menú por usuario, para dar solo ciertas opciones a cada usuario	(YA ESTÁ COMPLETO)
 • Crear reporte de Resumen de Stock								(YA ESTÁ COMPLETO)
-• Crear menú para creación de usuario								(Completo: Crear)
+• Crear menú para creación de usuario								(YA ESTÁ COMPLETO)
 
 • Crear usuario en la DB, sucasu - asu2024
 
@@ -13,7 +13,14 @@ Buscar según:
 ---------------------------------------------------------------------------------------------------
 
 • Agregar observación de cada registro al resumen de ventas
+(YA ESTÁ COMPLETO)
 
 • Corregir Opción de Stock, al darle al botón de Confirmar para que no avance si hay campos vacíos. Corregir apartado de Filtros
+(YA ESTÁ COMPLETO)
 
 • Agregar imagen para los artículos
+(YA ESTÁ COMPLETO) Falta colocar en la Ficha
+
+• Agregar Botón para Reabrir OTs
+
+• Hacer que las OTs no se puedan cerrar OTs si el saldo no es 0

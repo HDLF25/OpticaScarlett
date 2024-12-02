@@ -61,6 +61,7 @@ public class Conexion {
         try {
             stm = con.createStatement();
             stm.executeUpdate("Update "+tabla+" set "+valores+" where "+condicion);
+            System.out.println("Update "+tabla+" set "+valores+" where "+condicion);
             JOptionPane.showMessageDialog(null, "Los datos se modificaron correctamente.");
         } catch (SQLException ex) {
             System.out.println("Update "+tabla+" set "+valores+" where "+condicion);

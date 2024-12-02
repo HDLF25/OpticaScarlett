@@ -1305,7 +1305,7 @@ public class Users extends javax.swing.JPanel {
         chbFicha2.setText("Editar OT");
 
         chbFicha3.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
-        chbFicha3.setText("Anular OT");
+        chbFicha3.setText("Anular/Reabrir OT");
 
         chbFicha4.setFont(new java.awt.Font("Segoe UI", 2, 12)); // NOI18N
         chbFicha4.setText("Cerrar OT");

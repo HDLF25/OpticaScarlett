@@ -90,6 +90,7 @@ public class FichaCliente extends javax.swing.JPanel {
                         break;
                     case "FichaNull":
                         btnOTNull.setEnabled(true);
+                        btnOTREOpen.setEnabled(true);
                         break;
                     case "FichaClose":
                         btnOTClose.setEnabled(true);
@@ -105,6 +106,7 @@ public class FichaCliente extends javax.swing.JPanel {
         btnOTNew.setEnabled(false);
         btnOTEdit.setEnabled(false);
         btnOTNull.setEnabled(false);
+        btnOTREOpen.setEnabled(false);
         btnOTClose.setEnabled(false);
     }
 
@@ -301,9 +303,10 @@ public class FichaCliente extends javax.swing.JPanel {
         txtObservacion.setText("");
         txtArtCode.setText("");
         txtArtDescr.setText("");
-        txtArtUnitPrice.setText("");
         spinArtQuantity.setValue(0);
         txtArtSubtotal.setText("");
+        txtArtUnitPrice.setText("");
+        lblImage.setIcon(null);
         DetalleArt.setRowCount(0);
         cboxPayMethod.setSelectedIndex(0);
         PayMethod.setRowCount(0);
@@ -470,7 +473,7 @@ public class FichaCliente extends javax.swing.JPanel {
         if (Flag == 1) { // Guardar datos
             con.InsertarDatos("ordentrabajo",
                     "id_cliente,id_paciente,id_usuario,ot_estado,fecha_ordentrabajo,oi_esferico,oi_cilindrico,oi_eje,oi_adicion,oi_cantidad,od_esferico,od_cilindrico,od_eje,od_adicion,od_cantidad,di,dnd,dni,alturafocal,id_cristal,preciocristal,observacion,subtotal,sena,total",
-                    "'" + IDSol + "','" + IDPa + "','" + 1 + "','" + Estado + "','" + fecha + "','" + OIEsferico + "','" + OICilindrico + "','" + OIEje + "','" + OIAdicion + "','" + OICant + "','" + ODEsferico + "','" + ODCilindrico + "','" + ODEje + "','" + ODAdicion + "','" + ODCant + "','" + DI + "','" + DND + "','" + DNI + "','" + AlturaFocal + "','" + IDCristal + "','" + PrecioCristal + "','" + Observacion + "','" + SubTotal + "','" + Sena + "','" + Saldo + "'");
+                    "'" + IDSol + "','" + IDPa + "','" + Menu.idUsuario + "','" + Estado + "','" + fecha + "','" + OIEsferico + "','" + OICilindrico + "','" + OIEje + "','" + OIAdicion + "','" + OICant + "','" + ODEsferico + "','" + ODCilindrico + "','" + ODEje + "','" + ODAdicion + "','" + ODCant + "','" + DI + "','" + DND + "','" + DNI + "','" + AlturaFocal + "','" + IDCristal + "','" + PrecioCristal + "','" + Observacion + "','" + SubTotal + "','" + Sena + "','" + Saldo + "'");
             for (int a = 0; a < DetalleArt.getRowCount(); a++) {
                 String IDArt = DetalleArt.getValueAt(a, 0).toString();
                 String PrecioArt = DetalleArt.getValueAt(a, 2).toString();
@@ -553,7 +556,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 }
             }
             con.EditarDatos("ordentrabajo", "id_cliente='" + IDSol + "',id_paciente='" + IDPa + "',id_usuario='" + 1 + "',ot_estado='" + Estado + "',fecha_ordentrabajo='" + fecha + "',oi_esferico='" + OIEsferico + "',oi_cilindrico='" + OICilindrico + "',oi_eje='" + OIEje + "',oi_adicion='" + OIAdicion + "',oi_cantidad='" + OICant + "',od_esferico='" + ODEsferico + "',od_cilindrico='" + ODCilindrico + "',od_eje='" + ODEje + "',od_adicion='" + ODAdicion + "',od_cantidad='" + ODCant + "',di='" + DI + "',dnd='" + DND + "',dni='" + DNI + "',alturafocal='" + AlturaFocal + "',id_cristal='" + IDCristal + "',preciocristal='" + PrecioCristal + "',observacion='" + Observacion + "',subtotal='" + SubTotal + "',sena='" + Sena + "',total='" + Saldo + "'", "id_ordentrabajo=" + NroOT);
-        } else if (Flag == 3) { //Elimiar Datos
+        } else if (Flag == 3) { //Anular Datos
             con.EditarDatos("ordentrabajo", "ot_estado='Anulado'", "id_ordentrabajo='" + NroOT + "'");
             String RecuCant = "select oi_cantidad, od_cantidad from ordentrabajo where id_ordentrabajo='" + NroOT + "'";
             rs = con.Results(RecuCant);
@@ -570,7 +573,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.EditarDatosDetalle("stock", "cantidad = cantidad + '" + CantidadArt + "'", "id_articulo='" + IDArt + "' and id_deposito=1");
                 }
             }
-            con.BorrarDatos("ot_pay", "id_ordentrabajo=" + NroOT);
+            /* con.BorrarDatos("ot_pay", "id_ordentrabajo=" + NroOT);
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
                 String CurrPay = PayMethod.getValueAt(i, 0).toString();
                 String PaySQL = "select * from paymethod where descr_paymethod = '" + CurrPay + "'"; // Este query es para quitar el ID del Método de pago
@@ -579,7 +582,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     int Pay_Code = rs.getInt("id_paymethod");
                     con.BorrarDatos("ot_pay", "id_paymethod=" + Pay_Code + " and id_ordentrabajo=" + NroOT);
                 }
-            }
+            } */
         } else if (Flag == 4) { // Cerrar OT (Editar datos)
             con.EditarDatos("ordentrabajo", "sena=" + txtCOTSena.getText() + ", total=" + txtCOTSaldo.getText() + ", ot_estado='Cerrado'", "id_ordentrabajo='" + NroOT + "'");
             for (int i = 0; i < PayMethod.getRowCount(); i++) { // Este FOR ejecuta según la cantidad de filas de la tabla PayMethod (Elimina los métodos agregados anteriormente)
@@ -602,6 +605,8 @@ public class FichaCliente extends javax.swing.JPanel {
                     con.InsertarDatosDetalle("ot_pay", "id_paymethod,id_ordentrabajo,payamount,nrocomprobante", Pay_Code + "," + NroOT + "," + Pay_Mount + "," + Pay_Nro);
                 }
             }
+        } else if (Flag == 5) { // Reabrir OT (Pa Editar datos)
+            con.EditarDatos("ordentrabajo", "ot_estado = 'Abierto'", "id_ordentrabajo = " + NroOT);
         }
     }
 
@@ -977,7 +982,12 @@ public class FichaCliente extends javax.swing.JPanel {
     }
 
     private void CargarTablaOT() throws SQLException {
-        String SQLOT = "select ot.id_ordentrabajo,ot.id_cliente,ot.id_paciente,ot.fecha_ordentrabajo,ot.ot_estado,ot.observacion,ot.preciocristal,sum(dot.cantidad_articulo) as cantidad_articulo,sum(dot.subtotal_articulo) as subtotal_articulo,ot.subtotal,ot.sena,ot.total from detalle_ordentrabajo dot, ordentrabajo ot where dot.id_ordentrabajo=ot.id_ordentrabajo and ot.ot_estado='Abierto' group by ot.id_ordentrabajo order by ot.fecha_ordentrabajo desc";
+        String SQLOT = "";
+        if (Flag == 5) {
+            SQLOT = "select ot.id_ordentrabajo,ot.id_cliente,ot.id_paciente,ot.fecha_ordentrabajo,ot.ot_estado,ot.observacion,ot.preciocristal,sum(dot.cantidad_articulo) as cantidad_articulo,sum(dot.subtotal_articulo) as subtotal_articulo,ot.subtotal,ot.sena,ot.total from detalle_ordentrabajo dot, ordentrabajo ot where dot.id_ordentrabajo=ot.id_ordentrabajo and ot.ot_estado='Cerrado' group by ot.id_ordentrabajo order by ot.fecha_ordentrabajo desc";
+        } else {
+            SQLOT = "select ot.id_ordentrabajo,ot.id_cliente,ot.id_paciente,ot.fecha_ordentrabajo,ot.ot_estado,ot.observacion,ot.preciocristal,sum(dot.cantidad_articulo) as cantidad_articulo,sum(dot.subtotal_articulo) as subtotal_articulo,ot.subtotal,ot.sena,ot.total from detalle_ordentrabajo dot, ordentrabajo ot where dot.id_ordentrabajo=ot.id_ordentrabajo and ot.ot_estado='Abierto' group by ot.id_ordentrabajo order by ot.fecha_ordentrabajo desc";
+        }
         rs = con.Results(SQLOT);
         SearchOT.setRowCount(0);
         while (rs.next()) {
@@ -1122,6 +1132,18 @@ public class FichaCliente extends javax.swing.JPanel {
                 return false;
             }
         }
+        if (Flag == 4) {
+            int OTSaldo = Integer.parseInt(txtCOTSaldo.getText());
+            if (OTSaldo > 0) {
+                JOptionPane.showMessageDialog(null, "No es posible cerrar el OT mientras el Saldo no sea 0.\nAsegúrese de agregar todos los métodos de pago que correspondan antes de proceder con el cierre.");
+                btnOTCancel.doClick();
+                return false;
+            } else if (OTSaldo < 0) {
+                JOptionPane.showMessageDialog(null, "Error: No es posible continuar con el proceso.\nAsegúrese de que el pago no supere al total de la OT antes de continuar.");
+                btnOTCancel.doClick();
+                return false;
+            }
+        }
         return true;
     }
 
@@ -1249,6 +1271,7 @@ public class FichaCliente extends javax.swing.JPanel {
         btnOTEdit = new javax.swing.JButton();
         btnOTNull = new javax.swing.JButton();
         btnOTClose = new javax.swing.JButton();
+        btnOTREOpen = new javax.swing.JButton();
         PnlOTStats = new javax.swing.JPanel();
         lblFecha = new javax.swing.JLabel();
         dtOTDate = new com.toedter.calendar.JDateChooser();
@@ -1832,6 +1855,15 @@ public class FichaCliente extends javax.swing.JPanel {
             }
         });
 
+        btnOTREOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/complete.png"))); // NOI18N
+        btnOTREOpen.setText("Reabrir OT");
+        btnOTREOpen.setToolTipText("Cerrar Orden de Trabajo pendiente");
+        btnOTREOpen.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOTREOpenActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PnlBtnsOTLayout = new javax.swing.GroupLayout(PnlBtnsOT);
         PnlBtnsOT.setLayout(PnlBtnsOTLayout);
         PnlBtnsOTLayout.setHorizontalGroup(
@@ -1844,6 +1876,8 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnOTNull, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(btnOTREOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(btnOTClose, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
@@ -1855,7 +1889,8 @@ public class FichaCliente extends javax.swing.JPanel {
                     .addComponent(btnOTNew)
                     .addComponent(btnOTNull)
                     .addComponent(btnOTEdit)
-                    .addComponent(btnOTClose))
+                    .addComponent(btnOTClose)
+                    .addComponent(btnOTREOpen))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -2798,22 +2833,23 @@ public class FichaCliente extends javax.swing.JPanel {
                         .addComponent(PnlOTStats, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(jSeparator7)
                     .addComponent(jSeparator8)
-                    .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                        .addGroup(layout.createSequentialGroup()
-                            .addComponent(lblObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                            .addComponent(txtObservacion))
-                        .addGroup(layout.createSequentialGroup()
-                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addGroup(layout.createSequentialGroup()
-                                    .addComponent(PnlCristal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(PnlArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(lblObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtObservacion))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createSequentialGroup()
+                                .addComponent(PnlCristal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(PnlArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(PnlPayMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addComponent(PnlCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(PnlPayMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(0, 0, Short.MAX_VALUE)))
+                                .addGap(131, 131, 131)))
+                        .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jSeparator3))
                 .addContainerGap())
         );
@@ -3065,7 +3101,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 txtOTNro.setText(id);
                 RecuperarOT(txtOTNro.getText());
                 if (Flag == 3) {
-                    int respuesta = JOptionPane.showConfirmDialog(null, "Está seguro?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    int respuesta = JOptionPane.showConfirmDialog(null, "Está seguro de eliminar la OT N° "+id+"?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
                     if (respuesta == 0) {
                         btnOTConfirm.doClick();
                     } else {
@@ -3086,6 +3122,13 @@ public class FichaCliente extends javax.swing.JPanel {
                     WindowCloseOT.setResizable(false);
                     WindowCloseOT.setLocationRelativeTo(null);
                     WindowCloseOT.setVisible(true);
+                } else if (Flag == 5) {
+                    int respuesta = JOptionPane.showConfirmDialog(null, "Desea reabrir la OT N° "+id+"?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    if (respuesta == 0) {
+                        btnOTConfirm.doClick();
+                    } else {
+                        btnOTCancel.doClick();
+                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -3384,7 +3427,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 txtCristalPrice.requestFocus();
                 txtOTNro.requestFocus();
                 if (Flag == 3) {
-                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de Anular esta OT?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
                     if (resp == 0) {
                         btnOTConfirm.setEnabled(true);
                         btnOTConfirm.doClick();
@@ -3412,6 +3455,15 @@ public class FichaCliente extends javax.swing.JPanel {
                     txtCOTSena.requestFocus();
                     txtCOTSaldo.requestFocus();
                     btnOTConfirm.setEnabled(true);
+                } else if (Flag == 5) {
+                    int resp = JOptionPane.showConfirmDialog(null, "Estás seguro de reabrir esta OT?", "Atención!", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    if (resp == 0) {
+                        btnOTConfirm.setEnabled(true);
+                        btnOTConfirm.doClick();
+                    } else {
+                        btnOTCancel.setEnabled(true);
+                        btnOTCancel.doClick();
+                    }
                 }
             } catch (SQLException ex) {
                 Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -3424,6 +3476,8 @@ public class FichaCliente extends javax.swing.JPanel {
                 } else if (Flag == 3) {
                     lblMensajeOT.setText("Seleccione un Orden de Trabajo que desee anular");
                 } else if (Flag == 4) {
+                    lblMensajeOT.setText("Seleccione un Orden de Trabajo que desee cerrar");
+                } else if (Flag == 5) {
                     lblMensajeOT.setText("Seleccione un Orden de Trabajo que desee cerrar");
                 }
                 SearcherOT.setTitle("Buscar OT");
@@ -3528,7 +3582,6 @@ public class FichaCliente extends javax.swing.JPanel {
 
     private void btnOKUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOKUserActionPerformed
         String UserName = txtUser.getText().toString();
-        //String Password = txtPass.getText().toString();
         char[] passwordArray = txtPass.getPassword();
         String Password = new String(passwordArray);
         java.util.Arrays.fill(passwordArray, ' '); // Borra la contraseña del array para mayor seguridad
@@ -3539,6 +3592,12 @@ public class FichaCliente extends javax.swing.JPanel {
                 Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
             }
         } else if (Flag == 3) {
+            try {
+                UserCheck(UserName, Password);
+            } catch (SQLException ex) {
+                Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        } else if (Flag == 5) {
             try {
                 UserCheck(UserName, Password);
             } catch (SQLException ex) {
@@ -3659,12 +3718,10 @@ public class FichaCliente extends javax.swing.JPanel {
 
     private void spinArtQuantityStateChanged(javax.swing.event.ChangeEvent evt) {//GEN-FIRST:event_spinArtQuantityStateChanged
         if (!txtArtUnitPrice.equals("")) {
-            System.out.println("Precio Unitario no está vacío");
             int Cantidad = (Integer) spinArtQuantity.getValue();
             Integer SubTotal = Integer.parseInt(txtArtUnitPrice.getText()) * Cantidad;
             txtArtSubtotal.setText(SubTotal.toString());
         } else if (spinArtQuantity.equals(0)) {
-            System.out.println("Cantidad es 0");
             txtArtSubtotal.setText("0");
         }
     }//GEN-LAST:event_spinArtQuantityStateChanged
@@ -3802,6 +3859,17 @@ public class FichaCliente extends javax.swing.JPanel {
         }
     }//GEN-LAST:event_btnPayAddCOTActionPerformed
 
+    private void btnOTREOpenActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOTREOpenActionPerformed
+        Flag = 5;
+        lblSUSubtitle.setText("Ingrese un usuario administrativo para continuar con la operación.");
+        SUConfirm.setTitle("Atención: Acción requerida - Reapertura de OT");
+        SUConfirm.setModal(true);
+        SUConfirm.pack();
+        SUConfirm.setResizable(false);
+        SUConfirm.setLocationRelativeTo(null);
+        SUConfirm.setVisible(true);
+    }//GEN-LAST:event_btnOTREOpenActionPerformed
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel PnlArticulo;
@@ -3848,6 +3916,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnOTEdit;
     private javax.swing.JButton btnOTNew;
     private javax.swing.JButton btnOTNull;
+    private javax.swing.JButton btnOTREOpen;
     private javax.swing.JButton btnPayAdd;
     private javax.swing.JButton btnPayAddCOT;
     private javax.swing.JButton btnPayDelete;
