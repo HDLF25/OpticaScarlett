@@ -172,8 +172,6 @@
                               <Component id="lblPrecio" min="-2" pref="120" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <Component id="lblStock" alignment="0" max="32767" attributes="0"/>
-                      <Component id="txtStock" alignment="0" max="32767" attributes="0"/>
                       <Group type="102" alignment="0" attributes="0">
                           <Component id="btnAdd" min="-2" max="-2" attributes="0"/>
                           <EmptySpace max="-2" attributes="0"/>
@@ -212,6 +210,8 @@
                           </Group>
                       </Group>
                       <Component id="jSeparator1" max="32767" attributes="0"/>
+                      <Component id="lblStock" alignment="0" max="32767" attributes="0"/>
+                      <Component id="txtStock" alignment="0" max="32767" attributes="0"/>
                   </Group>
               </Group>
               <EmptySpace type="separate" max="-2" attributes="0"/>
@@ -529,7 +529,7 @@
         <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
           <Image iconType="3" name="/icons/image.png"/>
         </Property>
-        <Property name="text" type="java.lang.String" value="Cambiar im&#xe1;gen"/>
+        <Property name="text" type="java.lang.String" value="Cambiar imagen"/>
       </Properties>
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="btnImageActionPerformed"/>

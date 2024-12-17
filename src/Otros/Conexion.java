@@ -21,7 +21,6 @@ public class Conexion {
         try {
             Class.forName("org.postgresql.Driver");
             con = DriverManager.getConnection("jdbc:postgresql://"+server+"/"+db,user,password);
-            //System.out.println("La conexión se realizó con éxito.");
         } catch (Exception ex) {
             JOptionPane.showMessageDialog(null, ex.getMessage());
         }
@@ -61,7 +60,6 @@ public class Conexion {
         try {
             stm = con.createStatement();
             stm.executeUpdate("Update "+tabla+" set "+valores+" where "+condicion);
-            System.out.println("Update "+tabla+" set "+valores+" where "+condicion);
             JOptionPane.showMessageDialog(null, "Los datos se modificaron correctamente.");
         } catch (SQLException ex) {
             System.out.println("Update "+tabla+" set "+valores+" where "+condicion);

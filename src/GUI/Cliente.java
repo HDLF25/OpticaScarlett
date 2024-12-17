@@ -6,6 +6,7 @@ import java.awt.event.ItemListener;
 import java.awt.event.MouseEvent;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -25,7 +26,7 @@ public class Cliente extends javax.swing.JPanel {
         }
     };
 
-    public Cliente(int idUsuario) throws SQLException {
+    public Cliente(List<Menu.Permission> permissions) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -33,7 +34,7 @@ public class Cliente extends javax.swing.JPanel {
         DeshabilitarTxt();
         CabeceraTabla();
         CargarCboCiudad();
-        CheckUserPermissions(idUsuario);
+        CheckUserPermissions(permissions);
     }
 
     private void HabilitarBtn() {
@@ -53,7 +54,7 @@ public class Cliente extends javax.swing.JPanel {
         btnConfirmar.setEnabled(false);
         btnCancelar.setEnabled(false);
     }
-    
+
     private void DeshabilitarMainBtn() {
         btnAdd.setEnabled(false);
         btnEdit.setEnabled(false);
@@ -110,17 +111,12 @@ public class Cliente extends javax.swing.JPanel {
         txtDireccion.setText("");
         chboxMenor.setSelected(false);
     }
-    
-    private void CheckUserPermissions(int idUser) throws SQLException {
+
+    private void CheckUserPermissions(List<Menu.Permission> permissions) throws SQLException {
         DeshabilitarMainBtn();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (7,8,9,10) AND id_usuario = " + idUser + ";";
-        rs = con.Results(SQLUserCheck);
-        while (rs.next()) {
-            int idPermission = rs.getInt("id_permission");
-            String namePermission = rs.getString("name_permission");
-            Boolean isActive = rs.getBoolean("active");
-            if (isActive) {
-                switch (namePermission) {
+        for (Menu.Permission permission : permissions) {
+            if (permission.isActivePerm()) {
+                switch (permission.getNamePerm()) {
                     case "CliCreate":
                         btnAdd.setEnabled(true);
                         break;
@@ -134,7 +130,7 @@ public class Cliente extends javax.swing.JPanel {
                         btnSearch.setEnabled(true);
                         break;
                     default:
-                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                        System.out.println("Permiso no utilizado o no concedido: " + permission.getPermID() + ", " + permission.getNamePerm());
                 }
             }
         }
@@ -768,7 +764,7 @@ public class Cliente extends javax.swing.JPanel {
             DeshabilitarTxt();
             RestartCbox();
             EditableTxt();
-            CheckUserPermissions(Menu.idUsuario);
+            CheckUserPermissions(Menu.permissions);
         } catch (SQLException ex) {
             Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -803,7 +799,7 @@ public class Cliente extends javax.swing.JPanel {
                 DeshabilitarBtn();
                 RestartCbox();
                 Flag = 0;
-                CheckUserPermissions(Menu.idUsuario);
+                CheckUserPermissions(Menu.permissions);
             } catch (SQLException ex) {
                 Logger.getLogger(Cliente.class.getName()).log(Level.SEVERE, null, ex);
             }

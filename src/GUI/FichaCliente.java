@@ -9,6 +9,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.ImageIcon;
@@ -51,8 +52,23 @@ public class FichaCliente extends javax.swing.JPanel {
             return false;
         }
     };
+    DefaultTableModel ConsultOT = new DefaultTableModel() {
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+    DefaultTableModel ConsultOTDetail = new DefaultTableModel() {
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+    DefaultTableModel ConsultOTPay = new DefaultTableModel() {
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
 
-    public FichaCliente(int idUsuario) throws SQLException {
+    public FichaCliente(List<Menu.Permission> permissions) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -61,27 +77,26 @@ public class FichaCliente extends javax.swing.JPanel {
         DeshabilitarTxt1();
         DeshabilitarTxt2();
         NoEditTxt();
+        ConsultNoEditTxt();
         CabeceraTablaDetalleArticulo();
         CabeceraTablaArticulo();
         CabeceraTablaCliente();
         CabeceraTablaOT();
         CabeceraTablaPayMethod();
+        AddConsultOTColumn();
+        AddConsultOTDetailColumn();
+        AddConsultOTPayColumn();
         CargarCboxPMethod();
-        CheckUserPermissions(idUsuario);
+        CheckUserPermissions(permissions);
         dtOTDate.setDateFormatString("dd/MM/yyyy");
         btnPayDelete.setRequestFocusEnabled(false);
     }
 
-    private void CheckUserPermissions(int idUser) throws SQLException {
+    private void CheckUserPermissions(List<Menu.Permission> permissions) throws SQLException {
         DeshabilitarMainBtn();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (2,3,4,5) AND id_usuario = " + idUser + ";";
-        rs = con.Results(SQLUserCheck);
-        while (rs.next()) {
-            int idPermission = rs.getInt("id_permission");
-            String namePermission = rs.getString("name_permission");
-            Boolean isActive = rs.getBoolean("active");
-            if (isActive) {
-                switch (namePermission) {
+        for (Menu.Permission permission : permissions) {
+            if (permission.isActivePerm()) {
+                switch (permission.getNamePerm()) {
                     case "FichaCreate":
                         btnOTNew.setEnabled(true);
                         break;
@@ -96,7 +111,7 @@ public class FichaCliente extends javax.swing.JPanel {
                         btnOTClose.setEnabled(true);
                         break;
                     default:
-                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                        System.out.println("Permiso no utilizado o no concedido: " + permission.getPermID() + ", " + permission.getNamePerm());
                 }
             }
         }
@@ -333,6 +348,39 @@ public class FichaCliente extends javax.swing.JPanel {
         txtSaldo.setEditable(false);
         txtCOTSaldo.setEditable(false);
         txtCOTSena.setEditable(false);
+    }
+
+    private void ConsultNoEditTxt() {
+        txtGGOTNro.setEditable(false);
+        txtGGOTStatus.setEditable(false);
+        txtGGOTDate.setEnabled(false);
+        txtGGOTTotal.setEditable(false);
+        txtGGOTPay.setEditable(false);
+        txtGGOTBalance.setEditable(false);
+        txtGGPatientDoc.setEditable(false);
+        txtGGPatientName.setEditable(false);
+        txtGGUsername.setEditable(false);
+        txtGGOISpherical.setEditable(false);
+        txtGGODSpherical.setEditable(false);
+        txtGGOICylindrical.setEditable(false);
+        txtGGODCylindrical.setEditable(false);
+        txtGGOIAxis.setEditable(false);
+        txtGGODAxis.setEditable(false);
+        txtGGOIAddition.setEditable(false);
+        txtGGODAddition.setEditable(false);
+        txtGGOIQuantity.setEditable(false);
+        txtGGODQuantity.setEditable(false);
+        txtGGDI.setEditable(false);
+        txtGGDND.setEditable(false);
+        txtGGDNI.setEditable(false);
+        txtGGAltFoc.setEditable(false);
+        txtGGCrystalType.setEditable(false);
+        txtGGCrystalDescr.setEditable(false);
+        txtGGCrystalTotal.setEditable(false);
+        txtGGObs.setEditable(false);
+        txtGGUnitPrice.setEditable(false);
+        txtGGTotalArticle.setEditable(false);
+        tConsultOTPay.setEnabled(false);
     }
 
     private void NuevoOT() throws SQLException {
@@ -705,6 +753,130 @@ public class FichaCliente extends javax.swing.JPanel {
         }
     }
 
+    private void CleanConsultOT() {
+        txtGGOTNro.setText("");
+        txtGGOTStatus.setText("");
+        txtGGPatientDoc.setText("");
+        txtGGPatientName.setText("");
+        txtGGObs.setText("");
+        txtGGUsername.setText("");
+        txtGGODAddition.setText("");
+        txtGGODAxis.setText("");
+        txtGGODCylindrical.setText("");
+        txtGGODQuantity.setText("");
+        txtGGODSpherical.setText("");
+        txtGGOIAddition.setText("");
+        txtGGOIAxis.setText("");
+        txtGGOICylindrical.setText("");
+        txtGGOIQuantity.setText("");
+        txtGGOISpherical.setText("");
+        txtGGDI.setText("");
+        txtGGDND.setText("");
+        txtGGDNI.setText("");
+        txtGGAltFoc.setText("");
+        txtGGCrystalDescr.setText("");
+        txtGGCrystalTotal.setText("");
+        txtGGCrystalType.setText("");
+        txtGGUnitPrice.setText("");
+        txtGGOTTotal.setText("");
+        txtGGOTPay.setText("");
+        txtGGOTBalance.setText("");
+        txtGGTotalArticle.setText("");
+        ConsultOTDetail.setRowCount(0);
+        ConsultOTPay.setRowCount(0);
+        lblGGImage.setIcon(null);
+    }
+
+    private void LoadConsultOT(String OT_ID) throws SQLException {
+        CleanConsultOT();
+        String SQL_Recuperar = "SELECT ot.*, art.descripcion_articulo, cl.ci_cliente, cl.nombre_cliente||' '||cl.apellido_cliente AS paciente, us.username, SUM(dot.subtotal_articulo) AS subtotal_articulo FROM ordentrabajo ot, detalle_ordentrabajo dot, cliente cl, usuario us, articulos art WHERE ot.id_ordentrabajo = dot.id_ordentrabajo AND cl.id_cliente = ot.id_paciente AND ot.id_usuario = us.id_usuario AND ot.id_cristal = art.id_articulo AND ot.id_ordentrabajo = '" + OT_ID + "' GROUP BY ot.id_ordentrabajo, cl.ci_cliente, cl.ci_cliente, cl.nombre_cliente, cl.apellido_cliente, us.username, art.descripcion_articulo ORDER BY fecha_ordentrabajo DESC;";
+        rs = con.Results(SQL_Recuperar);
+        if (rs.next()) {
+            txtGGOTNro.setText(rs.getString("id_ordentrabajo"));
+            txtGGOTStatus.setText(rs.getString("ot_estado"));
+            txtGGPatientDoc.setText(rs.getString("ci_cliente"));
+            txtGGPatientName.setText(rs.getString("paciente"));
+            txtGGObs.setText(rs.getString("observacion"));
+            txtGGUsername.setText(rs.getString("username"));
+            txtGGODSpherical.setText(rs.getString("od_esferico"));
+            txtGGODCylindrical.setText(rs.getString("od_cilindrico"));
+            txtGGODAxis.setText(rs.getString("od_eje"));
+            txtGGODAddition.setText(rs.getString("od_adicion"));
+            txtGGODQuantity.setText(rs.getString("od_cantidad"));
+            txtGGOISpherical.setText(rs.getString("oi_esferico"));
+            txtGGOICylindrical.setText(rs.getString("oi_cilindrico"));
+            txtGGOIAxis.setText(rs.getString("oi_eje"));
+            txtGGOIAddition.setText(rs.getString("oi_adicion"));
+            txtGGOIQuantity.setText(rs.getString("oi_cantidad"));
+            txtGGDI.setText(rs.getString("di"));
+            txtGGDND.setText(rs.getString("dnd"));
+            txtGGDNI.setText(rs.getString("dni"));
+            txtGGAltFoc.setText(rs.getString("alturafocal"));
+            txtGGCrystalType.setText(rs.getString("id_cristal"));
+            txtGGCrystalDescr.setText(rs.getString("descripcion_articulo"));
+            txtGGUnitPrice.setText(rs.getString("preciocristal"));
+            int TotalCrystal = (rs.getInt("oi_cantidad") + rs.getInt("od_cantidad")) * rs.getInt("preciocristal");
+            txtGGCrystalTotal.setText(String.valueOf(TotalCrystal));
+            txtGGOTTotal.setText(rs.getString("subtotal"));
+            txtGGOTPay.setText(rs.getString("sena"));
+            txtGGOTBalance.setText(rs.getString("total"));
+            txtGGTotalArticle.setText(rs.getString("subtotal_articulo"));
+            // FALTA AGREGAR LAS TABLAS DE ARTICULOS Y METODOS DE PAGO
+            String SQL_LoadArticles = "SELECT dot.id_ordentrabajo, dot.id_articulo, dot.cantidad_articulo, dot.precio_articulo, dot.subtotal_articulo, art.descripcion_articulo, art.id_marca, mc.descripcion_marca, art.image_dir FROM detalle_ordentrabajo dot JOIN articulos art ON dot.id_articulo = art.id_articulo JOIN marca mc ON art.id_marca = mc.id_marca WHERE dot.id_ordentrabajo = '" + OT_ID + "';";
+            ResultSet rs2 = con.Results(SQL_LoadArticles);
+            ConsultOTDetail.setRowCount(0);
+            while (rs2.next()) {
+                Object[] row = new Object[6];
+                row[0] = rs2.getString("id_articulo");
+                row[1] = rs2.getString("descripcion_articulo");
+                row[2] = rs2.getString("descripcion_marca");
+                row[3] = rs2.getString("precio_articulo");
+                row[4] = rs2.getString("cantidad_articulo");
+                row[5] = rs2.getString("subtotal_articulo");
+                ConsultOTDetail.addRow(row);
+            }
+            String SQL_LoadPays = "SELECT otp.payamount, pm.descr_paymethod, otp.nrocomprobante FROM ot_pay otp JOIN paymethod pm ON otp.id_paymethod = pm.id_paymethod WHERE id_ordentrabajo = '" + OT_ID + "';";
+            ResultSet rs3 = con.Results(SQL_LoadPays);
+            ConsultOTPay.setRowCount(0);
+            while (rs3.next()) {
+                Object[] row = new Object[3];
+                row[0] = rs3.getString("descr_paymethod");
+                row[1] = rs3.getString("payamount");
+                row[2] = rs3.getString("nrocomprobante");
+                ConsultOTPay.addRow(row);
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontraron resultados");
+        }
+    }
+
+    private void LoadConsultOTArtImage(String ArtID) throws SQLException {
+        String SQL_Recuperar = "SELECT * FROM articulos WHERE id_articulo = '" + ArtID + "';";
+        rs = con.Results(SQL_Recuperar);
+        if (rs.next()) {
+            // Recuperar el directorio de la imagen
+            String imageDir = rs.getString("image_dir");
+            if (imageDir != null && !imageDir.isEmpty()) {
+                File imageFile = new File(imageDir);
+                if (imageFile.exists()) {
+                    // Cargar y escalar la imagen en lblImage
+                    ImageIcon imageIcon = new ImageIcon(imageFile.getAbsolutePath());
+                    lblGGImage.setIcon(new ImageIcon(imageIcon.getImage().getScaledInstance(lblGGImage.getWidth(), lblGGImage.getHeight(), Image.SCALE_SMOOTH)));
+                } else {
+                    // Si la imagen no existe, vaciar lblImage
+                    lblGGImage.setIcon(null);
+                    System.out.println("La imagen no existe en la ruta especificada: " + imageDir);
+                }
+            } else {
+                // Si no hay ruta almacenada, vaciar lblImage
+                lblGGImage.setIcon(null);
+                System.out.println("No se encontró una ruta de imagen para este artículo.");
+            }
+        } else {
+            JOptionPane.showMessageDialog(null, "No se encontraron resultados");
+        }
+    }
+
     private void RecuperarCliente(String ci) throws SQLException {
         String SQL_Recuperar = "select * from cliente where ci_cliente='" + String.valueOf(ci) + "'";
         rs = con.Results(SQL_Recuperar);
@@ -908,6 +1080,105 @@ public class FichaCliente extends javax.swing.JPanel {
         TSeacherPay.getColumnModel().getColumn(1).setCellRenderer(rightRenderer); //Monto
         TSeacherPay.getColumnModel().getColumn(2).setPreferredWidth(100); //Nro de Comprobante
         TSeacherPay.getColumnModel().getColumn(2).setCellRenderer(centerRenderer); //Nro de Comprobante
+    }
+
+    private void AddConsultOTColumn() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
+        ConsultOT.addColumn("OT N°"); // Columna 0
+        ConsultOT.addColumn("Estado"); // Columna 1
+        ConsultOT.addColumn("Fecha"); // Columna 2
+        ConsultOT.addColumn("Doc. N°"); // Columna 3
+        ConsultOT.addColumn("Paciente"); // Columna 4
+        ConsultOT.addColumn("Cant. Cristal"); // Columna 5
+        ConsultOT.addColumn("Total Cristal"); // Columna 6
+        ConsultOT.addColumn("Total Art."); // Columna 7
+        ConsultOT.addColumn("Subtotal"); // Columna 8
+        ConsultOT.addColumn("Pago"); // Columna 9
+        ConsultOT.addColumn("Saldo"); // Columna 10
+        tConsultOT.getColumnModel().getColumn(0).setPreferredWidth(20); //
+        tConsultOT.getColumnModel().getColumn(0).setCellRenderer(centerRenderer);
+        tConsultOT.getColumnModel().getColumn(1).setPreferredWidth(20); //
+        tConsultOT.getColumnModel().getColumn(1).setCellRenderer(centerRenderer);
+        tConsultOT.getColumnModel().getColumn(2).setPreferredWidth(20); //
+        tConsultOT.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tConsultOT.getColumnModel().getColumn(3).setPreferredWidth(50); //
+        tConsultOT.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+        tConsultOT.getColumnModel().getColumn(4).setPreferredWidth(190); //
+        tConsultOT.getColumnModel().getColumn(5).setPreferredWidth(20); //
+        tConsultOT.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+        tConsultOT.getColumnModel().getColumn(6).setPreferredWidth(50); //
+        tConsultOT.getColumnModel().getColumn(6).setCellRenderer(rightRenderer);
+        tConsultOT.getColumnModel().getColumn(7).setPreferredWidth(50); //
+        tConsultOT.getColumnModel().getColumn(7).setCellRenderer(rightRenderer);
+        tConsultOT.getColumnModel().getColumn(8).setPreferredWidth(50); //
+        tConsultOT.getColumnModel().getColumn(8).setCellRenderer(rightRenderer);
+        tConsultOT.getColumnModel().getColumn(9).setPreferredWidth(50); //
+        tConsultOT.getColumnModel().getColumn(9).setCellRenderer(rightRenderer);
+        tConsultOT.getColumnModel().getColumn(10).setPreferredWidth(50); //
+        tConsultOT.getColumnModel().getColumn(10).setCellRenderer(rightRenderer);
+    }
+
+    private void LoadOTConsult() throws SQLException {
+        String SQLOT = "SELECT ot.id_ordentrabajo, ot.id_cliente, ot.id_paciente, ot.fecha_ordentrabajo, cl.nombre_cliente || ' ' || cl.apellido_cliente AS paciente, cl.ci_cliente, ot.oi_cantidad, ot.od_cantidad, ot.ot_estado, ot.observacion, ot.preciocristal, SUM(COALESCE(dot.cantidad_articulo, 0)) AS cantidad_articulo, SUM(COALESCE(dot.subtotal_articulo, 0)) AS subtotal_articulo, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot JOIN detalle_ordentrabajo dot ON dot.id_ordentrabajo = ot.id_ordentrabajo JOIN cliente cl ON ot.id_paciente = cl.id_cliente GROUP BY ot.id_ordentrabajo, cl.nombre_cliente, cl.apellido_cliente, cl.ci_cliente ORDER BY ot.id_ordentrabajo DESC;";
+        rs = con.Results(SQLOT);
+        ConsultOT.setRowCount(0);
+        while (rs.next()) {
+            Object[] row = new Object[11];
+            row[0] = rs.getString("id_ordentrabajo");
+            row[1] = rs.getString("ot_estado");
+            row[2] = rs.getString("fecha_ordentrabajo");
+            row[3] = rs.getString("ci_cliente");
+            row[4] = rs.getString("paciente");
+            row[5] = rs.getInt("oi_cantidad") + rs.getInt("od_cantidad");
+            row[6] = (rs.getInt("oi_cantidad") + rs.getInt("od_cantidad")) * rs.getInt("preciocristal");
+            row[7] = rs.getString("subtotal_articulo");
+            row[8] = rs.getString("subtotal");
+            row[9] = rs.getString("sena");
+            row[10] = rs.getString("total");
+            ConsultOT.addRow(row);
+        }
+    }
+
+    private void AddConsultOTDetailColumn() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
+        ConsultOTDetail.addColumn("Art. ID"); // Columna 0
+        ConsultOTDetail.addColumn("Descripción"); // Columna 1
+        ConsultOTDetail.addColumn("Marca"); // Columna 2
+        ConsultOTDetail.addColumn("Precio Unit."); // Columna 3
+        ConsultOTDetail.addColumn("Cantidad"); // Columna 4
+        ConsultOTDetail.addColumn("Subtotal"); // Columna 5
+        tConsultOTDetail.getColumnModel().getColumn(0).setPreferredWidth(80); // ID Artículo
+        tConsultOTDetail.getColumnModel().getColumn(1).setPreferredWidth(180); // Descripción
+        tConsultOTDetail.getColumnModel().getColumn(1).setCellRenderer(rightRenderer);
+        tConsultOTDetail.getColumnModel().getColumn(2).setPreferredWidth(10); // Marca
+        tConsultOTDetail.getColumnModel().getColumn(2).setCellRenderer(centerRenderer);
+        tConsultOTDetail.getColumnModel().getColumn(3).setPreferredWidth(80); // Precio Unitario
+        tConsultOTDetail.getColumnModel().getColumn(3).setCellRenderer(rightRenderer);
+        tConsultOTDetail.getColumnModel().getColumn(4).setPreferredWidth(10); // Cantidad
+        tConsultOTDetail.getColumnModel().getColumn(4).setCellRenderer(centerRenderer);
+        tConsultOTDetail.getColumnModel().getColumn(5).setPreferredWidth(80); // Subtotal
+        tConsultOTDetail.getColumnModel().getColumn(5).setCellRenderer(rightRenderer);
+    }
+
+    private void AddConsultOTPayColumn() {
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(DefaultTableCellRenderer.CENTER);
+        DefaultTableCellRenderer rightRenderer = new DefaultTableCellRenderer();
+        rightRenderer.setHorizontalAlignment(DefaultTableCellRenderer.RIGHT);
+        ConsultOTPay.addColumn("Método de Pago"); // Columna 0
+        ConsultOTPay.addColumn("Monto"); // Columna 1
+        ConsultOTPay.addColumn("Nro de Comprobante"); // Columna 2
+        tConsultOTPay.getColumnModel().getColumn(0).setPreferredWidth(20); //Método de Pago
+        tConsultOTPay.getColumnModel().getColumn(1).setPreferredWidth(50); //Monto
+        tConsultOTPay.getColumnModel().getColumn(1).setCellRenderer(rightRenderer); //Monto
+        tConsultOTPay.getColumnModel().getColumn(2).setPreferredWidth(100); //Nro de Comprobante
+        tConsultOTPay.getColumnModel().getColumn(2).setCellRenderer(centerRenderer); //Nro de Comprobante
     }
 
     private void UserCheck(String ObtUser, String ObtPass) throws SQLException {
@@ -1167,8 +1438,6 @@ public class FichaCliente extends javax.swing.JPanel {
         return true;
     }
 
-    ;
-    
     private void CargarCboxPMethod() throws SQLException {
         cboxPayMethod.removeAllItems();
         cboxPayMethodCOT.removeAllItems();
@@ -1209,11 +1478,74 @@ public class FichaCliente extends javax.swing.JPanel {
         };
     }
 
-    /**
-     * This method is called from within the constructor to initialize the form.
-     * WARNING: Do NOT modify this code. The content of this method is always
-     * regenerated by the Form Editor.
-     */
+    private void OTConsultFilter() throws SQLException {
+        String fOpen = "";
+        String fClose = "";
+        String fNull = "";
+        if (chkGGOpen.isSelected() == true) {
+            if (chkGGClose.isSelected() == true) {
+                if (chkGGNull.isSelected() == true) {
+                    fOpen = "Abierto";
+                    fClose = "Cerrado";
+                    fNull = "Anulado";
+                } else {
+                    fOpen = "Abierto";
+                    fClose = "Cerrado";
+                }
+            } else if (chkGGNull.isSelected() == true) {
+                fOpen = "Abierto";
+                fNull = "Anulado";
+            } else {
+                fOpen = "Abierto";
+            }
+        } else if (chkGGClose.isSelected() == true) {
+            if (chkGGNull.isSelected() == true) {
+                fClose = "Cerrado";
+                fNull = "Anulado";
+            } else {
+                fClose = "Cerrado";
+            }
+        } else if (chkGGNull.isSelected() == true) {
+            fNull = "Anulado";
+        } else {
+            JOptionPane.showMessageDialog(null, "Hay algo raro aquí, esto no debería pasar D:");
+        }
+        String SQL_OT = "";
+        String Filters = txtGGFilter.getText();
+        if (Filters == "") {
+            SQL_OT = "SELECT ot.id_ordentrabajo, ot.id_cliente, ot.id_paciente, ot.fecha_ordentrabajo, cl.nombre_cliente || ' ' || cl.apellido_cliente AS paciente, cl.ci_cliente, ot.oi_cantidad, ot.od_cantidad, ot.ot_estado, ot.observacion, ot.preciocristal, SUM(COALESCE(dot.cantidad_articulo, 0)) AS cantidad_articulo, SUM(COALESCE(dot.subtotal_articulo, 0)) AS subtotal_articulo, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot JOIN detalle_ordentrabajo dot ON dot.id_ordentrabajo = ot.id_ordentrabajo JOIN cliente cl ON ot.id_paciente = cl.id_cliente WHERE ot.ot_estado IN ('" + fOpen + "', '" + fClose + "', '" + fNull + "') GROUP BY ot.id_ordentrabajo, cl.nombre_cliente, cl.apellido_cliente, cl.ci_cliente ORDER BY ot.id_ordentrabajo DESC;";
+        } else {
+            if (cboxGGFilter.getSelectedItem() == "CI/RUC Paciente") {
+                SQL_OT = "SELECT ot.id_ordentrabajo, ot.id_cliente, ot.id_paciente, ot.fecha_ordentrabajo, cl.nombre_cliente || ' ' || cl.apellido_cliente AS paciente, cl.ci_cliente, ot.oi_cantidad, ot.od_cantidad, ot.ot_estado, ot.observacion, ot.preciocristal, SUM(COALESCE(dot.cantidad_articulo, 0)) AS cantidad_articulo, SUM(COALESCE(dot.subtotal_articulo, 0)) AS subtotal_articulo, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot JOIN detalle_ordentrabajo dot ON dot.id_ordentrabajo = ot.id_ordentrabajo JOIN cliente cl ON ot.id_paciente = cl.id_cliente WHERE ot.ot_estado IN ('" + fOpen + "', '" + fClose + "', '" + fNull + "') AND cl.ci_cliente ILIKE '%"+txtGGFilter.getText()+"%' GROUP BY ot.id_ordentrabajo, cl.nombre_cliente, cl.apellido_cliente, cl.ci_cliente ORDER BY ot.id_ordentrabajo DESC;";
+            } else if (cboxGGFilter.getSelectedItem() == "Nombre Paciente") {
+                SQL_OT = "SELECT ot.id_ordentrabajo, ot.id_cliente, ot.id_paciente, ot.fecha_ordentrabajo, cl.nombre_cliente || ' ' || cl.apellido_cliente AS paciente, cl.ci_cliente, ot.oi_cantidad, ot.od_cantidad, ot.ot_estado, ot.observacion, ot.preciocristal, SUM(COALESCE(dot.cantidad_articulo, 0)) AS cantidad_articulo, SUM(COALESCE(dot.subtotal_articulo, 0)) AS subtotal_articulo, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot JOIN detalle_ordentrabajo dot ON dot.id_ordentrabajo = ot.id_ordentrabajo JOIN cliente cl ON ot.id_paciente = cl.id_cliente WHERE ot.ot_estado IN ('" + fOpen + "', '" + fClose + "', '" + fNull + "') AND cl.nombre_cliente ILIKE '%"+txtGGFilter.getText()+"%' GROUP BY ot.id_ordentrabajo, cl.nombre_cliente, cl.apellido_cliente, cl.ci_cliente ORDER BY ot.id_ordentrabajo DESC;";
+            } else if (cboxGGFilter.getSelectedItem() == "Nro OT") {
+                if (txtGGFilter.getText().isEmpty()) {
+                    SQL_OT = "SELECT ot.id_ordentrabajo, ot.id_cliente, ot.id_paciente, ot.fecha_ordentrabajo, cl.nombre_cliente || ' ' || cl.apellido_cliente AS paciente, cl.ci_cliente, ot.oi_cantidad, ot.od_cantidad, ot.ot_estado, ot.observacion, ot.preciocristal, SUM(COALESCE(dot.cantidad_articulo, 0)) AS cantidad_articulo, SUM(COALESCE(dot.subtotal_articulo, 0)) AS subtotal_articulo, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot JOIN detalle_ordentrabajo dot ON dot.id_ordentrabajo = ot.id_ordentrabajo JOIN cliente cl ON ot.id_paciente = cl.id_cliente WHERE ot.ot_estado IN ('" + fOpen + "', '" + fClose + "', '" + fNull + "') GROUP BY ot.id_ordentrabajo, cl.nombre_cliente, cl.apellido_cliente, cl.ci_cliente ORDER BY ot.id_ordentrabajo DESC;";
+                } else if (txtGGFilter.getText() != "") {
+                    SQL_OT = "SELECT ot.id_ordentrabajo, ot.id_cliente, ot.id_paciente, ot.fecha_ordentrabajo, cl.nombre_cliente || ' ' || cl.apellido_cliente AS paciente, cl.ci_cliente, ot.oi_cantidad, ot.od_cantidad, ot.ot_estado, ot.observacion, ot.preciocristal, SUM(COALESCE(dot.cantidad_articulo, 0)) AS cantidad_articulo, SUM(COALESCE(dot.subtotal_articulo, 0)) AS subtotal_articulo, ot.subtotal, ot.sena, ot.total FROM ordentrabajo ot JOIN detalle_ordentrabajo dot ON dot.id_ordentrabajo = ot.id_ordentrabajo JOIN cliente cl ON ot.id_paciente = cl.id_cliente WHERE ot.ot_estado IN ('" + fOpen + "', '" + fClose + "', '" + fNull + "') AND ot.id_ordentrabajo = '"+txtGGFilter.getText()+"' GROUP BY ot.id_ordentrabajo, cl.nombre_cliente, cl.apellido_cliente, cl.ci_cliente ORDER BY ot.id_ordentrabajo DESC;";
+                }
+            }
+        }
+        rs = con.Results(SQL_OT);
+        ConsultOT.setRowCount(0);
+        while (rs.next()) {
+            Object[] row = new Object[11];
+            row[0] = rs.getString("id_ordentrabajo");
+            row[1] = rs.getString("ot_estado");
+            row[2] = rs.getString("fecha_ordentrabajo");
+            row[3] = rs.getString("ci_cliente");
+            row[4] = rs.getString("paciente");
+            row[5] = rs.getInt("oi_cantidad") + rs.getInt("od_cantidad");
+            row[6] = (rs.getInt("oi_cantidad") + rs.getInt("od_cantidad")) * rs.getInt("preciocristal");
+            row[7] = rs.getString("subtotal_articulo");
+            row[8] = rs.getString("subtotal");
+            row[9] = rs.getString("sena");
+            row[10] = rs.getString("total");
+            ConsultOT.addRow(row);
+        }
+    }
+
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
@@ -1266,12 +1598,94 @@ public class FichaCliente extends javax.swing.JPanel {
         txtPass = new javax.swing.JPasswordField();
         btnOKUser = new javax.swing.JButton();
         btnCancelUser = new javax.swing.JButton();
+        ConsultOTDialog = new javax.swing.JDialog();
+        jLabel1 = new javax.swing.JLabel();
+        jLabel2 = new javax.swing.JLabel();
+        txtGGFilter = new javax.swing.JTextField();
+        cboxGGFilter = new javax.swing.JComboBox<>();
+        btnGGEraseFilter = new javax.swing.JButton();
+        jScrollPane1 = new javax.swing.JScrollPane();
+        tConsultOT = new javax.swing.JTable();
+        jSeparator6 = new javax.swing.JSeparator();
+        jLabel3 = new javax.swing.JLabel();
+        txtGGOTNro = new javax.swing.JTextField();
+        jLabel4 = new javax.swing.JLabel();
+        txtGGOTStatus = new javax.swing.JTextField();
+        jLabel5 = new javax.swing.JLabel();
+        txtGGOTDate = new com.toedter.calendar.JDateChooser();
+        jLabel7 = new javax.swing.JLabel();
+        txtGGPatientDoc = new javax.swing.JTextField();
+        txtGGPatientName = new javax.swing.JTextField();
+        jLabel8 = new javax.swing.JLabel();
+        chkGGOpen = new javax.swing.JCheckBox();
+        chkGGNull = new javax.swing.JCheckBox();
+        chkGGClose = new javax.swing.JCheckBox();
+        jSeparator11 = new javax.swing.JSeparator();
+        txtGGOTBalance = new javax.swing.JTextField();
+        jLabel27 = new javax.swing.JLabel();
+        txtGGOTPay = new javax.swing.JTextField();
+        jLabel28 = new javax.swing.JLabel();
+        txtGGOTTotal = new javax.swing.JTextField();
+        jLabel29 = new javax.swing.JLabel();
+        btnGGCleanOT = new javax.swing.JButton();
+        TabPanel = new javax.swing.JTabbedPane();
+        TabCrystal = new javax.swing.JPanel();
+        jLabel9 = new javax.swing.JLabel();
+        txtGGODSpherical = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
+        txtGGOISpherical = new javax.swing.JTextField();
+        jLabel11 = new javax.swing.JLabel();
+        txtGGODCylindrical = new javax.swing.JTextField();
+        txtGGOICylindrical = new javax.swing.JTextField();
+        jLabel12 = new javax.swing.JLabel();
+        txtGGODAxis = new javax.swing.JTextField();
+        txtGGOIAxis = new javax.swing.JTextField();
+        jLabel13 = new javax.swing.JLabel();
+        jLabel14 = new javax.swing.JLabel();
+        jLabel15 = new javax.swing.JLabel();
+        txtGGODAddition = new javax.swing.JTextField();
+        txtGGOIAddition = new javax.swing.JTextField();
+        jLabel16 = new javax.swing.JLabel();
+        txtGGODQuantity = new javax.swing.JTextField();
+        txtGGOIQuantity = new javax.swing.JTextField();
+        jLabel17 = new javax.swing.JLabel();
+        jLabel18 = new javax.swing.JLabel();
+        jLabel19 = new javax.swing.JLabel();
+        txtGGDI = new javax.swing.JTextField();
+        txtGGAltFoc = new javax.swing.JTextField();
+        jLabel20 = new javax.swing.JLabel();
+        jLabel21 = new javax.swing.JLabel();
+        txtGGDND = new javax.swing.JTextField();
+        txtGGDNI = new javax.swing.JTextField();
+        txtGGCrystalType = new javax.swing.JTextField();
+        txtGGCrystalDescr = new javax.swing.JTextField();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
+        jLabel24 = new javax.swing.JLabel();
+        txtGGCrystalTotal = new javax.swing.JTextField();
+        txtGGUnitPrice = new javax.swing.JTextField();
+        TabArticles = new javax.swing.JPanel();
+        jScrollPane6 = new javax.swing.JScrollPane();
+        tConsultOTDetail = new javax.swing.JTable();
+        jLabel26 = new javax.swing.JLabel();
+        lblGGImage = new javax.swing.JLabel();
+        txtGGTotalArticle = new javax.swing.JTextField();
+        jLabel32 = new javax.swing.JLabel();
+        TabPayMethod = new javax.swing.JPanel();
+        jScrollPane5 = new javax.swing.JScrollPane();
+        tConsultOTPay = new javax.swing.JTable();
+        jLabel25 = new javax.swing.JLabel();
+        txtGGUsername = new javax.swing.JTextField();
+        jLabel31 = new javax.swing.JLabel();
+        txtGGObs = new javax.swing.JTextField();
+        jLabel6 = new javax.swing.JLabel();
         PnlBtnsOT = new javax.swing.JPanel();
         btnOTNew = new javax.swing.JButton();
         btnOTEdit = new javax.swing.JButton();
         btnOTNull = new javax.swing.JButton();
         btnOTClose = new javax.swing.JButton();
         btnOTREOpen = new javax.swing.JButton();
+        btnOTConsult = new javax.swing.JButton();
         PnlOTStats = new javax.swing.JPanel();
         lblFecha = new javax.swing.JLabel();
         dtOTDate = new com.toedter.calendar.JDateChooser();
@@ -1817,6 +2231,554 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addContainerGap(35, Short.MAX_VALUE))
         );
 
+        jLabel1.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel1.setText("Consulta de OTs");
+
+        jLabel2.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/filtrar.png"))); // NOI18N
+        jLabel2.setText("Filtrar por:");
+
+        txtGGFilter.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtGGFilterKeyReleased(evt);
+            }
+        });
+
+        cboxGGFilter.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "CI/RUC Paciente", "Nombre Paciente", "Nro OT" }));
+
+        btnGGEraseFilter.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/eraser.png"))); // NOI18N
+
+        tConsultOT.setModel(ConsultOT);
+        tConsultOT.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tConsultOTMouseClicked(evt);
+            }
+        });
+        jScrollPane1.setViewportView(tConsultOT);
+
+        jLabel3.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel3.setText("OT N°");
+
+        txtGGOTNro.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel4.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel4.setText("Estado");
+
+        txtGGOTStatus.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel5.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel5.setText("Fecha");
+
+        txtGGOTDate.setDateFormatString("dd/MM/yyyy");
+
+        jLabel7.setText("Paciente");
+
+        txtGGPatientDoc.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel8.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel8.setText("Estado:");
+
+        chkGGOpen.setSelected(true);
+        chkGGOpen.setText("Abierto");
+        chkGGOpen.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkGGOpenItemStateChanged(evt);
+            }
+        });
+
+        chkGGNull.setSelected(true);
+        chkGGNull.setText("Anulado");
+        chkGGNull.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkGGNullItemStateChanged(evt);
+            }
+        });
+
+        chkGGClose.setSelected(true);
+        chkGGClose.setText("Cerrado");
+        chkGGClose.addItemListener(new java.awt.event.ItemListener() {
+            public void itemStateChanged(java.awt.event.ItemEvent evt) {
+                chkGGCloseItemStateChanged(evt);
+            }
+        });
+
+        txtGGOTBalance.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel27.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel27.setText("Saldo");
+
+        txtGGOTPay.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel28.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel28.setText("Pago");
+
+        txtGGOTTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel29.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel29.setText("Total");
+
+        btnGGCleanOT.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/eraser.png"))); // NOI18N
+        btnGGCleanOT.setText("Limpiar Campos");
+        btnGGCleanOT.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnGGCleanOTActionPerformed(evt);
+            }
+        });
+
+        jLabel9.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel9.setText("Ojo Derecho");
+
+        txtGGODSpherical.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel10.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel10.setText("Ojo Izquierdo");
+
+        txtGGOISpherical.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel11.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel11.setText("Esferico");
+
+        txtGGODCylindrical.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGOICylindrical.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel12.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel12.setText("Cilíndrico");
+
+        txtGGODAxis.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGOIAxis.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel13.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel13.setText("Eje");
+
+        jLabel14.setText("°");
+
+        jLabel15.setText("°");
+
+        txtGGODAddition.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGOIAddition.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel16.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel16.setText("Adición");
+
+        txtGGODQuantity.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGOIQuantity.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel17.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel17.setText("Cant.");
+
+        jLabel18.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel18.setText("Alt. Focal");
+
+        jLabel19.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel19.setText("DI");
+
+        txtGGDI.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGAltFoc.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel20.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel20.setText("DND");
+
+        jLabel21.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel21.setText("DNI");
+
+        txtGGDND.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGDNI.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGCrystalType.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel22.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel22.setText("Tipo Cristal");
+
+        jLabel23.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel23.setText("Total Cristal");
+
+        jLabel24.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel24.setText("Pr. Unit.");
+
+        txtGGCrystalTotal.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        txtGGUnitPrice.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        javax.swing.GroupLayout TabCrystalLayout = new javax.swing.GroupLayout(TabCrystal);
+        TabCrystal.setLayout(TabCrystalLayout);
+        TabCrystalLayout.setHorizontalGroup(
+            TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TabCrystalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(TabCrystalLayout.createSequentialGroup()
+                        .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(TabCrystalLayout.createSequentialGroup()
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGOISpherical, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(TabCrystalLayout.createSequentialGroup()
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel11, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtGGODSpherical, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtGGOICylindrical, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel12, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtGGODCylindrical, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(TabCrystalLayout.createSequentialGroup()
+                                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel13, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtGGODAxis, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(TabCrystalLayout.createSequentialGroup()
+                                .addComponent(txtGGOIAxis, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 15, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel16, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                .addComponent(txtGGODAddition, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(txtGGOIAddition, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(txtGGOIQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(TabCrystalLayout.createSequentialGroup()
+                                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(jLabel17, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtGGODQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGDI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGDND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 30, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGAltFoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                        .addComponent(jLabel22, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addGroup(javax.swing.GroupLayout.Alignment.LEADING, TabCrystalLayout.createSequentialGroup()
+                            .addComponent(txtGGCrystalType, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtGGCrystalDescr, javax.swing.GroupLayout.PREFERRED_SIZE, 330, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                    .addGroup(TabCrystalLayout.createSequentialGroup()
+                        .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGCrystalTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addContainerGap(214, Short.MAX_VALUE))
+        );
+        TabCrystalLayout.setVerticalGroup(
+            TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TabCrystalLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addGroup(TabCrystalLayout.createSequentialGroup()
+                            .addComponent(jLabel11)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGGODSpherical, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGGOISpherical, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGroup(TabCrystalLayout.createSequentialGroup()
+                            .addComponent(jLabel12)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtGGODCylindrical, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtGGOICylindrical, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(TabCrystalLayout.createSequentialGroup()
+                            .addComponent(jLabel13)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtGGODAxis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel14, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtGGOIAxis, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel15, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                    .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(TabCrystalLayout.createSequentialGroup()
+                            .addComponent(jLabel16)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtGGODAddition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtGGOIAddition, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(TabCrystalLayout.createSequentialGroup()
+                            .addComponent(jLabel17)
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                .addComponent(txtGGODQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel19, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGGDI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel20, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGGDND, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel21, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGGDNI, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(jLabel18, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(txtGGAltFoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addComponent(txtGGOIQuantity, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addGap(19, 19, 19)
+                .addComponent(jLabel22)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtGGCrystalType, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGGCrystalDescr, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(TabCrystalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel24, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGGUnitPrice, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel23, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGGCrystalTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap(65, Short.MAX_VALUE))
+        );
+
+        TabPanel.addTab("Cristal", TabCrystal);
+
+        tConsultOTDetail.setModel(ConsultOTDetail);
+        tConsultOTDetail.addMouseListener(new java.awt.event.MouseAdapter() {
+            public void mouseClicked(java.awt.event.MouseEvent evt) {
+                tConsultOTDetailMouseClicked(evt);
+            }
+        });
+        jScrollPane6.setViewportView(tConsultOTDetail);
+
+        jLabel26.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel26.setText("Artículos añadidos");
+
+        lblGGImage.setBorder(javax.swing.BorderFactory.createLineBorder(new java.awt.Color(153, 153, 153)));
+
+        txtGGTotalArticle.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
+
+        jLabel32.setText("Total Artículos");
+
+        javax.swing.GroupLayout TabArticlesLayout = new javax.swing.GroupLayout(TabArticles);
+        TabArticles.setLayout(TabArticlesLayout);
+        TabArticlesLayout.setHorizontalGroup(
+            TabArticlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TabArticlesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(TabArticlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel26, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane6, javax.swing.GroupLayout.DEFAULT_SIZE, 894, Short.MAX_VALUE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TabArticlesLayout.createSequentialGroup()
+                        .addGap(0, 0, Short.MAX_VALUE)
+                        .addComponent(jLabel32)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGTotalArticle, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(lblGGImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap())
+        );
+        TabArticlesLayout.setVerticalGroup(
+            TabArticlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TabArticlesLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel26)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(TabArticlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(lblGGImage, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, TabArticlesLayout.createSequentialGroup()
+                        .addComponent(jScrollPane6, javax.swing.GroupLayout.PREFERRED_SIZE, 0, Short.MAX_VALUE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(TabArticlesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(txtGGTotalArticle, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel32, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addContainerGap(12, Short.MAX_VALUE))
+        );
+
+        TabPanel.addTab("Artículos", TabArticles);
+
+        tConsultOTPay.setModel(ConsultOTPay);
+        jScrollPane5.setViewportView(tConsultOTPay);
+
+        jLabel25.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
+        jLabel25.setText("Métodos de Pago");
+
+        javax.swing.GroupLayout TabPayMethodLayout = new javax.swing.GroupLayout(TabPayMethod);
+        TabPayMethod.setLayout(TabPayMethodLayout);
+        TabPayMethodLayout.setHorizontalGroup(
+            TabPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TabPayMethodLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(TabPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addComponent(jScrollPane5, javax.swing.GroupLayout.DEFAULT_SIZE, 550, Short.MAX_VALUE)
+                    .addComponent(jLabel25, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                .addContainerGap(556, Short.MAX_VALUE))
+        );
+        TabPayMethodLayout.setVerticalGroup(
+            TabPayMethodLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(TabPayMethodLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel25)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane5, javax.swing.GroupLayout.PREFERRED_SIZE, 200, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+        );
+
+        TabPanel.addTab("Métodos de Pago", TabPayMethod);
+
+        txtGGUsername.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+
+        jLabel31.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel31.setText("Usuario");
+
+        jLabel6.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
+        jLabel6.setText("Observación");
+
+        javax.swing.GroupLayout ConsultOTDialogLayout = new javax.swing.GroupLayout(ConsultOTDialog.getContentPane());
+        ConsultOTDialog.getContentPane().setLayout(ConsultOTDialogLayout);
+        ConsultOTDialogLayout.setHorizontalGroup(
+            ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                    .addComponent(jScrollPane1)
+                    .addComponent(jSeparator11)
+                    .addComponent(jSeparator6)
+                    .addComponent(TabPanel)
+                    .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                        .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGOTPay, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGOTBalance, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(btnGGCleanOT))
+                    .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                        .addComponent(jLabel2)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                        .addComponent(cboxGGFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtGGFilter, javax.swing.GroupLayout.PREFERRED_SIZE, 250, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnGGEraseFilter)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chkGGOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chkGGNull, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(chkGGClose, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                        .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                                .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGOTNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGOTStatus, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGOTDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGap(18, 18, 18)
+                                .addComponent(jLabel7)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGPatientDoc, javax.swing.GroupLayout.PREFERRED_SIZE, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, 300, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                                .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(txtGGObs, javax.swing.GroupLayout.PREFERRED_SIZE, 500, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel31, javax.swing.GroupLayout.PREFERRED_SIZE, 55, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtGGUsername, javax.swing.GroupLayout.PREFERRED_SIZE, 130, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
+                .addContainerGap())
+        );
+        ConsultOTDialogLayout.setVerticalGroup(
+            ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(ConsultOTDialogLayout.createSequentialGroup()
+                .addContainerGap()
+                .addComponent(jLabel1)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGGFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(cboxGGFilter, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(btnGGEraseFilter))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel8, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                        .addComponent(chkGGOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(chkGGNull, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(chkGGClose, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 170, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator6, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addComponent(jLabel5, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtGGOTNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(txtGGOTStatus, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(txtGGOTDate, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                    .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(jLabel7, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGGPatientDoc, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGGPatientName, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(jSeparator11, javax.swing.GroupLayout.PREFERRED_SIZE, 10, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                        .addComponent(jLabel31, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(txtGGUsername, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(txtGGObs, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jLabel6, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(TabPanel, javax.swing.GroupLayout.PREFERRED_SIZE, 275, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(ConsultOTDialogLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(txtGGOTBalance, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel27, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGGOTPay, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel28, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtGGOTTotal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(jLabel29, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btnGGCleanOT))
+                .addContainerGap())
+        );
+
         setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         btnOTNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/add.png"))); // NOI18N
@@ -1864,21 +2826,34 @@ public class FichaCliente extends javax.swing.JPanel {
             }
         });
 
+        btnOTConsult.setIcon(new javax.swing.ImageIcon(getClass().getResource("/icons/searchlist.png"))); // NOI18N
+        btnOTConsult.setText("Consulta OT");
+        btnOTConsult.setToolTipText("Cerrar Orden de Trabajo pendiente");
+        btnOTConsult.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnOTConsultActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout PnlBtnsOTLayout = new javax.swing.GroupLayout(PnlBtnsOT);
         PnlBtnsOT.setLayout(PnlBtnsOTLayout);
         PnlBtnsOTLayout.setHorizontalGroup(
             PnlBtnsOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PnlBtnsOTLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(btnOTNew, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOTEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOTNull, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOTREOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnOTClose, javax.swing.GroupLayout.PREFERRED_SIZE, 110, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PnlBtnsOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PnlBtnsOTLayout.createSequentialGroup()
+                        .addComponent(btnOTNew, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOTEdit, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOTNull, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(PnlBtnsOTLayout.createSequentialGroup()
+                        .addComponent(btnOTREOpen, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOTClose, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnOTConsult, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PnlBtnsOTLayout.setVerticalGroup(
@@ -1888,9 +2863,12 @@ public class FichaCliente extends javax.swing.JPanel {
                 .addGroup(PnlBtnsOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOTNew)
                     .addComponent(btnOTNull)
-                    .addComponent(btnOTEdit)
+                    .addComponent(btnOTEdit))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PnlBtnsOTLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                     .addComponent(btnOTClose)
-                    .addComponent(btnOTREOpen))
+                    .addComponent(btnOTREOpen)
+                    .addComponent(btnOTConsult))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -1926,19 +2904,22 @@ public class FichaCliente extends javax.swing.JPanel {
             PnlOTStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(PnlOTStatsLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblOt, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtOTNro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(btnSearchOT)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(txtOTState, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(dtOTDate, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(PnlOTStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(PnlOTStatsLayout.createSequentialGroup()
+                        .addComponent(lblOt, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtOTNro, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(btnSearchOT)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(dtOTDate, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlOTStatsLayout.createSequentialGroup()
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 140, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(txtOTState, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         PnlOTStatsLayout.setVerticalGroup(
@@ -1949,11 +2930,13 @@ public class FichaCliente extends javax.swing.JPanel {
                     .addGroup(PnlOTStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(txtOTNro, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addComponent(lblOt, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addComponent(txtOTState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(lblFecha, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addComponent(dtOTDate, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                     .addComponent(btnSearchOT))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addGroup(PnlOTStatsLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblEstado, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtOTState, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
 
@@ -2170,7 +3153,7 @@ public class FichaCliente extends javax.swing.JPanel {
 
         lblOIEje.setText("°");
 
-        txtOIAdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtOIAdicion.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         spinOICantidad.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         spinOICantidad.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -2190,7 +3173,7 @@ public class FichaCliente extends javax.swing.JPanel {
 
         lblODEje.setText("°");
 
-        txtODAdicion.setHorizontalAlignment(javax.swing.JTextField.CENTER);
+        txtODAdicion.setHorizontalAlignment(javax.swing.JTextField.RIGHT);
 
         spinODCantidad.setModel(new javax.swing.SpinnerNumberModel(0, 0, null, 1));
         spinODCantidad.addChangeListener(new javax.swing.event.ChangeListener() {
@@ -2267,86 +3250,85 @@ public class FichaCliente extends javax.swing.JPanel {
         PnlCristal.setLayout(PnlCristalLayout);
         PnlCristalLayout.setHorizontalGroup(
             PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlCristalLayout.createSequentialGroup()
+            .addGroup(PnlCristalLayout.createSequentialGroup()
                 .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                    .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                        .addGroup(PnlCristalLayout.createSequentialGroup()
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblDI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtDI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(lblDND, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtDND, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGap(18, 18, 18)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
-                                .addComponent(txtAlturaFocal, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(lblAlturaFocal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addGroup(PnlCristalLayout.createSequentialGroup()
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(txtCristalCode)
-                                .addComponent(lblTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addGroup(PnlCristalLayout.createSequentialGroup()
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblDI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblDND, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtDND, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(txtDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblDNI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(18, 18, 18)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
+                                    .addComponent(txtAlturaFocal, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblAlturaFocal, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addGroup(PnlCristalLayout.createSequentialGroup()
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(txtCristalCode)
+                                    .addComponent(lblTipoCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(btnCristalSearch)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(txtCristalDescr, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblPrecioCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtCristalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlCristalLayout.createSequentialGroup()
+                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblOI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblOD, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                             .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtOIEsferico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtODEsferico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblEsferico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtOICilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtODCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(lblCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(txtOIEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(txtODEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addGroup(PnlCristalLayout.createSequentialGroup()
-                                    .addComponent(btnCristalSearch)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addComponent(txtCristalDescr, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                                        .addComponent(lblPrecioCristal, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                        .addComponent(txtCristalPrice, javax.swing.GroupLayout.PREFERRED_SIZE, 90, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                                .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlCristalLayout.createSequentialGroup()
-                                    .addComponent(btnCristClean)
-                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                    .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                        .addComponent(txtCristalTotal, javax.swing.GroupLayout.Alignment.TRAILING)
-                                        .addComponent(lblCristalTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+                                    .addGap(2, 2, 2)
+                                    .addComponent(lblEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(lblOIEje)
+                                .addComponent(lblODEje))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                .addComponent(txtOIAdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                    .addComponent(lblAdicion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                    .addComponent(txtODAdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                            .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(spinODCantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(spinOICantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                .addComponent(lblCantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(lblVistaLejana, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, PnlCristalLayout.createSequentialGroup()
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblOI, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblOD, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addComponent(btnCristClean)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtOIEsferico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtODEsferico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblEsferico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtOICilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtODCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(lblCilindrico, javax.swing.GroupLayout.PREFERRED_SIZE, 60, javax.swing.GroupLayout.PREFERRED_SIZE))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                .addComponent(txtOIEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addComponent(txtODEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(PnlCristalLayout.createSequentialGroup()
-                                .addGap(2, 2, 2)
-                                .addComponent(lblEje, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(lblOIEje)
-                            .addComponent(lblODEje))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                            .addComponent(txtOIAdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                                .addComponent(lblAdicion, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                .addComponent(txtODAdicion, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(spinODCantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(spinOICantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblCantidad, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 70, javax.swing.GroupLayout.PREFERRED_SIZE)))
-                    .addComponent(lblVistaLejana, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 383, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGroup(PnlCristalLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addComponent(txtCristalTotal, javax.swing.GroupLayout.Alignment.TRAILING)
+                            .addComponent(lblCristalTotal, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addContainerGap())
         );
         PnlCristalLayout.setVerticalGroup(
@@ -2834,23 +3816,24 @@ public class FichaCliente extends javax.swing.JPanel {
                     .addComponent(jSeparator7)
                     .addComponent(jSeparator8)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(lblObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 80, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(lblObservacion, javax.swing.GroupLayout.PREFERRED_SIZE, 75, javax.swing.GroupLayout.PREFERRED_SIZE)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(txtObservacion))
+                    .addComponent(jSeparator3)
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(PnlPayMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(layout.createSequentialGroup()
+                                .addGap(35, 35, 35)
                                 .addComponent(PnlCristal, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(jSeparator4, javax.swing.GroupLayout.PREFERRED_SIZE, 8, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(PnlArticulo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(PnlPayMethod, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                                .addComponent(PnlCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addGap(131, 131, 131)))
-                        .addGap(0, 0, Short.MAX_VALUE))
-                    .addComponent(jSeparator3))
+                            .addGroup(layout.createSequentialGroup()
+                                .addGap(123, 123, 123)
+                                .addComponent(PnlCliente, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addContainerGap())
         );
         layout.setVerticalGroup(
@@ -2938,7 +3921,7 @@ public class FichaCliente extends javax.swing.JPanel {
             DeshabilitarTxt2();
             LimpiarTxt();
             LimpiarTxt2();
-            CheckUserPermissions(Menu.idUsuario);
+            CheckUserPermissions(Menu.permissions);
         } catch (SQLException ex) {
             Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -2955,7 +3938,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     DeshabilitarBtn2();
                     DeshabilitarTxt1();
                     DeshabilitarTxt2();
-                    CheckUserPermissions(Menu.idUsuario);
+                    CheckUserPermissions(Menu.permissions);
                     Flag = 0;
                 } catch (SQLException ex) {
                     Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -3101,7 +4084,7 @@ public class FichaCliente extends javax.swing.JPanel {
                 txtOTNro.setText(id);
                 RecuperarOT(txtOTNro.getText());
                 if (Flag == 3) {
-                    int respuesta = JOptionPane.showConfirmDialog(null, "Está seguro de eliminar la OT N° "+id+"?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    int respuesta = JOptionPane.showConfirmDialog(null, "Está seguro de eliminar la OT N° " + id + "?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
                     if (respuesta == 0) {
                         btnOTConfirm.doClick();
                     } else {
@@ -3123,7 +4106,7 @@ public class FichaCliente extends javax.swing.JPanel {
                     WindowCloseOT.setLocationRelativeTo(null);
                     WindowCloseOT.setVisible(true);
                 } else if (Flag == 5) {
-                    int respuesta = JOptionPane.showConfirmDialog(null, "Desea reabrir la OT N° "+id+"?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
+                    int respuesta = JOptionPane.showConfirmDialog(null, "Desea reabrir la OT N° " + id + "?", "Atención", JOptionPane.WARNING_MESSAGE, JOptionPane.YES_NO_OPTION);
                     if (respuesta == 0) {
                         btnOTConfirm.doClick();
                     } else {
@@ -3870,8 +4853,91 @@ public class FichaCliente extends javax.swing.JPanel {
         SUConfirm.setVisible(true);
     }//GEN-LAST:event_btnOTREOpenActionPerformed
 
+    private void btnOTConsultActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnOTConsultActionPerformed
+        try {
+            LoadOTConsult();
+            ConsultOTDialog.setTitle("Consulta de OT");
+            ConsultOTDialog.setModal(true);
+            ConsultOTDialog.pack();
+            ConsultOTDialog.setResizable(false);
+            ConsultOTDialog.setLocationRelativeTo(null);
+            ConsultOTDialog.setVisible(true);
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_btnOTConsultActionPerformed
+
+    private void tConsultOTMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tConsultOTMouseClicked
+        try {
+            int row = tConsultOT.getSelectedRow();
+            String OT_ID = tConsultOT.getModel().getValueAt(row, 0).toString();
+            LoadConsultOT(OT_ID);
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tConsultOTMouseClicked
+
+    private void tConsultOTDetailMouseClicked(java.awt.event.MouseEvent evt) {//GEN-FIRST:event_tConsultOTDetailMouseClicked
+        try {
+            int row = tConsultOTDetail.getSelectedRow();
+            String ArtID = tConsultOTDetail.getModel().getValueAt(row, 0).toString();
+            LoadConsultOTArtImage(ArtID);
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_tConsultOTDetailMouseClicked
+
+    private void btnGGCleanOTActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGGCleanOTActionPerformed
+        CleanConsultOT();
+    }//GEN-LAST:event_btnGGCleanOTActionPerformed
+
+    private void txtGGFilterKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtGGFilterKeyReleased
+        try {
+            OTConsultFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_txtGGFilterKeyReleased
+
+    private void chkGGOpenItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkGGOpenItemStateChanged
+        try {
+            if (chkGGOpen.isSelected() == false && chkGGNull.isSelected() == false && chkGGClose.isSelected() == false) {
+                JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
+                chkGGOpen.setSelected(true);
+            }
+            OTConsultFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_chkGGOpenItemStateChanged
+
+    private void chkGGNullItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkGGNullItemStateChanged
+        try {
+            if (chkGGNull.isSelected() == false && chkGGOpen.isSelected() == false && chkGGClose.isSelected() == false) {
+                JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
+                chkGGNull.setSelected(true);
+            }
+            OTConsultFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_chkGGNullItemStateChanged
+
+    private void chkGGCloseItemStateChanged(java.awt.event.ItemEvent evt) {//GEN-FIRST:event_chkGGCloseItemStateChanged
+        try {
+            if (chkGGClose.isSelected() == false && chkGGOpen.isSelected() == false && chkGGNull.isSelected() == false) {
+                JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
+                chkGGClose.setSelected(true);
+            }
+            OTConsultFilter();
+        } catch (SQLException ex) {
+            Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_chkGGCloseItemStateChanged
+
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JDialog ConsultOTDialog;
     private javax.swing.JPanel PnlArticulo;
     private javax.swing.JPanel PnlBtnsOT;
     private javax.swing.JPanel PnlCliente;
@@ -3888,6 +4954,10 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JTable TSearcherCli;
     private javax.swing.JTable TSearcherDetalle;
     private javax.swing.JTable TSearcherOT;
+    private javax.swing.JPanel TabArticles;
+    private javax.swing.JPanel TabCrystal;
+    private javax.swing.JTabbedPane TabPanel;
+    private javax.swing.JPanel TabPayMethod;
     private javax.swing.JScrollPane TableDetailArticle;
     private javax.swing.JScrollPane TablePayMethod;
     private javax.swing.JScrollPane TablePayMethod1;
@@ -3909,10 +4979,13 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnCopy;
     private javax.swing.JButton btnCristClean;
     private javax.swing.JButton btnCristalSearch;
+    private javax.swing.JButton btnGGCleanOT;
+    private javax.swing.JButton btnGGEraseFilter;
     private javax.swing.JButton btnOKUser;
     private javax.swing.JButton btnOTCancel;
     private javax.swing.JButton btnOTClose;
     private javax.swing.JButton btnOTConfirm;
+    private javax.swing.JButton btnOTConsult;
     private javax.swing.JButton btnOTEdit;
     private javax.swing.JButton btnOTNew;
     private javax.swing.JButton btnOTNull;
@@ -3925,18 +4998,58 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JButton btnSearchPa;
     private javax.swing.JButton btnSearchSol;
     private javax.swing.JComboBox<String> cboxFiltrarCli;
+    private javax.swing.JComboBox<String> cboxGGFilter;
     private javax.swing.JComboBox<String> cboxPayMethod;
     private javax.swing.JComboBox<String> cboxPayMethodCOT;
     private javax.swing.JCheckBox chboxMenor;
+    private javax.swing.JCheckBox chkGGClose;
+    private javax.swing.JCheckBox chkGGNull;
+    private javax.swing.JCheckBox chkGGOpen;
     private com.toedter.calendar.JDateChooser dtOTDate;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
+    private javax.swing.JLabel jLabel11;
+    private javax.swing.JLabel jLabel12;
+    private javax.swing.JLabel jLabel13;
+    private javax.swing.JLabel jLabel14;
+    private javax.swing.JLabel jLabel15;
+    private javax.swing.JLabel jLabel16;
+    private javax.swing.JLabel jLabel17;
+    private javax.swing.JLabel jLabel18;
+    private javax.swing.JLabel jLabel19;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel20;
+    private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
+    private javax.swing.JLabel jLabel24;
+    private javax.swing.JLabel jLabel25;
+    private javax.swing.JLabel jLabel26;
+    private javax.swing.JLabel jLabel27;
+    private javax.swing.JLabel jLabel28;
+    private javax.swing.JLabel jLabel29;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel31;
+    private javax.swing.JLabel jLabel32;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JLabel jLabel7;
+    private javax.swing.JLabel jLabel8;
+    private javax.swing.JLabel jLabel9;
+    private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
     private javax.swing.JScrollPane jScrollPane4;
+    private javax.swing.JScrollPane jScrollPane5;
+    private javax.swing.JScrollPane jScrollPane6;
     private javax.swing.JSeparator jSeparator1;
+    private javax.swing.JSeparator jSeparator11;
     private javax.swing.JSeparator jSeparator2;
     private javax.swing.JSeparator jSeparator3;
     private javax.swing.JSeparator jSeparator4;
     private javax.swing.JSeparator jSeparator5;
+    private javax.swing.JSeparator jSeparator6;
     private javax.swing.JSeparator jSeparator7;
     private javax.swing.JSeparator jSeparator8;
     private javax.swing.JLabel lblAdicion;
@@ -3968,6 +5081,7 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JLabel lblEstado;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblFiltrarCli;
+    private javax.swing.JLabel lblGGImage;
     private javax.swing.JLabel lblImage;
     private javax.swing.JLabel lblMenor;
     private javax.swing.JLabel lblMensajeArt;
@@ -3997,6 +5111,9 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JSpinner spinArtQuantity;
     private javax.swing.JSpinner spinODCantidad;
     private javax.swing.JSpinner spinOICantidad;
+    private javax.swing.JTable tConsultOT;
+    private javax.swing.JTable tConsultOTDetail;
+    private javax.swing.JTable tConsultOTPay;
     private javax.swing.JTextField txtAlturaFocal;
     private javax.swing.JTextField txtArtCode;
     private javax.swing.JTextField txtArtDescr;
@@ -4018,6 +5135,36 @@ public class FichaCliente extends javax.swing.JPanel {
     private javax.swing.JTextField txtDND;
     private javax.swing.JTextField txtDNI;
     private javax.swing.JTextField txtFilterCli;
+    private javax.swing.JTextField txtGGAltFoc;
+    private javax.swing.JTextField txtGGCrystalDescr;
+    private javax.swing.JTextField txtGGCrystalTotal;
+    private javax.swing.JTextField txtGGCrystalType;
+    private javax.swing.JTextField txtGGDI;
+    private javax.swing.JTextField txtGGDND;
+    private javax.swing.JTextField txtGGDNI;
+    private javax.swing.JTextField txtGGFilter;
+    private javax.swing.JTextField txtGGODAddition;
+    private javax.swing.JTextField txtGGODAxis;
+    private javax.swing.JTextField txtGGODCylindrical;
+    private javax.swing.JTextField txtGGODQuantity;
+    private javax.swing.JTextField txtGGODSpherical;
+    private javax.swing.JTextField txtGGOIAddition;
+    private javax.swing.JTextField txtGGOIAxis;
+    private javax.swing.JTextField txtGGOICylindrical;
+    private javax.swing.JTextField txtGGOIQuantity;
+    private javax.swing.JTextField txtGGOISpherical;
+    private javax.swing.JTextField txtGGOTBalance;
+    private com.toedter.calendar.JDateChooser txtGGOTDate;
+    private javax.swing.JTextField txtGGOTNro;
+    private javax.swing.JTextField txtGGOTPay;
+    private javax.swing.JTextField txtGGOTStatus;
+    private javax.swing.JTextField txtGGOTTotal;
+    private javax.swing.JTextField txtGGObs;
+    private javax.swing.JTextField txtGGPatientDoc;
+    private javax.swing.JTextField txtGGPatientName;
+    private javax.swing.JTextField txtGGTotalArticle;
+    private javax.swing.JTextField txtGGUnitPrice;
+    private javax.swing.JTextField txtGGUsername;
     private javax.swing.JTextField txtODAdicion;
     private javax.swing.JTextField txtODCilindrico;
     private javax.swing.JTextField txtODEje;

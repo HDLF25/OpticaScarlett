@@ -5,6 +5,7 @@ import java.awt.Toolkit;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Arrays;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -24,7 +25,7 @@ public class Users extends javax.swing.JPanel {
         }
     };
 
-    public Users(int idUsuario) throws SQLException {
+    public Users(int idUsuario, List<Menu.Permission> permissions) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -32,7 +33,7 @@ public class Users extends javax.swing.JPanel {
         DisableActionBtns();
         DisableAllValues();
         CabeceraTabla();
-        CheckUserPermissions(idUsuario);
+        CheckUserPermissions(permissions);
         CheckUserLogged_Admin(idUsuario);
     }
 
@@ -311,16 +312,11 @@ public class Users extends javax.swing.JPanel {
         chbUser5.setEnabled(false);
     }
 
-    private void CheckUserPermissions(int idUser) throws SQLException {
+    private void CheckUserPermissions(List<Menu.Permission> permissions) throws SQLException {
         DisableBtns();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (36,37,38,39,40) AND id_usuario = " + idUser + ";";
-        rs = con.Results(SQLUserCheck);
-        while (rs.next()) {
-            int idPermission = rs.getInt("id_permission");
-            String namePermission = rs.getString("name_permission");
-            Boolean isActive = rs.getBoolean("active");
-            if (isActive) {
-                switch (namePermission) {
+        for (Menu.Permission permission : permissions) {
+            if (permission.isActivePerm()) {
+                switch (permission.getNamePerm()) {
                     case "UserCreate":
                         btnCreate.setEnabled(true);
                         break;
@@ -338,7 +334,7 @@ public class Users extends javax.swing.JPanel {
                         btnChangePass.setEnabled(true);
                         break;
                     default:
-                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                        System.out.println("Permiso no utilizado o no concedido: " + permission.getPermID() + ", " + permission.getNamePerm());
                 }
             }
         }
@@ -1822,7 +1818,7 @@ public class Users extends javax.swing.JPanel {
             DisableAllValues();
             EnableBtns();
             DisableActionBtns();
-            CheckUserPermissions(Menu.idUsuario);
+            CheckUserPermissions(Menu.permissions);
             lblUserInfo.setText("Datos Generales");
         } catch (SQLException ex) {
             Logger.getLogger(Users.class.getName()).log(Level.SEVERE, null, ex);
@@ -1838,7 +1834,7 @@ public class Users extends javax.swing.JPanel {
                     DisableAllValues();
                     EnableBtns();
                     DisableActionBtns();
-                    CheckUserPermissions(Menu.idUsuario);
+                    CheckUserPermissions(Menu.permissions);
                     lblUserInfo.setText("Datos Generales");
                     Flag = 0;
                 }

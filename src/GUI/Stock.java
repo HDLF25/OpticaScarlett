@@ -3,6 +3,7 @@ package GUI;
 import Otros.Conexion;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
@@ -21,7 +22,7 @@ public class Stock extends javax.swing.JPanel {
     };
     String costoactualcomp = "";
     
-    public Stock(int idUsuario) throws SQLException {
+    public Stock(List<Menu.Permission> permissions) throws SQLException {
         initComponents();
         con = new Conexion();
         con.Login();
@@ -29,7 +30,7 @@ public class Stock extends javax.swing.JPanel {
         DeshabilitarTxt();
         CabeceraTabla();
         txtArticulo.setEditable(false);
-        CheckUserPermissions(idUsuario);
+        CheckUserPermissions(permissions);
     }
     
     private void HabilitarBtn(){
@@ -80,16 +81,11 @@ public class Stock extends javax.swing.JPanel {
         txtStock.setText("");
     }
     
-    private void CheckUserPermissions(int idUser) throws SQLException {
+    private void CheckUserPermissions(List<Menu.Permission> permissions) throws SQLException {
         DeshabilitarMainBtn();
-        String SQLUserCheck = "SELECT up.id_permission, per.name_permission, up.active FROM users_permissions up, permissions per WHERE up.id_permission = per.id_permission AND up.id_permission IN (17,18,19) AND id_usuario = " + idUser + ";";
-        rs = con.Results(SQLUserCheck);
-        while (rs.next()) {
-            int idPermission = rs.getInt("id_permission");
-            String namePermission = rs.getString("name_permission");
-            Boolean isActive = rs.getBoolean("active");
-            if (isActive) {
-                switch (namePermission) {
+        for (Menu.Permission permission : permissions) {
+            if (permission.isActivePerm()) {
+                switch (permission.getNamePerm()) {
                     case "StockAdd":
                         btnAdd.setEnabled(true);
                         break;
@@ -100,7 +96,7 @@ public class Stock extends javax.swing.JPanel {
                         btnSearch.setEnabled(true);
                         break;
                     default:
-                        System.out.println("Permiso desconocido: " + idPermission + ", " + namePermission);
+                        System.out.println("Permiso no utilizado o no concedido: " + permission.getPermID() + ", " + permission.getNamePerm());
                 }
             }
         }
@@ -518,7 +514,7 @@ public class Stock extends javax.swing.JPanel {
                 LimpiarTxt();
                 DeshabilitarTxt();
                 DeshabilitarBtn();
-                CheckUserPermissions(Menu.idUsuario);
+                CheckUserPermissions(Menu.permissions);
                 Flag = 0;
             } catch (SQLException ex) {
                 Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
@@ -532,7 +528,7 @@ public class Stock extends javax.swing.JPanel {
             LimpiarTxt();
             DeshabilitarBtn();
             DeshabilitarTxt();
-            CheckUserPermissions(Menu.idUsuario);
+            CheckUserPermissions(Menu.permissions);
             lblNuevoStock.setText("Cantidad...");
         } catch (SQLException ex) {
             Logger.getLogger(Stock.class.getName()).log(Level.SEVERE, null, ex);
