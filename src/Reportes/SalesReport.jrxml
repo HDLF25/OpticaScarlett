@@ -5,13 +5,15 @@
 	<property name="ireport.y" value="0"/>
 	<parameter name="date_first" class="java.util.Date"/>
 	<parameter name="date_last" class="java.util.Date"/>
+	<parameter name="includ_null" class="java.lang.String"/>
 	<queryString>
-		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.sena, ot.total, ot.observacion, usr.username, usr.fullname FROM ordentrabajo ot, cliente cli, usuario usr WHERE cli.id_cliente = ot.id_paciente AND ot.id_usuario = usr.id_usuario AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY id_ordentrabajo ASC]]>
+		<![CDATA[SELECT ot.id_ordentrabajo, ot.fecha_ordentrabajo, CONCAT(cli.nombre_cliente, ' ', cli.apellido_cliente) AS paciente, ot.subtotal, ot.ot_estado, ot.sena, ot.total, ot.observacion, usr.username, usr.fullname FROM ordentrabajo ot, cliente cli, usuario usr WHERE cli.id_cliente = ot.id_paciente AND ot.id_usuario = usr.id_usuario AND ot.ot_estado IN ('Abierto','Cerrado',$P{includ_null}) AND ot.fecha_ordentrabajo BETWEEN $P{date_first} AND $P{date_last} ORDER BY ot.id_ordentrabajo ASC]]>
 	</queryString>
 	<field name="id_ordentrabajo" class="java.lang.Integer"/>
 	<field name="fecha_ordentrabajo" class="java.sql.Date"/>
 	<field name="paciente" class="java.lang.String"/>
 	<field name="subtotal" class="java.lang.Integer"/>
+	<field name="ot_estado" class="java.lang.String"/>
 	<field name="sena" class="java.lang.Integer"/>
 	<field name="total" class="java.lang.Integer"/>
 	<field name="observacion" class="java.lang.String"/>
@@ -25,6 +27,10 @@
 	</variable>
 	<variable name="TotalSaldo" class="java.lang.Integer" calculation="Sum">
 		<variableExpression><![CDATA[$F{total}]]></variableExpression>
+	</variable>
+	<variable name="Counter" class="java.lang.Integer" calculation="Count">
+		<variableExpression><![CDATA[1]]></variableExpression>
+		<initialValueExpression><![CDATA[]]></initialValueExpression>
 	</variable>
 	<background>
 		<band splitType="Stretch"/>
@@ -115,21 +121,21 @@
 	<columnHeader>
 		<band height="21" splitType="Stretch">
 			<staticText>
-				<reportElement x="0" y="0" width="50" height="19" uuid="9218a176-512f-40c6-8efb-c88d57794200"/>
+				<reportElement x="25" y="0" width="40" height="19" uuid="9218a176-512f-40c6-8efb-c88d57794200"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Nro OT]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="50" y="0" width="60" height="19" uuid="ec95097c-46e4-4962-a63b-ef433cacae75"/>
+				<reportElement x="65" y="0" width="55" height="19" uuid="ec95097c-46e4-4962-a63b-ef433cacae75"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Fecha]]></text>
 			</staticText>
 			<staticText>
-				<reportElement x="110" y="0" width="160" height="19" uuid="272e8f22-4045-4041-9fce-eedd2dab4f99"/>
+				<reportElement x="170" y="0" width="145" height="19" uuid="272e8f22-4045-4041-9fce-eedd2dab4f99"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
@@ -160,28 +166,42 @@
 				<reportElement x="0" y="20" width="555" height="1" uuid="e81d1d0d-8792-44d5-9fde-76681819b5a3"/>
 			</line>
 			<staticText>
-				<reportElement x="270" y="0" width="105" height="19" uuid="795a6e2b-ba17-4345-a15a-6ec7092f3fcc"/>
+				<reportElement x="315" y="0" width="60" height="19" uuid="795a6e2b-ba17-4345-a15a-6ec7092f3fcc"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle">
 					<font isBold="true"/>
 				</textElement>
 				<text><![CDATA[Usuario]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="120" y="0" width="50" height="19" uuid="300fc330-e1e9-4b7f-99d9-8d4d1ef0930e"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[Estado]]></text>
+			</staticText>
+			<staticText>
+				<reportElement x="0" y="0" width="25" height="19" uuid="f4a550e8-a5d0-4bdb-be62-e4096c5b91ac"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle">
+					<font isBold="true"/>
+				</textElement>
+				<text><![CDATA[N°]]></text>
 			</staticText>
 		</band>
 	</columnHeader>
 	<detail>
 		<band height="20" splitType="Stretch">
 			<textField>
-				<reportElement x="0" y="5" width="50" height="15" uuid="b1f4f3e8-2f53-4a7c-98a3-bf03c4e8ddc3"/>
+				<reportElement x="25" y="5" width="40" height="15" uuid="b1f4f3e8-2f53-4a7c-98a3-bf03c4e8ddc3"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{id_ordentrabajo}]]></textFieldExpression>
 			</textField>
 			<textField pattern="dd/MM/yyyy">
-				<reportElement x="50" y="5" width="60" height="15" uuid="a635792d-7fb7-40b9-97f9-86cca75f2d5f"/>
+				<reportElement x="65" y="5" width="55" height="15" uuid="a635792d-7fb7-40b9-97f9-86cca75f2d5f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{fecha_ordentrabajo}]]></textFieldExpression>
 			</textField>
 			<textField>
-				<reportElement x="110" y="5" width="160" height="15" uuid="c565cf7b-1bb1-46b6-90ea-54c0a4ff8be7"/>
+				<reportElement x="170" y="5" width="145" height="15" uuid="c565cf7b-1bb1-46b6-90ea-54c0a4ff8be7"/>
 				<textElement verticalAlignment="Middle"/>
 				<textFieldExpression><![CDATA[$F{paciente}]]></textFieldExpression>
 			</textField>
@@ -201,9 +221,19 @@
 				<textFieldExpression><![CDATA[$F{sena}]]></textFieldExpression>
 			</textField>
 			<textField pattern="#,##0;-#,##0">
-				<reportElement x="270" y="5" width="105" height="15" uuid="f4fca91a-e336-4aa0-9485-ac290575f91f"/>
+				<reportElement x="315" y="5" width="60" height="15" uuid="f4fca91a-e336-4aa0-9485-ac290575f91f"/>
 				<textElement textAlignment="Center" verticalAlignment="Middle"/>
-				<textFieldExpression><![CDATA[" "+$F{username}+" - "+$F{fullname}]]></textFieldExpression>
+				<textFieldExpression><![CDATA[$F{username}]]></textFieldExpression>
+			</textField>
+			<textField pattern="dd/MM/yyyy">
+				<reportElement x="120" y="5" width="50" height="15" uuid="d27b5a29-4b6f-4214-87db-01e71108e3b1"/>
+				<textElement textAlignment="Center" verticalAlignment="Middle"/>
+				<textFieldExpression><![CDATA[$F{ot_estado}]]></textFieldExpression>
+			</textField>
+			<textField>
+				<reportElement x="0" y="5" width="25" height="15" uuid="822c5214-7374-43e0-940f-a0bc4c5de6f8"/>
+				<textElement textAlignment="Center"/>
+				<textFieldExpression><![CDATA[$V{Counter}]]></textFieldExpression>
 			</textField>
 		</band>
 	</detail>

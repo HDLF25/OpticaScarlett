@@ -81,11 +81,12 @@ public class SalesSummary extends javax.swing.JPanel {
         jDateUntil.cleanup();
     }
 
-    private void ViewReport(Date filter_datefirst, Date filter_datelast) {
+    private void ViewReport(Date filter_datefirst, Date filter_datelast, String includ_null) {
         try {
             HashMap<String, Object> parametros = new HashMap<>();
             parametros.put("date_first", filter_datefirst);
             parametros.put("date_last", filter_datelast);
+            parametros.put("includ_null", includ_null);
             System.out.println("Parámetros: " + parametros);
             System.out.println("Datasource: " + con.Login());
             URL urlReport = getClass().getClassLoader().getResource("Reportes/SalesReport.jasper");
@@ -123,6 +124,7 @@ public class SalesSummary extends javax.swing.JPanel {
         jMonth = new com.toedter.calendar.JMonthChooser();
         jYear = new com.toedter.calendar.JYearChooser();
         lblToday = new javax.swing.JLabel();
+        chboxIncludNulls = new javax.swing.JCheckBox();
 
         lblFrom.setHorizontalAlignment(javax.swing.SwingConstants.RIGHT);
         lblFrom.setText("Desde");
@@ -167,6 +169,8 @@ public class SalesSummary extends javax.swing.JPanel {
 
         lblToday.setText("-");
 
+        chboxIncludNulls.setText("Incluir Anulados");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(this);
         this.setLayout(layout);
         layout.setHorizontalGroup(
@@ -179,26 +183,28 @@ public class SalesSummary extends javax.swing.JPanel {
                         .addComponent(btnGenerar)
                         .addContainerGap())
                     .addGroup(layout.createSequentialGroup()
-                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
-                            .addComponent(jLabel1)
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(rbtnToday)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                                .addComponent(lblToday, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(jMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addGroup(layout.createSequentialGroup()
-                                .addComponent(lblFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(lblUntil, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                                .addComponent(jDateUntil, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
-                            .addComponent(rbtnDateRange, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
-                            .addComponent(rbtnMonth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                                .addComponent(jLabel1)
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(rbtnToday)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                    .addComponent(lblToday, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(jMonth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jYear, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGroup(layout.createSequentialGroup()
+                                    .addComponent(lblFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jDateFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(lblUntil, javax.swing.GroupLayout.PREFERRED_SIZE, 40, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                    .addComponent(jDateUntil, javax.swing.GroupLayout.PREFERRED_SIZE, 120, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addComponent(rbtnDateRange, javax.swing.GroupLayout.DEFAULT_SIZE, 350, Short.MAX_VALUE)
+                                .addComponent(rbtnMonth, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+                            .addComponent(chboxIncludNulls))
                         .addGap(0, 0, Short.MAX_VALUE))))
         );
         layout.setVerticalGroup(
@@ -226,7 +232,9 @@ public class SalesSummary extends javax.swing.JPanel {
                             .addComponent(jDateFrom, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
                             .addComponent(lblUntil, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addComponent(lblFrom, javax.swing.GroupLayout.PREFERRED_SIZE, 22, javax.swing.GroupLayout.PREFERRED_SIZE))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 36, Short.MAX_VALUE)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addComponent(chboxIncludNulls)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 12, Short.MAX_VALUE)
                 .addComponent(btnGenerar)
                 .addContainerGap())
         );
@@ -235,6 +243,12 @@ public class SalesSummary extends javax.swing.JPanel {
     private void btnGenerarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnGenerarActionPerformed
         Date date_from = null;
         Date date_until = null;
+        String includ_null = "";
+        if (chboxIncludNulls.isSelected() == true) {
+            includ_null = "Anulado";
+        } else {
+            includ_null = "";
+        }
         if (rbtnToday.isSelected()) {
             LocalDate datefrom = LocalDate.now();
             LocalDate dateuntil = LocalDate.now();
@@ -244,7 +258,7 @@ public class SalesSummary extends javax.swing.JPanel {
             date_until = Date.from(dateuntilwithhour.atZone(ZoneId.systemDefault()).toInstant());;
             System.out.println("Filtro Desde:  (" + date_from + ")");
             System.out.println("Filtro Hasta:  (" + date_until + ")");
-            ViewReport(date_from, date_until);
+            ViewReport(date_from, date_until, includ_null);
         } else if (rbtnMonth.isSelected()) {
             int MonthSelected = jMonth.getMonth();
             int YearSelected = jYear.getYear();
@@ -256,13 +270,13 @@ public class SalesSummary extends javax.swing.JPanel {
             date_until = calendar.getTime();
             System.out.println("Filtro Desde:  (" + date_from + ")");
             System.out.println("Filtro Hasta:  (" + date_until + ")");
-            ViewReport(date_from, date_until);
+            ViewReport(date_from, date_until, includ_null);
         } else if (rbtnDateRange.isSelected()) {
             date_from = (Date) jDateFrom.getDate();
             date_until = (Date) jDateUntil.getDate();
             System.out.println("Filtro Desde:  (" + date_from + ")");
             System.out.println("Filtro Hasta:  (" + date_until + ")");
-            ViewReport(date_from, date_until);
+            ViewReport(date_from, date_until, includ_null);
         }
     }//GEN-LAST:event_btnGenerarActionPerformed
 
@@ -288,6 +302,7 @@ public class SalesSummary extends javax.swing.JPanel {
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.ButtonGroup bgDateSelect;
     private javax.swing.JButton btnGenerar;
+    private javax.swing.JCheckBox chboxIncludNulls;
     private com.toedter.calendar.JDateChooser jDateFrom;
     private com.toedter.calendar.JDateChooser jDateUntil;
     private javax.swing.JLabel jLabel1;

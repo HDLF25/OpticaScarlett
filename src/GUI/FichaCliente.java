@@ -4905,6 +4905,9 @@ public class FichaCliente extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
                 chkGGOpen.setSelected(true);
             }
+            if (txtGGOTStatus.getText().equals("Abierto")) {
+                CleanConsultOT();
+            }
             OTConsultFilter();
         } catch (SQLException ex) {
             Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -4917,6 +4920,9 @@ public class FichaCliente extends javax.swing.JPanel {
                 JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
                 chkGGNull.setSelected(true);
             }
+            if (txtGGOTStatus.getText().equals("Anulado")) {
+                CleanConsultOT();
+            }
             OTConsultFilter();
         } catch (SQLException ex) {
             Logger.getLogger(FichaCliente.class.getName()).log(Level.SEVERE, null, ex);
@@ -4928,6 +4934,9 @@ public class FichaCliente extends javax.swing.JPanel {
             if (chkGGClose.isSelected() == false && chkGGOpen.isSelected() == false && chkGGNull.isSelected() == false) {
                 JOptionPane.showMessageDialog(null, "Acción no permitida. Debe marcar al menos una opción.");
                 chkGGClose.setSelected(true);
+            }
+            if (txtGGOTStatus.getText().equals("Cerrado")) {
+                CleanConsultOT();
             }
             OTConsultFilter();
         } catch (SQLException ex) {
